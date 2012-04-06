@@ -6,3 +6,17 @@ body {
 a {
   color: #00B7FF;
 }
+
+#fileDrop {
+  border: 1px dashed blue;
+  border-radius: 5px;
+  font-size: 50px;
+  height: 20%;
+  min-height: 50px;
+  text-align: center;
+  width: 100%;
+}
+
+#fileDrop :hover {
+  
+}
