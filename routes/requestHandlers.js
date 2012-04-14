@@ -1,40 +1,40 @@
 (function() {
-  var querystring;
+  var database, querystring, urlShorten;
 
   querystring = require("querystring");
 
-  exports.master = function(response) {
-    console.log("Request to handler 'master' was called.");
-    response.render("index", {
+  database = require("../database");
+
+  urlShorten = require("../urlShorten");
+
+  exports.master = function(sessionID, response) {
+    response.render("master", {
       title: "Master"
     });
-    response.end();
   };
 
-  exports.slave = function(response) {
-    console.log("Request to handler 'slave' was called.");
+  exports.test = function(sessionID, response) {
+    response.render("test", {
+      layout: false
+    });
+  };
+
+  exports.render = function(sessionID, response) {
+    console.log("Request to handler 'render' was called.");
     response.render("index", {
       title: "Slave"
     });
-    response.end();
   };
 
-  exports.test = function(response) {
-    console.log("Request to handle 'test' was called.");
-    response.render("test", {
-      title: "Testing",
-      layout: false
-    });
-    response.end();
+  exports.getRender = function(sessionID, response, getRender) {
+    console.log("Request to handler 'getRender' was called.");
+    database.find(getRender.renderId, sessionID);
   };
 
-  exports.upload = function(response, postData) {
+  exports.upload = function(sessionID, response, renderObject) {
     console.log("Request to handler 'upload' was called.");
-    response.render("index", {
-      title: "Upload",
-      postData: querystring.parse(postData).text
-    });
-    response.end();
+    urlShorten.shortenURL(renderObject.url, sessionID);
+    database.insert(renderObject);
   };
 
 }).call(this);

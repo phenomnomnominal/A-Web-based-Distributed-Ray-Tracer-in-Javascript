@@ -1,20 +1,25 @@
 (function() {
-  var handle, requestHandlers, router, server;
+  var database, handle, requestHandlers, router, server;
 
-  server = require("./server");
+  database = require("./database");
 
   router = require("./router");
 
   requestHandlers = require("./routes/requestHandlers");
 
+  server = require("./server");
+
   handle = {
     "/": requestHandlers.master,
     "/master": requestHandlers.master,
+    "/getRender": requestHandlers.getRender,
+    "/render": requestHandlers.render,
     "/test": requestHandlers.test,
-    "/slave": requestHandlers.slave,
     "/upload": requestHandlers.upload
   };
 
   server.init(router.route, handle);
+
+  database.init();
 
 }).call(this);

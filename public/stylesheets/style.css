@@ -1,22 +1,36 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;  
 }
 
 a {
   color: #00B7FF;
 }
 
-#fileDrop {
-  border: 1px dashed blue;
-  border-radius: 5px;
-  font-size: 50px;
-  height: 20%;
-  min-height: 50px;
-  text-align: center;
-  width: 100%;
+.centered {
+  left: 10%;
+  min-width: 800px;
+  padding: 2.5%;
+  position: absolute;
+  width: 75%;
 }
 
-#fileDrop :hover {
-  
+#fileDrop {
+  border: 3px dashed blue;
+  border-radius: 20px;
+  font-size: 50px;
+  height: 50%;
+  text-align: center;
+}
+
+#renderOptions {  
+  top: 60%;
 }

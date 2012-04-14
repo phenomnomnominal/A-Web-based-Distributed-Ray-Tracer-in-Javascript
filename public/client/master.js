@@ -1,9 +1,22 @@
 (function() {
-  var defineGlobalFunctions, handleDragOver, handleFileDrop, handleFileRead, root;
-
-  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+  var defineGlobalFunctions, handleDragOver, handleFileDrop, handleFileRead, socket;
 
   if (window.File && window.FileReader && window.FileList && window.Blob) {
+    socket = io.connect("http://127.0.0.1", {
+      "connect timeout": 500,
+      "reconnect": true,
+      "reconnection delay": 500,
+      "reopen delay": 600,
+      "max reconnection attempts": 10
+    });
+    socket.on("connected", function(data) {
+      socket.emit("confirmConnection", {
+        connection: "confirmed"
+      });
+      socket.on("urlShortened", function(data) {
+        $("#infoReport").text(data.shortURL);
+      });
+    });
     /*
       function handleFileRead
           This function takes any XML content from the uploaded file,
@@ -16,9 +29,10 @@
       json = $.xmlToJSON(readerOutput);
       if (json !== void 0 && json !== null) {
         uuid = UUID.genV1().toString();
-        WEBSITE = "localhost:3000?render=";
+        WEBSITE = "http://127.0.0.1:3000/render?renderId=";
         renderObject = {
-          urlToShorten: WEBSITE + uuid,
+          url: WEBSITE + uuid,
+          uuid: uuid,
           sceneDescription: JSON.stringify(json)
         };
         $.ajax({
@@ -88,10 +102,10 @@
           for node.js, or 'window' for client scripts.
     */
     defineGlobalFunctions = function() {
-      root.globalFunctions = {};
-      root.globalFunctions.handleFileRead = handleFileRead;
-      root.globalFunctions.handleFileDrop = handleFileDrop;
-      root.globalFunctions.handleDragOver = handleDragOver;
+      this.globalFunctions = {};
+      this.globalFunctions.handleFileRead = handleFileRead;
+      this.globalFunctions.handleFileDrop = handleFileDrop;
+      this.globalFunctions.handleDragOver = handleDragOver;
     };
   } else {
     alert('The File APIs are not fully supported in this browser.');

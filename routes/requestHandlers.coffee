@@ -1,35 +1,33 @@
 querystring = require("querystring")
+database = require("../database")
+urlShorten = require("../urlShorten")
 
-exports.master = (response) ->
-  console.log "Request to handler 'master' was called."
-  response.render( "index",
-      title: "Master"
+exports.master = (sessionID, response) ->
+  response.render( "master", 
+      title: "Master"  
     )
-  response.end()
   return
 
-exports.slave = (response)->
-  console.log "Request to handler 'slave' was called."
-  response.render( "index",
-      title: "Slave"
-    )
-  response.end()
-  return
-
-exports.test = (response)->
-	console.log "Request to handle 'test' was called."
+exports.test = (sessionID, response) ->
 	response.render( "test",
-	    title: "Testing"
 	    layout: false
 	  )
-	response.end()
 	return
-
-exports.upload = (response, postData)->
-  console.log "Request to handler 'upload' was called."
+	
+exports.render = (sessionID, response) ->
+  console.log "Request to handler 'render' was called."
   response.render( "index",
-      title: "Upload"
-      postData: querystring.parse(postData).text
-    )
-  response.end()
+      title: "Slave"
+  )
+  return
+  
+exports.getRender = (sessionID, response, getRender) ->
+  console.log "Request to handler 'getRender' was called."
+  database.find(getRender.renderId, sessionID)
+  return
+
+exports.upload = (sessionID, response, renderObject) ->
+  console.log "Request to handler 'upload' was called."
+  urlShorten.shortenURL(renderObject.url, sessionID)
+  database.insert(renderObject)
   return

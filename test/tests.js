@@ -144,7 +144,7 @@
       var renderObject;
       expect(2);
       renderObject = window.globalFunctions.handleFileRead(exampleCollada);
-      notEqual(null, renderObject.urlToShorten.match(/^localhost\:3000\?render\=[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/), "renderObject should have a 'urlToShorten' in the form localhost:3000?render= + UUID");
+      notEqual(null, renderObject.url.match(/\:3000\/render\?renderId\=[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/), "renderObject should have a 'urlToShorten' in the form DOMAIN:3000/render?renderId= + UUID");
       return notEqual(null, renderObject.sceneDescription, "rendorObject should have a sceneDescription object");
     });
   });

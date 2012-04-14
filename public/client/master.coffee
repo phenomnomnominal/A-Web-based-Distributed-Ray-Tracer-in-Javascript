@@ -1,7 +1,30 @@
-root = exports ? this
-
 if window.File && window.FileReader && window.FileList && window.Blob 
-#Provided the browser has the required file APIs  
+#Provided the browser has the required file APIs
+
+  # Connect WebSocket to server.
+  socket = io.connect("http://127.0.0.1",
+    "connect timeout": 500
+    "reconnect": true
+    "reconnection delay": 500
+    "reopen delay": 600
+    "max reconnection attempts": 10
+  )
+  
+  # Add a listener for the "connected" message.
+  socket.on("connected", (data) ->
+    #  When the connection is made, respond with a confimation message.
+    socket.emit("confirmConnection",
+      connection: "confirmed"
+    )
+    
+    # And add a listener for the "urlShortened" message.
+    socket.on("urlShortened", (data) ->
+      # When the shortened url is received, use it...
+      $("#infoReport").text(data.shortURL)
+      return
+    )
+    return
+  )
 
   ###
   function handleFileRead
@@ -14,9 +37,10 @@ if window.File && window.FileReader && window.FileList && window.Blob
     json = $.xmlToJSON(readerOutput) #Convert the .dae file from XML to JSON
     if json isnt undefined and json isnt null#Provided a JavaScript object exists, we POST it to the server.
       uuid = UUID.genV1().toString() #Generate a Universal Unique Identifier
-      WEBSITE = "localhost:3000?render="
+      WEBSITE = "http://127.0.0.1:3000/render?renderId="
       renderObject =
-	      urlToShorten: WEBSITE + uuid 
+	      url: WEBSITE + uuid
+	      uuid: uuid
 	      sceneDescription: JSON.stringify(json)
   	  	$.ajax
 				    contentType: "application/json"
@@ -89,11 +113,11 @@ if window.File && window.FileReader && window.FileList && window.Blob
       for node.js, or 'window' for client scripts.
   ###
   defineGlobalFunctions = ->
-    root.globalFunctions = {}
-    root.globalFunctions.handleFileRead = handleFileRead
-    root.globalFunctions.handleFileDrop = handleFileDrop
-    root.globalFunctions.handleDragOver = handleDragOver
+    this.globalFunctions = {}
+    this.globalFunctions.handleFileRead = handleFileRead
+    this.globalFunctions.handleFileDrop = handleFileDrop
+    this.globalFunctions.handleDragOver = handleDragOver
     return
-
+    
 else
   alert('The File APIs are not fully supported in this browser.')

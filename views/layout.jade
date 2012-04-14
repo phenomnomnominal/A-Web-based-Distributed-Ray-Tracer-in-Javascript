@@ -5,6 +5,10 @@ html
     link(rel='stylesheet', href='/public/stylesheets/style.css')
     script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js')
     script(type='text/javascript', src='/public/jslibs/UUID.js')
-    script(type='text/javascript', src='/public/client/xmlToJSON.js')
-    script(type='text/javascript', src='/public/client/master.js')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    if title == "Master"
+      script(type='text/javascript', src='/public/client/xmlToJSON.js')
+      script(type='text/javascript', src='/public/client/master.js')
+    if title == "Slave"
+      script(type='text/javascript', src='/public/client/slave.js')
   body!= body

@@ -4,28 +4,67 @@ Module dependencies
 */
 
 (function() {
-  var express, init, url;
+  var Session, express, init, io, parseCookie, url;
 
   express = require("express");
 
   url = require("url");
 
+  io = require("socket.io");
+
+  parseCookie = require("connect").utils.parseCookie;
+
+  Session = require('connect').middleware.session.Session;
+
   init = function(route, handle) {
-    var onRequest, server;
+    var initSocket, onRequest, server, store;
     onRequest = function(request, response) {
-      var pathname, postData;
-      postData = "";
+      var pathname;
       pathname = url.parse(request.url).pathname;
       request.setEncoding("utf8");
-      request.addListener("data", function(postDataChunk) {
-        postData += postDataChunk;
-        console.log("Received POST data chunk '" + postDataChunk + "'.");
-      });
-      request.addListener("end", function() {
-        route(handle, pathname, response, postData);
+      route(handle, request.sessionID, pathname, response, request.body);
+    };
+    initSocket = function() {
+      io.configure(function() {
+        io.set('authorization', function(data, accept) {
+          if (data.headers.cookie) {
+            data.cookie = parseCookie(data.headers.cookie);
+            data.sessionID = data.cookie['express.sid'];
+            data.sessionStore = store;
+            store.get(data.sessionID, function(err, session) {
+              if (err || !session) {
+                accept('Error', false);
+              } else {
+                data.session = new Session(data, session);
+                accept(null, true);
+              }
+            });
+          } else {
+            accept("No cookie transmitted.", false);
+          }
+        });
+        io.sockets.on("connection", function(socket) {
+          console.log(io.transports[socket.id].name);
+          console.log("A socket with sessionID " + socket.handshake.sessionID + " connected!");
+          socket.join(socket.handshake.sessionID);
+          socket.emit("connected", {
+            connection: true
+          });
+          socket.on("confirmConnected", function(data) {
+            console.log(data);
+          });
+        });
+        io.sockets.on("disconnect", function(socket) {
+          return console.log("A socket with sessionID " + socket.handshake.sessionID + " disconnected!");
+        });
       });
     };
-    server = module.exports = express.createServer(onRequest).listen(3000);
+    server = module.exports = express.createServer();
+    io = io.listen(server);
+    server.listen(3000);
+    initSocket();
+    server.io = io;
+    store = new express.session.MemoryStore;
     /* 
     Server Configuration
     */
@@ -37,20 +76,36 @@ Module dependencies
       server.use(express.cookieParser());
       server.use(express.session({
         secret: "phenomnomnominal",
-        id: new Date()
+        key: "express.sid",
+        id: new Date(),
+        store: store
       }));
       server.use(express.methodOverride());
       server.use(server.router);
-      server.use(express.static("" + __dirname + "/public"));
-    });
-    server.configure(function() {
+      server.use("/public", express.static("" + __dirname + "/public"));
+      server.use("/test", express.static("" + __dirname + "/test"));
       server.use(express.errorHandler({
         dumpExceptions: true,
         showStack: true
       }));
     });
-    server.configure(function() {
-      server.use(express.errorHandler());
+    server.get("/", function(req, res) {
+      onRequest(req, res);
+    });
+    server.get("/test", function(req, res) {
+      onRequest(req, res);
+    });
+    server.get("/render", function(req, res) {
+      onRequest(req, res);
+    });
+    server.get("/master", function(req, res) {
+      onRequest(req, res);
+    });
+    server.post("/upload", function(req, res) {
+      onRequest(req, res);
+    });
+    server.post("/getRender", function(req, res) {
+      onRequest(req, res);
     });
     console.log("Express server listening on port " + (server.address().port) + " in " + server.settings.env + " mode");
   };
