@@ -17,20 +17,20 @@ else
 
   # Some constants are required for this script:
  
-  # * **LOCATION** - *IP Address location for the server.*
+  # * **`LOCATION`** - *IP Address location for the server.*
   LOCATION = 'http://127.0.0.1'
 
-  # * **PORT** - *Port for [**WebSocket**](http://http://www.websocket.org/) connections.*
+  # * **`PORT`** - *Port for* [**WebSocket**](http://http://www.websocket.org/) *connections.*
   PORT = 3000  
   
   # ___
   # ## File Event Handler Functions:
   # ___
   
-  # ### *handleFileRead*:
-  # > *'handleFileRead'* first converts the .dae file from XML to JSON using the [xml2json](http://www.fyneworks.com/jquery/xml-to-json/) jQuery plugin.
+  # ### <section id='handleFileRead'>*handleFileRead*:</section>
+  # > **`handleFileRead`** first converts the *.dae* file from XML to JSON using the [**xml2json**](http://www.fyneworks.com/jquery/xml-to-json/) [**jQuery**](http://www.jquery.com) plugin.
   #
-  # > Provided a JavaScript object exists, we then generate a [***UUID***](http://en.wikipedia.org/wiki/Universally_unique_identifier) with [uuid.js](https://github.com/LiosK/UUID.js)), create the link URL and POST the render and URL to the server.
+  # > Provided a JavaScript object exists, we then generate a [**UUID**](http://en.wikipedia.org/wiki/Universally_unique_identifier) with [**uuid.js**](https://github.com/LiosK/UUID.js)), create the link URL and POST the render and URL to the server.
   handleFileRead = (readerOutput) ->
     renderJSON = $.xml2json readerOutput
     if renderJSON? and not $.isEmptyObject renderJSON
@@ -50,11 +50,11 @@ else
       throw new Error 'The XML to JSON converstion returned no JSON data'
   
   # ### *handleFileDrop*:
-  # > *'handleFileDrop'* looks at the file (or files) that have been dropped by the user, selects the first one and checks if it is a [**COLLADA**](http://www.collada.org) file with the extension *'.dae'*. If it is, the file is passed to the *'handleFileRead'* function for parsing, otherwise an error is thrown.
+  # > **`handleFileDrop`** looks at the file (or files) that have been dropped by the user, selects the first one and checks if it is a [**COLLADA**](http://www.collada.org) file with the extension *.dae*. If it is, the file is passed to the [**`handleFileRead`**](#handleFileRead) function for parsing, otherwise an error is thrown.
   handleFileDrop = (e) ->
     e.stopPropagation() 
     e.preventDefault()
-    if e.dataTransfer.files.length > 1
+    if e.dataTransfer.files.length >= 1
       file = e.dataTransfer.files[0]
     if file
       if file.name.substring(file.name.length - 4, file.name.length) is '.dae'
@@ -69,7 +69,7 @@ else
       throw new Error "No file dropped"
 
   # ### *handleFileDrop*:
-  # > *'handleFileDrop'* is called whenever the user drags a file over the file dropzone and sets the drop effect to 'copy'.
+  # > **`handleFileDrop`** is called whenever the user drags a file over the file dropzone and sets the `dropEffect` to *'copy'*.
   handleDragOver = (e) ->
     e.stopPropagation()
     e.preventDefault()
@@ -79,7 +79,7 @@ else
   # ## Initialisation:
   # ___
   
-  # When the document is ready, options for a [**WebSocket**](http://http://www.websocket.org/) connection are initialised and the connection is made between the client and the server. 
+  # When the `document` is ready, options for a [**WebSocket**](http://http://www.websocket.org/) connection are initialised and the connection is made between the client and the server. 
   $(document).ready ->    
     socketOptions =
       'connect timeout': 500
@@ -94,11 +94,11 @@ else
       socket.emit 'confirmConnection', connection: 'confirmed'
       # Once the connection is confirmed, event-listeners for other expected [**WebSocket**](http://http://www.websocket.org/) messages are created, such as:
 
-      # * **'urlShortened'** - display the shortened URL which links to the newly created rendering operation.
+      # * *'urlShortened'* - display the shortened URL which links to the newly created rendering operation.
       socket.on 'urlShortened', (data) ->
         $('#infoReport').text data.shortURL
     
-    # Finally, the file event handler functions are attached to the *'fileDrop'* element. 
+    # Finally, the file event handler functions are attached to the `fileDrop` element. 
     fileDrop = $('#fileDrop').get(0)
     if fileDrop
       fileDrop.ondragover = handleDragOver
@@ -108,7 +108,7 @@ else
   # ## Exports
   # ___
 
-  # The ***handleFileRead***, ***handleFileDrop*** and ***handleDragOver*** functions are added to the global *root* object.
+  # The **`handleFileRead`**, **`handleFileDrop`** and **`handleDragOver`** functions are added to the global `root` object.
   root = exports ? this
   root.globalFunctions = 
     handleFileRead: handleFileRead
