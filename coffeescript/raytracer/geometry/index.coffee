@@ -1,0 +1,5 @@
+exports.AnimatedTransform = require './animatedTransform'
+exports.DifferentialGeometry = require './differentialGeometry'
+exports.Geometry = require './geometry'
+exports.Matrix = require './matrix'
+exports.Transform = require './transform'
