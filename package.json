@@ -1,12 +1,22 @@
 {
-    "name": "AWeb-basedDistributedRay-TracerinJavascript"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.8"
-    , "jade": ">= 0.0.1"
-    , "mongodb": ">= 0.9.6-7"
-    , "socket.io": ">= 0.9.5"
-    , "connect": ">2.0.0"
+  "name": "AWeb-basedDistributedRay-TracerinJavascript",
+  "version": "0.0.1",
+  "author": Craig Spence <craigspence0@gmail.com>,
+  "description": "A web-based, distributed ray-tracer written in JavaScript",
+  "contributors": [ 
+    {
+      "name": "Craig Spence",
+      "email": "craigspence0@gmail.com"
+    } 
+  ],
+  "private": true,
+  "dependencies": {
+    "connect": ">= 2.0.0",
+    "express": ">= 2.5.8",
+    "goo.gl": ">= 0.0.2",
+    "jade": ">= 0.22.0",
+    "mongodb": ">= 0.9.6-7",
+    "qunit": ">= 0.5.0",
+    "socket.io": ">= 0.9.5",
   }
 }
