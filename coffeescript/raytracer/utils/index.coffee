@@ -1,0 +1,1 @@
+exports.Math = require("./math")
