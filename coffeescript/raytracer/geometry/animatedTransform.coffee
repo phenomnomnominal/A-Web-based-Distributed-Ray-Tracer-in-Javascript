@@ -31,14 +31,14 @@ class Quaternion
   # ___
   # ### Prototypical Instance Functions:
   
-  # These functions are attached to each instance of the **`Quaternion`** class - changing the function of one **`Quaternion`** changes the function on all other **`Quaternion`**s as well.
+  # These functions are attached to each instance of the **`Quaternion`** class - changing the function of one **`Quaternion`** changes the function on all other **`Quaternion`**s as well. These functions act on a **`Quaternion`** in place - the original object is modified.
     
   # ### **Arithmetic methods:**
   # > Arithmetic with **`Quaternion`** instances is performed component-wise, for example:
   #
-  # >    *q + q' = (w + w'), (x + x') × i, (y + y') × j, (z + z') × k*
+  # > *q + q' = (w + w'), (x + x') × i, (y + y') × j, (z + z') × k*
   #
-  # >    *q × 3 = (w × 3), (x × 3) × i, (y × 3) × j, (z × 3) × k*
+  # > *q × 3 = (w × 3), (x × 3) × i, (y × 3) × j, (z × 3) × k*
   
   # > ### *add:*
   # >> **`add`** uses [**`Vector.add`**](geometry.html#vector-add) to add the *X*, *Y* and *Z* **`Vector`** components and simple addition for the *W* component.

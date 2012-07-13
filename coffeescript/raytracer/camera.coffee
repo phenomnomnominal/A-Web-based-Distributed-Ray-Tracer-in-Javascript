@@ -1,4 +1,4 @@
-# *camera.coffee* contains generic camera options, including the [**`Camera`**](#camera) interface and two subclasses which implement it:
+# *camera.coffee* contains generic camera constructs, specifically the [**`Camera`**](#camera) interface and two subclasses which implement it:
 #
 # * [**`OrthographicCamera`**](#orthographic)
 #
@@ -46,7 +46,7 @@ class Camera
   # ___
   # ### Prototypical Instance Functions:
   
-  # These functions are attached to each instance of the **`Camera`** class - changing the function of one **`Camera`** changes the function on all other **`Camera`**s as well.
+  # These functions are attached to each instance of the **`Camera`** class - changing the function of one **`Camera`** changes the function on all other **`Camera`**s as well. 
 
   # ### *generateRay:*
   # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
