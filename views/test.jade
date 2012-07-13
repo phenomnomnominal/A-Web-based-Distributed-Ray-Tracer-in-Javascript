@@ -1,0 +1,38 @@
+!!! 5
+html
+  head
+    title = title
+    link(rel="stylesheet", href="/stylesheets/qunit.css", type="text/css", media="screen")
+    //jQuery
+    script(src="/libraries/jquery.js")
+    //Project scripts
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type="text/javascript", src="/raytracer/utils/math.js")
+    script(type="text/javascript", src="/raytracer/geometry/matrix.js")
+    script(type="text/javascript", src="/raytracer/geometry/geometry.js")
+    script(type="text/javascript", src="/raytracer/geometry/transform.js")
+    script(type="text/javascript", src="/raytracer/geometry/animatedTransform.js")
+    script(type="text/javascript", src="/raytracer/geometry/differentialGeometry.js")
+    script(type="text/javascript", src="/raytracer/shape/shape.js")
+    script(type="text/javascript", src="/client/master.js")
+    script(type="text/javascript", src="/libraries/xml2json.js")
+    script(type="text/javascript", src="/libraries/uuid.js")
+    //Testing scripts
+    script(type="text/javascript", src="/libraries/qunit.js")
+    script(type="text/javascript", src="/testing/testCollada.js")
+    script(type="text/javascript", src="/testing/testUI.js")
+    script(type="text/javascript", src="/testing/testMath.js")
+    script(type="text/javascript", src="/testing/testMatrix.js")
+    script(type="text/javascript", src="/testing/testGeometry.js")
+    script(type="text/javascript", src="/testing/testTransform.js")
+    script(type="text/javascript", src="/testing/testAnimatedTransform.js")
+    script(type="text/javascript", src="/testing/testDifferentialGeometry.js")
+    script(type="text/javascript", src="/testing/testShape.js")
+    
+  body
+    h1(id='qunit-header') A Web-Based Distributed Ray-Tracer in JavaScript
+    h2(id='qunit-banner')
+    div(id='qunit-testrunner-toolbar')
+    h2(id='qunit-userAgent')
+    ol(id='qunit-tests')
+    div(id='qunit-fixture')
