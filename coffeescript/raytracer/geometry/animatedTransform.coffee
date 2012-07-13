@@ -1,4 +1,6 @@
-# ## Quaternion:
+# *animatedTransform.coffee* contains classes for animating transforms, specifically the [**`Quaternion`**](#quaternion) class and the [**`AnimatedTransform`**](#animatedTransform).
+
+# ## <section id='quaternion'>Quaternion:</section>
 #
 # In two dimensions *(x,y)*, imaginary numbers are numbers in the form:
 #
@@ -207,7 +209,7 @@ class Quaternion
 
 # ___
 
-# ## AnimatedTransform:
+# ## <section id='animatedTransform'>AnimatedTransform:</section>
 
 # An **`AnimatedTransform`** describes a transformation on an object over time from a `startTransform`
 # to an `endTransform`. These can be interpolated between to get a [**`Transform`**](transform.html#transform) that describes the
@@ -405,8 +407,8 @@ class AnimatedTransform
     return bRet
 
 # ___
-
 # ## Exports:
+
 # The **`Quaternion`** and **`AnimatedTransform`** classes are added to the global `root` object.
 root = exports ? this
 root.Quaternion = Quaternion
