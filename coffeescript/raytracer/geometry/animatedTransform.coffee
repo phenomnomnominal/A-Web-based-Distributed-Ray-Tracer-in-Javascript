@@ -78,7 +78,7 @@ class Quaternion
   # These functions belong to the **`Quaternion`** class - any object arguments are not modified and a new object is always returned.
     
   # ### *Quaternion.ToTransform:*
-  # > **`Quaternion.ToTransform`** provides the ability to generate a [**`Transform`**](transform.html#transform) that represents the same rotation as an existing **`Quaternion`**. Transforming a **`Point`** by a **`Quaternion`** is given by:
+  # > **`Quaternion.ToTransform`** provides the ability to generate a [**`Transform`**](transform.html#transform) that represents the same rotation as an existing **`Quaternion`**. Transforming a [**`Point`**](geometry.html#point) by a **`Quaternion`** is given by:
   #
   # >>   *p' = q × p × q<sup>&minus;1</sup>*.
   #
@@ -227,7 +227,7 @@ class AnimatedTransform
   #
   # * **`Transform`** translation
   #
-  # * **`Quaternion`** rotation
+  # * [**`Quaternion`**](#quaternion) rotation
   #
   # * **`Transform`** scale
   #
@@ -411,7 +411,7 @@ class AnimatedTransform
 # ___
 # ## Exports:
 
-# The **`Quaternion`** and **`AnimatedTransform`** classes are added to the global `root` object.
+# The [**`Quaternion`**](#quaternion) and [**`AnimatedTransform`**](#animatedTransform) classes are added to the global `root` object.
 root = exports ? this
 root.Quaternion = Quaternion
 root.AnimatedTransform = AnimatedTransform

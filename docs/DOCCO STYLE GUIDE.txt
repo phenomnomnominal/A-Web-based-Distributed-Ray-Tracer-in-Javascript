@@ -25,7 +25,7 @@ File names - *filename.fileext*
 
 Additional information for listed items: # * LIST_ITEM - *Additional Information.*
 
-Link to classes from different CoffeeScript files (once per function).
+Link to classes from different CoffeeScript files (once per class).
 Link to functions from different classes (once per function).
 
 Bullet points have no full stops at the end.

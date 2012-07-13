@@ -55,7 +55,7 @@ class Camera
     throw Error "Not Implemented - GenerateRay must be implemented by Camera subclasses."
   
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
   generateRayDifferential: (sample) ->
     [weight, rayDiff] = GenerateRay(sample)
     
@@ -78,9 +78,9 @@ class Camera
 
 # ___
 
-# ## ProjectiveCamera:
+# ## <section id='projective'>ProjectiveCamera:</section>
 # ___
-# **`ProjectiveCamera`** extends the **`Camera`** base class to provide a common base for all *Projective* 
+# **`ProjectiveCamera`** extends the [**`Camera`**](#camera) base class to provide a common base for all *Projective* 
 # camera types.
 class ProjectiveCamera extends Camera
   # ### *constructor:*
@@ -108,7 +108,7 @@ class ProjectiveCamera extends Camera
 
 # ## <section id='orthographic'>OrthographicCamera:</section>
 # ___
-# **`OrthographicCamera`** extends the **`ProjectiveCamera`** base class and is based on the [**orthographic projection transformation**](http://en.wikipedia.org/wiki/Orthographic_projection).
+# **`OrthographicCamera`** extends the [**`ProjectiveCamera`**](#projective)) base class and is based on the [**orthographic projection transformation**](http://en.wikipedia.org/wiki/Orthographic_projection).
 class OrthographicCamera extends ProjectiveCamera
   # ### *constructor:*
   # > The **`OrthographicCamera`** constructor requires 2 additional paramaters to those required by the **`ProjectiveCamera`** class:
@@ -144,7 +144,7 @@ class OrthographicCamera extends ProjectiveCamera
     return [1, ray]
     
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
   generateRayDifferential: (sample) ->
     RasterPoint = new Point(sample.imageX, sample.imageY, 0)
     CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
@@ -164,7 +164,7 @@ class OrthographicCamera extends ProjectiveCamera
 
 # ## <section id='perspective'>PerspectiveCamera:</section>
 # ___
-# **`PerspectiveCamera`** extends the **`ProjectiveCamera`** base class and is based on the 
+# **`PerspectiveCamera`** extends the [**`ProjectiveCamera`**](#projective) base class and is based on the 
 # [**perspective projection transformation**](http://en.wikipedia.org/wiki/Camera_matrix).
 class PerspectiveCamera extends ProjectiveCamera
   # ### *constructor:*
@@ -206,7 +206,7 @@ class PerspectiveCamera extends ProjectiveCamera
     return [1, ray]
 
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
   generateRayDifferential: (sample, rayDiff) ->
     RasterPoint = new Point(sample.imageX, sample.imageY, 0)
     CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
@@ -229,12 +229,14 @@ class PerspectiveCamera extends ProjectiveCamera
 # **`Film`** is an abstract base class which defines the interface that all film subclasses must implement.
 class Film
   
+  # # TODO
+  
   constructor: (@xResolution, @yResolution) ->
     
 # ___
 # ## Exports:
 
-# The **`OrthographicCamera`**, **`PerspectiveCamera`** and **`Film`** classes are added to the global *root* object.
+# The [**`OrthographicCamera`**](#orthographics), [**`PerspectiveCamera`**](#perspective) and [**`Film`**](#film) classes are added to the global *root* object.
 root = exports ? this
 root.OrthographicCamera = OrthographicCamera
 root.PerspectiveCamera = PerspectiveCamera

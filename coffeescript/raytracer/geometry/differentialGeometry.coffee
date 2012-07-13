@@ -22,7 +22,7 @@ class DifferentialGeometry
   # ### *constructor:*
   # > The **`DifferentialGeometry`** constructor takes several parameters:
   #
-  # > * The point of interest: `point`
+  # > * The [**`Point`**](geometry.html#point) of interest: `point`
   #
   # > * The partial derivatives of position and normal: `dpdu`, `dpdv`, `dndu` and `dndv`
   #
@@ -30,7 +30,7 @@ class DifferentialGeometry
   #
   # > * The [**`Shape`**](shape.html#shape) it belongs to: `shape`
   # 
-  # > The normal is computed as the [**Cross Product**](http://en.wikipedia.org/wiki/Cross_product) of the partial derivatives.
+  # > The [**`Normal`**](geometry.html#normal) is computed as the [**Cross Product**](http://en.wikipedia.org/wiki/Cross_product) of the partial derivatives.
   #
   # > If the **`Shape`** has the `ReverseOrientation` flag set, or its transformation matrix swaps the handesness of the coordinate system, the normal is flipped so it stays on the "outside" of the **`Shape`**. However, if both of these are true then the effect is cancelled out, so the exclusive-OR (`^`) operator is used.
   constructor: (@point, @dpdu, @dpdv, @dndu, @dndv, @u = 0, @v = 0, @shape = null) ->
@@ -42,6 +42,6 @@ class DifferentialGeometry
 # ___
 # ## Exports:
 
-# The **`DifferentialGeometry`** class is added to the global `root` object.
+# The [**`DifferentialGeometry`**](#diffgeo) class is added to the global `root` object.
 root = exports ? this
 root.DifferentialGeometry = DifferentialGeometry

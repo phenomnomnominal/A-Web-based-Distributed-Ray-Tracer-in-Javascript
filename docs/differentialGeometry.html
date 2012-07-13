@@ -20,13 +20,13 @@ It contains:</p>
   <p>The <strong><code>DifferentialGeometry</code></strong> constructor takes several parameters:</p>
   
   <ul>
-  <li><p>The point of interest: <code>point</code></p></li>
+  <li><p>The <a href="geometry.html#point"><strong><code>Point</code></strong></a> of interest: <code>point</code></p></li>
   <li><p>The partial derivatives of position and normal: <code>dpdu</code>, <code>dpdv</code>, <code>dndu</code> and <code>dndv</code></p></li>
   <li><p>The <em>(u, v)</em> coordinates: <code>u</code> and <code>v</code></p></li>
   <li><p>The <a href="shape.html#shape"><strong><code>Shape</code></strong></a> it belongs to: <code>shape</code></p></li>
   </ul>
   
-  <p>The normal is computed as the <a href="http://en.wikipedia.org/wiki/Cross_product"><strong>Cross Product</strong></a> of the partial derivatives.</p>
+  <p>The <a href="geometry.html#normal"><strong><code>Normal</code></strong></a> is computed as the <a href="http://en.wikipedia.org/wiki/Cross_product"><strong>Cross Product</strong></a> of the partial derivatives.</p>
   
   <p>If the <strong><code>Shape</code></strong> has the <code>ReverseOrientation</code> flag set, or its transformation matrix swaps the handesness of the coordinate system, the normal is flipped so it stays on the "outside" of the <strong><code>Shape</code></strong>. However, if both of these are true then the effect is cancelled out, so the exclusive-OR (<code>^</code>) operator is used.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@point, @dpdu, @dpdv, @dndu, @dndv, @u = 0, @v = 0, @shape = null) -&gt;</span>
@@ -35,7 +35,7 @@ It contains:</p>
     <span class="k">if</span> <span class="nx">@shape</span><span class="o">?</span> <span class="o">and</span> <span class="p">(</span><span class="nx">@shape</span><span class="p">.</span><span class="nx">ReverseOrientation</span> <span class="o">^</span> <span class="nx">@shape</span><span class="p">.</span><span class="nx">TransformSwapsHandedness</span><span class="p">)</span>
       <span class="nx">@normalisedNormal</span><span class="p">.</span><span class="nx">multiply</span> <span class="o">-</span><span class="mi">1</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <hr />
 
-<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The <strong><code>DifferentialGeometry</code></strong> class is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The <a href="#diffgeo"><strong><code>DifferentialGeometry</code></strong></a> class is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
 <span class="nv">root.DifferentialGeometry = </span><span class="nx">DifferentialGeometry</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
