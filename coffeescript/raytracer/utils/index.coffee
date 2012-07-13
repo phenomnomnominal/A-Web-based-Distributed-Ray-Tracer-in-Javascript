@@ -1,1 +1,1 @@
-exports.Math = require("./math")
+exports.Math = require './math'
