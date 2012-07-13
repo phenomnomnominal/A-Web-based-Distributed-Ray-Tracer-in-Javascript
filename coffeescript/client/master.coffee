@@ -13,19 +13,17 @@ if not window.File or not window.FileReader or not window.FileList
 else
   # ___
   # ## Constants:
-  # ___
 
   # Some constants are required for this script:
  
-  # * **`LOCATION`** - *IP Address location for the server.*
+  # * **`LOCATION`** - *IP Address location for the server*
   LOCATION = 'http://127.0.0.1'
 
-  # * **`PORT`** - *Port for* [**WebSocket**](http://http://www.websocket.org/) *connections.*
+  # * **`PORT`** - *Port for* [**WebSocket**](http://http://www.websocket.org/) *connections*
   PORT = 3000  
   
   # ___
   # ## File Event Handler Functions:
-  # ___
   
   # ### <section id='handleFileRead'>*handleFileRead*:</section>
   # > **`handleFileRead`** first converts the *.dae* file from XML to JSON using the [**xml2json**](http://www.fyneworks.com/jquery/xml-to-json/) [**jQuery**](http://www.jquery.com) plugin.
@@ -77,7 +75,6 @@ else
     
   # ___
   # ## Initialisation:
-  # ___
   
   # When the `document` is ready, options for a [**WebSocket**](http://http://www.websocket.org/) connection are initialised and the connection is made between the client and the server. 
   $(document).ready ->    
@@ -105,8 +102,7 @@ else
       fileDrop.ondrop = handleFileDrop
 
   # ___
-  # ## Exports
-  # ___
+  # ## Exports:
 
   # The **`handleFileRead`**, **`handleFileDrop`** and **`handleDragOver`** functions are added to the global `root` object.
   root = exports ? this

@@ -2,16 +2,14 @@
 
 # ___
 # ## Constants:
-# ___
 
 # Some constants are required for this script:
 
-# * **`LOCATION`** - *IP Address location for the server.*
+# * **`LOCATION`** - *IP Address location for the server*
 LOCATION = 'http://127.0.0.1'
 
 # ___
 # ## Initialisation:
-# ___
 
 # When the `document` is ready, options for a [**WebSocket**](http://http://www.websocket.org/) connection are initialised and the socket connection is made between the client and the server. 
 $(document).ready ->

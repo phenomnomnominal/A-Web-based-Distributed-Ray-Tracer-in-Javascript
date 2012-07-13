@@ -4,19 +4,16 @@ Section Headings -
 
 # ___
 # ## Title:
-# ___
 
 Section Headings with link - 
 
 # ___
 # ## <section id="title">Title:</section>
-# ___
 
 Sub-section Headings - 
 
 # ___
 # ### Title:
-# ___
 
 External Linked Documents/APIs - [**Titile**](link)
 
@@ -27,3 +24,8 @@ Constants, Classes and Functions - **`functionName`**
 File names - *filename.fileext*
 
 Additional information for listed items: # * LIST_ITEM - *Additional Information.*
+
+Link to classes from different CoffeeScript files (once per function).
+Link to functions from different classes (once per function).
+
+Bullet points have no full stops at the end.
