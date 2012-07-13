@@ -1,6 +1,8 @@
 # *animatedTransform.coffee* contains classes for animating transforms, specifically the [**`Quaternion`**](#quaternion) class and the [**`AnimatedTransform`**](#animatedTransform).
+# ___
 
 # ## <section id='quaternion'>Quaternion:</section>
+# ___
 #
 # In two dimensions *(x,y)*, imaginary numbers are numbers in the form:
 #
@@ -13,7 +15,6 @@
 # where 
 #
 # >    *i<sup>2</sup> = j<sup>2</sup> = k<sup>2</sup> = i × j × k = &minus;1.*
-
 # **`Quaternion`**s provide an elegant representation of a rotation, which leads to elegant - and correct - methods for interpolating between rotations, which are used for animations.
 class Quaternion
   # ### *constructor:*
@@ -72,7 +73,7 @@ class Quaternion
     return @
     
   # ___
-  # ## Static Functions:
+  # ### Static Functions:
   
   # These functions belong to the **`Quaternion`** class - any object arguments are not modified and a new object is always returned.
     
@@ -210,6 +211,7 @@ class Quaternion
 # ___
 
 # ## <section id='animatedTransform'>AnimatedTransform:</section>
+# ___
 
 # An **`AnimatedTransform`** describes a transformation on an object over time from a `startTransform`
 # to an `endTransform`. These can be interpolated between to get a [**`Transform`**](transform.html#transform) that describes the
@@ -243,12 +245,12 @@ class AnimatedTransform
     @scale = start: decomposeStart.s, end: decomposeEnd.s
 
   # ___
-  # ## Static Functions:
+  # ### Static Functions:
   
   # These functions belong to the **`AnimatedTransform`** class - any object arguments are not 
   # modified and a new object is always returned.
   
-  # ## *AnimatedTransform.Decompose:*
+  # ### *AnimatedTransform.Decompose:*
   # > **`Decompose`** takes the an overall transformation and splits it into its translation, rotation and scaling components. This allows the rotation to be turned into an equivalent **`Quaternion`** to allow the **`AnimatedTransform`** to be interpolated correctly.
   #
   # > The translation component can be read directly from the matrix.
@@ -296,7 +298,7 @@ class AnimatedTransform
     scale = Matrix4x4.Multiply Matrix4x4.Inverse(R), M
     return t: translation, r: rotation, s: scale
   
-  # ## *AnimatedTransform.Interpolate:*
+  # ### *AnimatedTransform.Interpolate:*
   # > **`Interpolate`** computes the interpolated value of an **`AnimatedTransform`** at a given time. 
   #
   # > If the `actuallyAnimated` flag isn't set, or the given time is less than the `startTime`, the `startTransform` is returned.
@@ -324,7 +326,7 @@ class AnimatedTransform
     transform = Transform.Multiply Transform.Translate(translation), Quaternion.ToTrasform(rotate)
     return Transform.Multiply transform, new Transform(scale)
 
-  # ## *AnimatedTransform.TransformRay:*
+  # ### *AnimatedTransform.TransformRay:*
   # > **`TransformRay`** applies the **`AnimatedTransform`** to a [**`Ray`**](geometry.html#ray) instance using the `time` of the **`Ray`**.
   #
   # > If the `actuallyAnimated` flag isn't set, or the `time` of the **`Ray`** is less than the `startTime`, of the **`AnimatedTransform`**, the **`Ray`** is transformed by the `startTransform` of the **`AnimatedTransform`**.
@@ -340,7 +342,7 @@ class AnimatedTransform
     t = AnimatedTransform.Interpolate at, ray.time
     return Transform.TransformRay t, ray
 
-  # ## *AnimatedTransform.TransformRayDiff:*
+  # ### *AnimatedTransform.TransformRayDiff:*
   # > **`TransformRayDiff`** applies the **`AnimatedTransform`** to a [**`RayDifferential`**](geometry.html#raydiff) instance using the `time` of the **`RayDifferential`**.
   #
   # > If the `actuallyAnimated` flag isn't set, or the `time` of the **`RayDifferential`** is less than the `startTime` of the **`AnimatedTransform`**, the **`RayDifferential`** is transformed by the `startTransform` of the **`AnimatedTransform`**.
@@ -356,7 +358,7 @@ class AnimatedTransform
     t = AnimatedTransform.Interpolate at, rayDiff.time
     return Transform.TransformRay t, rayDiff
   
-  # ## *AnimatedTransform.TransformPoint:*
+  # ### *AnimatedTransform.TransformPoint:*
   # > **`TransformPoint`** applies the **`AnimatedTransform`** to a [**`Point`**](geometry.html#point) instance for a given *time*.
   #
   # > If the `actuallyAnimated` flag isn't set, or the `time` is less than the `startTime` of the **`AnimatedTransform`**, the **`Point`** is transformed by the `startTransform` of the **`AnimatedTransform`**.
@@ -372,7 +374,7 @@ class AnimatedTransform
     t = AnimatedTransform.Interpolate at, time
     return Transform.TransformPoint t, point
 
-  # ## *AnimatedTransform.TransformVector:*
+  # ### *AnimatedTransform.TransformVector:*
   # > **`TransformVector`** applies the **`AnimatedTransform`** to a [**`Vector`**](geometry.html#vector) instance for a given `time`.
   #
   # > If the `actuallyAnimated` flag isn't set, or the `time` is less than the `startTime` of the **`AnimatedTransform`**, the **`Vector`** is transformed by the `startTransform` of the **`AnimatedTransform`**.
@@ -388,7 +390,7 @@ class AnimatedTransform
     t = AnimatedTransform.Interpolate at, time
     return Transform.TransformVector t, vector
 
-  # ## *AnimatedTransform.MotionBounds:*
+  # ### *AnimatedTransform.MotionBounds:*
   # > **`MotionBounds`** creates a [**`BoundingBox`**](geometry.html#bbox) that encapsulates the entire volume that an object occupies as it undergoes a transformation.
   #
   # > If the `actuallyAnimated` flag isn't set, then return the result of transforming `b` by the Inverse of `startTransform`.

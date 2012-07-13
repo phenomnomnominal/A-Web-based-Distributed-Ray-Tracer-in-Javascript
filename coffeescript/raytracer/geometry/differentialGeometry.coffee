@@ -1,6 +1,8 @@
 # *differentialGeometry.coffee* contains the **`DifferentialGeometry`** class.
+# ___
 
 # ## <section id='diffgeo'>DifferentialGeometry:</section>
+# ___
 #
 # The **`DifferentialGeometry`** structure provides a self-contained representation for the geometry of a particular point on a surface.
 # It contains:
@@ -16,7 +18,6 @@
 # * The partial derivatives of the change in surface normal *&part;n &frasl; &part;u* and *&part;n &frasl; &part;v*
 #
 # * A reference to the [**`Shape`**](shape.html) that the differential geometry lies on
-# ___
 class DifferentialGeometry
   # ### *constructor:*
   # > The **`DifferentialGeometry`** constructor takes several parameters:

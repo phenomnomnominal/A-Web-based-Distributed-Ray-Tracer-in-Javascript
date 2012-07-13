@@ -26,8 +26,9 @@ Point = this.Point ? Geometry.Point
 Transform = this.Transform ? if require? then (require './geometry/transform').Transform
 
 # ___
-# ## <section id='camera'>Camera:</section>
 
+# ## <section id='camera'>Camera:</section>
+# ___
 # **`Camera`** is an abstract base class which defines the interface that all **`Camera`** subclasses must implement.
 class Camera
   # ### *constructor:*
@@ -41,6 +42,11 @@ class Camera
   constructor: (@CameraToWorld, @ShutterOpen, @ShutterClose, @Film) ->
     if @CameraToWorld.hasScale() 
       throw Error "CameraToWorld shouldn't have any scale factors in it."
+
+  # ___
+  # ### Prototypical Instance Functions:
+  
+  # These functions are attached to each instance of the **`Camera`** class - changing the function of one **`Camera`** changes the function on all other **`Camera`**s as well.
 
   # ### *generateRay:*
   # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
@@ -71,8 +77,9 @@ class Camera
     return [weight, rayDiff]
 
 # ___
-# ## ProjectiveCamera:
 
+# ## ProjectiveCamera:
+# ___
 # **`ProjectiveCamera`** extends the **`Camera`** base class to provide a common base for all *Projective* 
 # camera types.
 class ProjectiveCamera extends Camera
@@ -98,8 +105,9 @@ class ProjectiveCamera extends Camera
     return projective
     
 # ___
-# ## <section id='orthographic'>OrthographicCamera:</section>
 
+# ## <section id='orthographic'>OrthographicCamera:</section>
+# ___
 # **`OrthographicCamera`** extends the **`ProjectiveCamera`** base class and is based on the [**orthographic projection transformation**](http://en.wikipedia.org/wiki/Orthographic_projection).
 class OrthographicCamera extends ProjectiveCamera
   # ### *constructor:*
@@ -115,6 +123,11 @@ class OrthographicCamera extends ProjectiveCamera
     orthographic.dyCamera = Transform.TransformVector(orthographic.RasterToCamera, new Vector(0, 1, 0))
     (orthographic[key] = @[key] for key of @)
     return orthographic    
+  
+  # ___
+  # ### Prototypical Instance Functions:
+
+  # These functions are attached to each instance of the **`OrthographicCamera`** class - changing the function of one **`OrthographicCamera`** changes the function on all other **`OrthographicCamera`**s as well.
   
   # ### *generateRay:*
   # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
@@ -148,8 +161,9 @@ class OrthographicCamera extends ProjectiveCamera
     return [1, rayDiff]
 
 # ___
-# ## <section id='perspective'>PerspectiveCamera:</section>
 
+# ## <section id='perspective'>PerspectiveCamera:</section>
+# ___
 # **`PerspectiveCamera`** extends the **`ProjectiveCamera`** base class and is based on the 
 # [**perspective projection transformation**](http://en.wikipedia.org/wiki/Camera_matrix).
 class PerspectiveCamera extends ProjectiveCamera
@@ -171,6 +185,11 @@ class PerspectiveCamera extends ProjectiveCamera
                                                         Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
     (perspective[key] = @[key] for key of @)
     return perspective    
+    
+  # ___
+  # ### Prototypical Instance Functions:
+
+  # These functions are attached to each instance of the **`ProjectiveCamera`** class - changing the function of one **`ProjectiveCamera`** changes the function on all other **`ProjectiveCamera`**s as well.
     
   # ### *generateRay:*
   # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
@@ -204,10 +223,12 @@ class PerspectiveCamera extends ProjectiveCamera
     return [1, rayDiff]
     
 # ___
-# ## <section id='film'>Film:</section>
 
+# ## <section id='film'>Film:</section>
+# ___
 # **`Film`** is an abstract base class which defines the interface that all film subclasses must implement.
 class Film
+  
   constructor: (@xResolution, @yResolution) ->
     
 # ___
