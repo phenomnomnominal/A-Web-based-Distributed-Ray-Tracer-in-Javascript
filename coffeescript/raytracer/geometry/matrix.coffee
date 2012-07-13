@@ -93,7 +93,7 @@ class Matrix4x4
                           [m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2]],
                           [m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3]]])
     
-  # ### *Matrix.Inverse:*
+  # ### <section id='matrix-inverse'>*Matrix.Inverse:*</section>
   # > **`Matrix.Inverse`** performs [**Gauss-Jordan elimination**](http://en.wikipedia.org/wiki/Gauss%E2%80%93Jordan_elimination) on a **`Matrix4x4`** to compute the inverse.
   @Inverse: (m) ->
     indxc = []
