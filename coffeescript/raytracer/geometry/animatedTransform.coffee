@@ -162,7 +162,7 @@ class Quaternion
   # > ### *Quaternion.Divide:*
   # >> **`Quaternion.Divide`** uses [**`Vector.Divide`**](geometry.html#vector-Divide) to divide the *X*, *Y* and *Z* **`Vector`** components from each **`Quaternion`** and simple division for the *W* component.
   @Divide: (q, f) ->
-    v = Vector.Divid eq.v, f
+    v = Vector.Divide q.v, f
     w = q.w / f
     return new Quaternion(v, w)
     
