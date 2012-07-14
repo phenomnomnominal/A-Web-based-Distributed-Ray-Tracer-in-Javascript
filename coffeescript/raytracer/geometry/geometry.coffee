@@ -157,6 +157,11 @@ class Vector
       return v1.x is v2.x and v1.y is v2.y and v1.z is v2.z
     return false
   
+  # ### *Vector.Clone:*
+  # > **`Vector.Clone`** creates an exact copy of a **`Vector`**. A Class specific function is used for improved efficiency.
+  @Clone: (v) ->
+    return new Vector(v.x, v.y, v.z)
+  
   # ### <section id='vector-Dot'>*Vector.Dot:*</section>
   # > **`Vector.Dot`** computes the [**Dot Product**](http://en.wikipedia.org/wiki/Dot_product) of two **`Vector`** instances - or a **`Vector`** and a **`Normal`**. The **Dot Product** is defined for *a* and *b* as:
   # >>    *(a.x × b.x) + (a.y × b.y) + (a.z × b.z).*
@@ -339,6 +344,11 @@ class Point
       return p1.x is p2.x and p1.y is p2.y and p1.z is p2.z
     return false
     
+  # ### *Point.Clone:*
+  # > **`Point.Clone`** creates an exact copy of a **`Point`**. A Class specific function is used for improved efficiency.
+  @Clone: (p) ->
+    return new Point(p.x, p.y, p.z)
+    
   # ### *Point.Distance:*
   # > **`Point.Distance`** finds the distance between two **`Point`**s by subtracting them and finding the length of the resulting **`Vector`**.
   @Distance: (p1, p2) ->
@@ -490,6 +500,11 @@ class Normal
     if n1.constructor? and n1.constructor.name is "Normal" and n2.constructor? and n2.constructor.name is "Normal"
       return n1.x is n2.x and n1.y is n2.y and n1.z is n2.z
     else false
+    
+  # ### *Normal.Clone:*
+  # > **`Normal.Clone`** creates an exact copy of a **`Normal`**. A Class specific function is used for improved efficiency.
+  @Clone: (n) ->
+    return new Normal(n.x, n.y, n.z)
 
   # ### *Normal.Dot:*
   # > **`Normal.Dot`** computes the [**Dot Product**](http://en.wikipedia.org/wiki/Dot_product) of two **`Normal`** instances - or a **`Normal`** and a **`Vector`**. The **Dot Product** is defined for *a* and *b* as:
