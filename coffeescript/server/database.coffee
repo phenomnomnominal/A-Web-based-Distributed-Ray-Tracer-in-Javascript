@@ -59,7 +59,7 @@ FindRenderInDatabase = (renderID, sessionID) ->
           (server.io.sockets.in sessionID).emit 'gotRender', render: render
 
 # ___
-# ## Exports
+# ## Exports:
 
 # The [**`InsertRenderIntoDatabase`**](#insert) and [**`FindRenderInDatabase`**](#find) functions are added to the global `root` object.
 root = exports ? this
