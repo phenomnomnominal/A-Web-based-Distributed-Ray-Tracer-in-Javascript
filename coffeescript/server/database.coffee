@@ -2,7 +2,7 @@
 # ___
 
 # ## Requires:
-# Functionality in *database.coffee* requires access to the following [node.js](http://nodejs.org/) modules:
+# Functionality in *database.coffee* requires access to the following [**node.js**](http://nodejs.org/) modules:
 
 # * [**MongoDB**](http://www.mongodb.org/) - Scalable, High-Performance [**NoSQL**](http://en.wikipedia.org/wiki/NoSQL) database.
 mongo = require 'mongodb'
