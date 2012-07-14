@@ -92,17 +92,15 @@ class ProjectiveCamera extends Camera
   #
   # > * The `LensRadius` and `FocalDistance` for depth of field
   constructor: (CameraToWorld, ProjectiveTransform, ScreenWindow, ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film) ->
-    projective = new Camera(CameraToWorld, ShutterOpen, ShutterClose, Film)
-    projective.CameraToScreen = ProjectiveTransform
-    projective.ScreenToRaster = Transform.Multiply(Transform.Scale(Film.xResolution, Film.yResolution, 1), 
-                                  Transform.Scale(1 / (ScreenWindow[1] - ScreenWindow[0]), 1 / (ScreenWindow[2] - ScreenWindow[3]), 1),
-                                  Transform.Translate(new Vector(-ScreenWindow[0], -ScreenWindow[3], 0)))
-    projective.RasterToScreen = Transform.InverseTransform(projective.ScreenToRaster)
-    projective.RasterToCamera = Transform.Multiply(Transform.InverseTransform(projective.CameraToScreen), projective.RasterToScreen)
-    projective.LensRadius = LensRadius
-    projective.FocalDistance = FocalDistance
-    (projective[key] = @[key] for key of @)
-    return projective
+    super(CameraToWorld, ShutterOpen, ShutterClose, Film)
+    @CameraToScreen = ProjectiveTransform
+    @ScreenToRaster = Transform.Multiply(Transform.Scale(Film.xResolution, Film.yResolution, 1), 
+                                         Transform.Scale(1 / (ScreenWindow[1] - ScreenWindow[0]), 1 / (ScreenWindow[2] - ScreenWindow[3]), 1),
+                                         Transform.Translate(new Vector(-ScreenWindow[0], -ScreenWindow[3], 0)))
+    @RasterToScreen = Transform.InverseTransform(@ScreenToRaster)
+    @RasterToCamera = Transform.Multiply(Transform.InverseTransform(@CameraToScreen), @RasterToScreen)
+    @LensRadius = LensRadius
+    @FocalDistance = FocalDistance
     
 # ___
 
@@ -117,13 +115,11 @@ class OrthographicCamera extends ProjectiveCamera
   # 
   # > * The *Z* value for the `Far` projection plane
   constructor: (CameraToWorld, Near = 0, Far = 1, ScreenWindow, ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film) ->
-    orthographic = new ProjectiveCamera(CameraToWorld, Transform.Orthographic(Near, Far), ScreenWindow, 
-                                        ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
-    orthographic.dxCamera = Transform.TransformVector(orthographic.RasterToCamera, new Vector(1, 0, 0))
-    orthographic.dyCamera = Transform.TransformVector(orthographic.RasterToCamera, new Vector(0, 1, 0))
-    (orthographic[key] = @[key] for key of @)
-    return orthographic    
-  
+    super(CameraToWorld, Transform.Orthographic(Near, Far), ScreenWindow, 
+          ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
+    @dxCamera = Transform.TransformVector @RasterToCamera, new Vector(1, 0, 0)
+    @dyCamera = Transform.TransformVector @RasterToCamera, new Vector(0, 1, 0)
+    
   # ___
   # ### Prototypical Instance Functions:
 
@@ -177,14 +173,12 @@ class PerspectiveCamera extends ProjectiveCamera
   # > * The *Z* value for the `Far` projection plane
   #
   constructor: (CameraToWorld, FieldOfView, Near = 1e-2, Far = 1000, ScreenWindow, ShutterOpen, ShutterClose, LensRadius = 0, FocalDistance = 0, Film) ->
-    perspective = new ProjectiveCamera(CameraToWorld, Transform.Perspective(FieldOfView, Near, Far), ScreenWindow, 
+    super(CameraToWorld, Transform.Perspective(FieldOfView, Near, Far), ScreenWindow, 
                                         ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
-    perspective.dxCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(1, 0, 0)),
-                                                        Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
-    perspective.dyCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 1, 0)),
-                                                        Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
-    (perspective[key] = @[key] for key of @)
-    return perspective    
+    @dxCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(1, 0, 0)),
+                                             Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
+    @dyCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 1, 0)),
+                                             Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
     
   # ___
   # ### Prototypical Instance Functions:
