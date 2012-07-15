@@ -2,7 +2,7 @@ $(document).ready(->
   module "Shape - constructor"
   
   test("Test creating a new Shape, supplying various arguments to the constructor", ->
-    expect 21
+    expect 23
     ok(Shape?, "If we create a Shape by calling 'new Shape' with no arguments,")
     raises(->
         s = new Shape()
@@ -40,6 +40,12 @@ $(document).ready(->
       , /ReverseOrientation must be defined./, 
       "an error is thrown: 'ReverseOrientation must be defined.'"
     )
+    notBoolean = "NOT A BOOLEAN"
+    ok notBoolean?, 'If we pass a non-Booelan object into the constructor as reverseOrientation'
+    raises ->
+        tm new TriangleMesh(o2w, w2o, notBoolean)
+      , /ReverseOrientation must be a Boolean./,
+      'an error is thrown: "reverseOrientation must be a Boolean."'
     s1 = new Shape(o2w, w2o, true)
     ok(s1? and s1.constructor.name is "Shape", "If we create a Shape by calling 'new Shape' with the correct arguments, the constructor should return a Shape")
     ok(s1.ObjectToWorld? and s1.ObjectToWorld.constructor.name is "Transform", "which has an 'ObjectToWorld' property that is a Transform")

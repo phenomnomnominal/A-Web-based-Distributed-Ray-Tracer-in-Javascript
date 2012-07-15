@@ -43,6 +43,8 @@ class Shape
       throw Error "WorldToObject must be a Transform."
     unless @ReverseOrientation?
       throw Error "ReverseOrientation must be defined."
+    unless _.isBoolean(@ReverseOrientation)
+      throw Error "ReverseOrientation must be a Boolean."
     @TransformSwapsHandedness = Transform.SwapsHandedness @ObjectToWorld
     @ShapeID = nextShapeID++
     
