@@ -10,15 +10,15 @@
 
 <blockquote>
   <ul>
-  <li><p><code>ObjectToWorld</code> - A <a href="transform.html#transform"><strong><code>Transform</code></strong></a> that describes the mapping of the <strong><code>Shape</code></strong> from object-space to world-space</p></li>
-  <li><p><code>WorldToObject</code> - A <strong><code>Transform</code></strong> that describes the mapping of the <strong><code>Shape</code></strong> from world-space to object-space</p></li>
-  <li><p><code>ReverseOrientation</code> - A boolean that determines whether the <strong><code>Shape</code></strong>s surface normal directions should be reversed from the default</p></li>
-  <li><p><code>TransformSwapsHandedness</code> - A boolean that indicates whether the <code>ObjectToWorld</code> transformation changes the 'handedness' of the <strong><code>Shape</code></strong></p></li>
-  <li><p><code>ShapeID</code> - A number which acts as a unique identified for the <strong><code>Shape</code></strong>. The ID's start at <code>1</code> so that <code>0</code> can be used to indicate 'no <strong><code>Shape</code></strong>'</p></li>
+  <li><p><code>objectToWorld</code> - A <a href="transform.html#transform"><strong><code>Transform</code></strong></a> that describes the mapping of the <strong><code>Shape</code></strong> from object-space to world-space</p></li>
+  <li><p><code>worldToObject</code> - A <strong><code>Transform</code></strong> that describes the mapping of the <strong><code>Shape</code></strong> from world-space to object-space</p></li>
+  <li><p><code>reverseOrientation</code> - A boolean that determines whether the <strong><code>Shape</code></strong>s surface normal directions should be reversed from the default</p></li>
+  <li><p><code>transformSwapsHandedness</code> - A boolean that indicates whether the <code>objectToWorld</code> transformation changes the 'handedness' of the <strong><code>Shape</code></strong></p></li>
+  <li><p><code>shapeID</code> - A number which acts as a unique identified for the <strong><code>Shape</code></strong>. The ID's start at <code>1</code> so that <code>0</code> can be used to indicate 'no <strong><code>Shape</code></strong>'</p></li>
   </ul>
 </blockquote>
 
-<p><strong><code>Shape</code></strong> also provides default functions for <a href="#wb"><strong><code>WorldBound</code></strong></a>, <a href="#ci"><strong><code>CanIntersect</code></strong></a> and <a href="#gsg"><strong><code>GetShadingGeometry</code></strong></a>, all other functions must be implemented and overridden by the subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Shape</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <hr />
+<p><strong><code>Shape</code></strong> also provides default functions for <a href="#wb"><strong><code>worldBound</code></strong></a>, <a href="#ci"><strong><code>canIntersect</code></strong></a> and <a href="#gsg"><strong><code>getShadingGeometry</code></strong></a>, all other functions must be implemented and overridden by the subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Shape</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <hr />
 
 <h3><em>Class variables:</em></h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <blockquote>
   <ul>
@@ -28,85 +28,87 @@
   </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
 
 <blockquote>
-  <p>The <strong><code>Shape</code></strong> constructor requires two <strong><code>Transform</code></strong>s, <code>ObjectToWorld</code> and <code>WorldToObject</code> (which are inverses of one another).  </p>
+  <p>The <strong><code>Shape</code></strong> constructor requires two <strong><code>Transform</code></strong>s, <code>objectToWorld</code> and <code>worldToObject</code> (which are inverses of one another).  </p>
   
-  <p>It also requires a boolean, <code>ReverseOrientation</code>.  </p>
+  <p>It also requires a boolean, <code>reverseOrientation</code>.  </p>
   
   <p>If these are not supplied, the constructor will throw an <strong><code>Error</code></strong>, otherwise the remaining properties will be set.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@ObjectToWorld, @WorldToObject, @ReverseOrientation) -&gt;</span>
-    <span class="nx">unless</span> <span class="nx">@ObjectToWorld</span><span class="o">?</span> 
-      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;ObjectToWorld must be defined.&quot;</span>
-    <span class="nx">unless</span> <span class="nx">@ObjectToWorld</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&quot;Transform&quot;</span>
-      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;ObjectToWorld must be a Transform.&quot;</span>
-    <span class="nx">unless</span> <span class="nx">@WorldToObject</span><span class="o">?</span>
-      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;WorldToObject must be defined.&quot;</span>
-    <span class="nx">unless</span> <span class="nx">@WorldToObject</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&quot;Transform&quot;</span>
-      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;WorldToObject must be a Transform.&quot;</span>
-    <span class="nx">unless</span> <span class="nx">@ReverseOrientation</span><span class="o">?</span>
-      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;ReverseOrientation must be defined.&quot;</span>
-    <span class="vi">@TransformSwapsHandedness = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">SwapsHandedness</span> <span class="nx">@ObjectToWorld</span>
-    <span class="vi">@ShapeID = </span><span class="nx">nextShapeID</span><span class="o">++</span>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@objectToWorld, @worldToObject, @reverseOrientation) -&gt;</span>
+    <span class="nx">unless</span> <span class="nx">@objectToWorld</span><span class="o">?</span> 
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;objectToWorld must be defined.&quot;</span>
+    <span class="nx">unless</span> <span class="nx">@objectToWorld</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&quot;Transform&quot;</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;objectToWorld must be a Transform.&quot;</span>
+    <span class="nx">unless</span> <span class="nx">@worldToObject</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;worldToObject must be defined.&quot;</span>
+    <span class="nx">unless</span> <span class="nx">@worldToObject</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&quot;Transform&quot;</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;worldToObject must be a Transform.&quot;</span>
+    <span class="nx">unless</span> <span class="nx">@reverseOrientation</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;reverseOrientation must be defined.&quot;</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">@reverseOrientation</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;reverseOrientation must be a Boolean.&quot;</span>
+    <span class="vi">@transformSwapsHandedness = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">SwapsHandedness</span> <span class="nx">@objectToWorld</span>
+    <span class="vi">@shapeID = </span><span class="nx">nextShapeID</span><span class="o">++</span>
     </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
 
 <h3>Prototypical Instance Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>These functions are attached to each instance of the <strong><code>Shape</code></strong> class - changing the property of one <strong><code>Shape</code></strong> changes the property on all other <strong><code>Shape</code></strong>s as well.</p>
 
-<p>The <strong><code>Shape</code></strong> class provides default implementations for <a href="#wb"><strong><code>WorldBound</code></strong></a>, <a href="#ci"><strong><code>CanIntersect</code></strong></a> and <a href="#gsg"><strong><code>GetShadingGeometry</code></strong></a>, all other functions must be implemented and overridden by the subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre>    </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3><em>ObjectBound:</em></h3>
+<p>The <strong><code>Shape</code></strong> class provides default implementations for <a href="#wb"><strong><code>worldBound</code></strong></a>, <a href="#ci"><strong><code>canIntersect</code></strong></a> and <a href="#gsg"><strong><code>getShadingGeometry</code></strong></a>, all other functions must be implemented and overridden by the subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre>    </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3><em>objectBound:</em></h3>
 
 <blockquote>
-  <p><strong><code>ObjectBound</code></strong> returns a <a href="geometry.html#bbox"><strong><code>BoundingBox</code></strong></a> of the <strong><code>Shape</code></strong> in the <strong><code>Shape</code></strong>'s object-space. It is required to be overridden by all subclasses of the <strong><code>Shape</code></strong> class.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">ObjectBound: </span><span class="o">-&gt;</span>
-    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - ObjectBound must be implemented by Shape subclasses.&quot;</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3><section id='wb'><em>WorldBound:</em></section></h3>
+  <p><strong><code>objectBound</code></strong> returns a <a href="geometry.html#bbox"><strong><code>BoundingBox</code></strong></a> of the <strong><code>Shape</code></strong> in the <strong><code>Shape</code></strong>'s object-space. It is required to be overridden by all subclasses of the <strong><code>Shape</code></strong> class.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">objectBound: </span><span class="o">-&gt;</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - objectBound must be implemented by Shape subclasses.&quot;</span>
+      </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3><section id='wb'><em>worldBound:</em></section></h3>
 
 <blockquote>
-  <p><strong><code>WorldBound</code></strong> returns a <strong><code>BoundingBox</code></strong> of the <strong><code>Shape</code></strong> in the <strong><code>Shape</code></strong>'s world-space. The <strong><code>Shape</code></strong> class provides a default implementation, but it can be overridden if there is a way to compute a tighter bound.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">WorldBound: </span><span class="o">-&gt;</span>
-    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformBoundingBox</span> <span class="nx">@ObjectToWorld</span><span class="p">,</span> <span class="nx">@ObjectBound</span><span class="p">()</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3><section id='ci'><em>CanIntersect:</em></section></h3>
+  <p><strong><code>worldBound</code></strong> returns a <strong><code>BoundingBox</code></strong> of the <strong><code>Shape</code></strong> in the <strong><code>Shape</code></strong>'s world-space. The <strong><code>Shape</code></strong> class provides a default implementation, but it can be overridden if there is a way to compute a tighter bound.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">worldBound: </span><span class="o">-&gt;</span>
+    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformBoundingBox</span> <span class="nx">@objectToWorld</span><span class="p">,</span> <span class="nx">@objectBound</span><span class="p">()</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3><section id='ci'><em>canIntersect:</em></section></h3>
 
 <blockquote>
-  <p><strong><code>CanIntersect</code></strong> inicates whether a <strong><code>Shape</code></strong> can compute ray intersections. Only <strong><code>Shape</code></strong>s that are nonintersectable need to override this function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">CanIntersect: </span><span class="o">-&gt;</span>
+  <p><strong><code>canIntersect</code></strong> indicates whether a <strong><code>Shape</code></strong> can compute ray intersections. Only <strong><code>Shape</code></strong>s that are nonintersectable need to override this function.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">canIntersect: </span><span class="o">-&gt;</span>
     <span class="k">return</span> <span class="kc">true</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3><em>Refine:</em></h3>
+    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3><em>refine:</em></h3>
 
 <blockquote>
-  <p><strong><code>Refine</code></strong> provides the functionality to split any <strong><code>Shape</code></strong> that cannot be intersected into a group of smaller <strong><code>Shape</code></strong>s (some of which may be intersectable, some may need further refinement).</p>
+  <p><strong><code>refine</code></strong> provides the functionality to split any <strong><code>Shape</code></strong> that cannot be intersected into a group of smaller <strong><code>Shape</code></strong>s (some of which may be intersectable, some may need further refinement).</p>
   
-  <p>All <strong><code>Shape</code></strong>s that return <code>false</code> for <a href="#ci"><strong><code>CanIntersect</code></strong></a> must implement this function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">Refine: </span><span class="o">-&gt;</span>
-    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - Refine must be implemented by Shape subclasses.&quot;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3><em>Intersect:</em></h3>
+  <p>All <strong><code>Shape</code></strong>s that return <code>false</code> for <a href="#ci"><strong><code>canIntersect</code></strong></a> must implement this function.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">refine: </span><span class="o">-&gt;</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - refine must be implemented by Shape subclasses.&quot;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3><section id='intersect'><em>intersect:</em></section></h3>
 
 <blockquote>
-  <p><strong><code>Intersect</code></strong> returns geometric information about a single <a href="geometry.html#ray"><strong><code>Ray</code></strong></a>-<strong><code>Shape</code></strong> intersection corresponding to the first intersection (if any) along the parametric range of the <strong><code>Ray</code></strong>.  </p>
+  <p><strong><code>intersect</code></strong> returns geometric information about a single <a href="geometry.html#ray"><strong><code>Ray</code></strong></a>-<strong><code>Shape</code></strong> intersection corresponding to the first intersection (if any) along the parametric range of the <strong><code>Ray</code></strong>.  </p>
   
-  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>CanIntersect</code></strong></a> must implement this function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">Intersect: </span><span class="o">-&gt;</span>
-    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - Intersect must be implemented by Shape subclasses.&quot;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3><em>IntersectP:</em></h3>
+  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>canIntersect</code></strong></a> must implement this function.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">intersect: </span><span class="o">-&gt;</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - intersect must be implemented by Shape subclasses.&quot;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3><em>intersectP:</em></h3>
 
 <blockquote>
-  <p><strong><code>IntersectP</code></strong> determines whether or not an intersection occurs between a <strong><code>Ray</code></strong> and a <strong><code>Shape</code></strong>, without providing any information about the intersection.  </p>
+  <p><strong><code>intersectP</code></strong> determines whether or not an intersection occurs between a <strong><code>Ray</code></strong> and a <strong><code>Shape</code></strong>, without providing any information about the intersection.  </p>
   
-  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>CanIntersect</code></strong></a> must implement this function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">IntersectP: </span><span class="o">-&gt;</span>
-    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - IntersectP must be implemented by Shape subclasses.&quot;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3><em>Area:</em></h3>
+  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>canIntersect</code></strong></a> must implement this function.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">intersectP: </span><span class="o">-&gt;</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - intersectP must be implemented by Shape subclasses.&quot;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3><em>area:</em></h3>
 
 <blockquote>
-  <p><strong><code>Area</code></strong> computes the surface area of a <strong><code>Shape</code></strong> in object-space.  </p>
+  <p><strong><code>area</code></strong> computes the surface area of a <strong><code>Shape</code></strong> in object-space.  </p>
   
-  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>CanIntersect</code></strong></a> must implement this function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">Area: </span><span class="o">-&gt;</span>
-    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - Area must be implemented by Shape subclasses.&quot;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3><section id='gsg'><em>GetShadingGeometry:</em></section></h3>
+  <p>All <strong><code>Shape</code></strong>s that return <code>true</code> for <a href="#ci"><strong><code>canIntersect</code></strong></a> must implement this function.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">area: </span><span class="o">-&gt;</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Not Implemented - area must be implemented by Shape subclasses.&quot;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3><section id='gsg'><em>getShadingGeometry:</em></section></h3>
 
 <blockquote>
-  <p><strong><code>GetShadingGeometry</code></strong>  returns the shading geometry corresponding to the <a href="differentialgeometry.html#diffgeo"><strong><code>DifferentialGeometry</code></strong></a> returned by the <em>Intersect</em> function.</p>
+  <p><strong><code>getShadingGeometry</code></strong>  returns the shading geometry corresponding to the <a href="differentialgeometry.html#diffgeo"><strong><code>DifferentialGeometry</code></strong></a> returned by the <a href="#intersect"><strong><code>intersect</code></strong></a> function.</p>
   
-  <p>The default implementation just returns the true geometry, but it may be overridden by subclasses to transform the true geometry by an <code>objectToWorld</code> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. This <strong><code>Transform</code></strong> will not necessarily be the same <strong><code>Transform</code></strong> defined in the <code>ObjectToWorld</code> property. This allows for object instancing, where the same geometry is just transformed to a different location in world-space.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">GetShadingGeometry: </span><span class="nf">(objectToWorld, dg) -&gt;</span>
+  <p>The default implementation just returns the true geometry, but it may be overridden by subclasses to transform the true geometry by an <code>objectToWorld</code> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. This <strong><code>Transform</code></strong> will not necessarily be the same <strong><code>Transform</code></strong> defined in the <code>@objectToWorld</code> property. This allows for object instancing, where the same geometry is just transformed to a different location in world-space.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">getShadingGeometry: </span><span class="nf">(objectToWorld, dg) -&gt;</span>
     <span class="k">return</span> <span class="nx">dg</span>
     </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <hr />
 
