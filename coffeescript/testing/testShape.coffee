@@ -1,7 +1,7 @@
 $(document).ready(->
   module "Shape - constructor"
   
-  test("Test creating a new Shape, supplying no arguments to the constructor", ->
+  test("Test creating a new Shape, supplying various arguments to the constructor", ->
     expect 21
     ok(Shape?, "If we create a Shape by calling 'new Shape' with no arguments,")
     raises(->
