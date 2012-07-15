@@ -3,9 +3,11 @@ html
   head
     title = title
     link(rel="stylesheet", href="/stylesheets/qunit.css", type="text/css", media="screen")
-    //jQuery
+    // jQuery
     script(src="/libraries/jquery.js")
-    //Project scripts
+    // underscore
+    script(src="/libraries/underscore.js")
+    // Project scripts
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type="text/javascript", src="/raytracer/utils/math.js")
     script(type="text/javascript", src="/raytracer/geometry/matrix.js")
@@ -18,7 +20,7 @@ html
     script(type="text/javascript", src="/client/master.js")
     script(type="text/javascript", src="/libraries/xml2json.js")
     script(type="text/javascript", src="/libraries/uuid.js")
-    //Testing scripts
+    // Testing scripts
     script(type="text/javascript", src="/libraries/qunit.js")
     script(type="text/javascript", src="/testing/testCollada.js")
     script(type="text/javascript", src="/testing/testUI.js")
