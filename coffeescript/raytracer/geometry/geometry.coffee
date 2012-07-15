@@ -707,7 +707,7 @@ class BoundingBox
     return new BoundingBox(new Point(Math.min(bbox.pMin.x, p.x), Math.min(bbox.pMin.y, p.y), Math.min(bbox.pMin.z, p.z)),
                            new Point(Math.max(bbox.pMax.x, p.x), Math.max(bbox.pMax.y, p.y), Math.max(bbox.pMax.z, p.z)))
   
-  # ### *BoundingBox.UnionBBoxAndBBox:*
+  # ### <section id='bbox-unionbp'>*BoundingBox.UnionBBoxAndBBox:*</section>
   # > **`BoundingBox.UnionBBoxAndBBox`** returns a new **`BoundingBox`** that encompasses a two given **`BoundingBox`** instances.
   @UnionBBoxAndBBox: (bbox1, bbox2) ->
     return new BoundingBox(new Point(Math.min(bbox1.pMin.x, bbox2.pMin.x), Math.min(bbox1.pMin.y, bbox2.pMin.y), Math.min(bbox1.pMin.z, bbox2.pMin.z)),

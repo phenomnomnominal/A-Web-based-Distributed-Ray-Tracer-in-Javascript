@@ -26,7 +26,7 @@ class Shape
   # > * `nextShapeID` - increments as every new **`Shape`** is Initialised
   nextShapeID = 1
   
-  # ### *constructor:*
+  # ### <section id='shape-cons'>*constructor:*</section>
   # > The **`Shape`** constructor requires two **`Transform`**s, `objectToWorld` and `worldToObject` (which are inverses of one another).  
   #
   # > It also requires a boolean, `reverseOrientation`.  
@@ -66,7 +66,7 @@ class Shape
     return Transform.TransformBoundingBox @objectToWorld, @objectBound()
     
   # ### <section id='ci'>*canIntersect:*</section>
-  # > **`canIntersect`** indicates whether a **`Shape`** can compute ray intersections. Only **`Shape`**s that are nonintersectable need to override this function.
+  # > **`canIntersect`** indicates whether a **`Shape`** can compute [**`Ray`**](geometry.html#ray) intersections. Only **`Shape`**s that are not intersectable need to override this function.
   canIntersect: ->
     return true
     
