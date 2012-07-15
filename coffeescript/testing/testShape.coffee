@@ -1,187 +1,149 @@
-$(document).ready(->
-  module "Shape - constructor"
+$(document).ready ->
+  module 'Shape - constructor'
   
-  test("Test creating a new Shape, supplying various arguments to the constructor", ->
+  test 'Test for Errors when passing incorrect arguments to the required parameters of the Shape constructor', ->
     expect 23
-    ok(Shape?, "If we create a Shape by calling 'new Shape' with no arguments,")
-    raises(->
-        s = new Shape()
-        return
-      , /ObjectToWorld must be defined./, 
-      "an error is thrown: 'ObjectToWorld must be defined.'"
-    )
-    ok(Transform?, "If we pass a non-Transform object into the constructor as ObjectToWorld,")
-    raises(->
-        s = new Shape("NOT A TRANSFORM")
-        return
-      , /ObjectToWorld must be a Transform./, 
-      "an error is thrown: 'ObjectToWorld must be a Transform.'"
-    )
-    ok(Transform?, "If we create an ObjectToWorld transform, and pass in into the constructor,")
-    o2w = new Transform()
-    raises(->
-        s = new Shape(o2w)
-        return
-      , /WorldToObject must be defined./, 
-      "an error is thrown: 'WorldToObject must be defined.'"
-    )
-    ok(Transform?, "If we pass a non-Transform object into the constructor as WorldToObject,")
-    raises(->
-        s = new Shape(o2w, "NOT A TRANSFORM")
-        return
-      , /WorldToObject must be a Transform./, 
-      "an error is thrown: 'WorldToObject must be a Transform.'"
-    )
-    ok(Transform?, "If we create an WorldToObject transform, and pass in into the constructor,")
-    w2o = new Transform()
-    raises(->
-        s = new Shape(o2w, w2o)
-        return
-      , /ReverseOrientation must be defined./, 
-      "an error is thrown: 'ReverseOrientation must be defined.'"
-    )
-    notBoolean = "NOT A BOOLEAN"
-    ok notBoolean?, 'If we pass a non-Booelan object into the constructor as reverseOrientation'
+    ok Shape?, 'If we create a Shape by calling "new Shape" with no arguments'
     raises ->
-        tm new TriangleMesh(o2w, w2o, notBoolean)
-      , /ReverseOrientation must be a Boolean./,
-      'an error is thrown: "reverseOrientation must be a Boolean."'
+        s = new Shape()
+      , /objectToWorld must be defined./, 
+      'an Error is thrown (by the Shape constructor): "objectToWorld must be defined."'
+    notTransform = 'NOT A TRANSFORM'
+    ok notTransform?, "If we pass a non-Transform object into the constructor as objectToWorld"
+    raises ->
+        s = new Shape(notTransform)
+      , /objectToWorld must be a Transform./, 
+      'an Error is thrown (by the Shape constructor): "objectToWorld must be a Transform."'
+    o2w = new Transform()
+    ok o2w?, 'If we create an objectToWorld transform and pass in into the constructor'
+    raises ->
+        s = new Shape(o2w)
+      , /worldToObject must be defined./,
+      'an Error is thrown (by the Shape constructor): "worldToObject must be defined."'
+    ok notTransform?, 'If we pass a non-Transform object into the constructor as worldToObject'
+    raises ->
+        s = new Shape(o2w, notTransform)
+      , /worldToObject must be a Transform./, 
+      'an Error is thrown (by the Shape constructor): "worldToObject must be a Transform."'
+    w2o = new Transform()
+    ok w2o?, 'If we create an worldToObject transform and pass in into the constructor'
+    raises ->
+        s = new Shape(o2w, w2o)
+      , /reverseOrientation must be defined./, 
+      'an Error is thrown: "reverseOrientation must be defined."'
+    notBoolean = 'NOT A BOOLEAN'
+    ok notBoolean?, 'If we pass a non-Boolean object into the constructor as reverseOrientation'
+    raises ->
+        s = new Shape(o2w, w2o, notBoolean)
+      , /reverseOrientation must be a Boolean./,
+      'an Error is thrown (by the Shape constructor): "reverseOrientation must be a Boolean."'
     s1 = new Shape(o2w, w2o, true)
-    ok(s1? and s1.constructor.name is "Shape", "If we create a Shape by calling 'new Shape' with the correct arguments, the constructor should return a Shape")
-    ok(s1.ObjectToWorld? and s1.ObjectToWorld.constructor.name is "Transform", "which has an 'ObjectToWorld' property that is a Transform")
-    ok(s1.WorldToObject? and s1.WorldToObject.constructor.name is "Transform", "and a 'WorldToObject' property that is a Transform")
-    ok(s1.ReverseOrientation? and s1.ReverseOrientation.constructor.name is "Boolean", "and a 'ReverseOrientation' property that is a Boolean")
-    ok(s1.TransformSwapsHandedness? and s1.TransformSwapsHandedness.constructor.name is "Boolean", "and a 'TransformSwapsHandedness' property that is a Boolean")
-    ok(s1.ShapeID? and s1.ShapeID.constructor.name is "Number", "and a 'ShapeID' property that is a number.")
+    ok s1? and s1.constructor.name is 'Shape', 'If we create a Shape by calling "new Shape" with the correct arguments, the constructor should return a Shape'
+    ok s1.objectToWorld? and s1.objectToWorld.constructor.name is 'Transform', 'which has an "objectToWorld" property that is a Transform'
+    ok s1.worldToObject? and s1.worldToObject.constructor.name is 'Transform', 'and a "worldToObject" property that is a Transform'
+    ok s1.reverseOrientation? and _.isBoolean(s1.reverseOrientation), "and a 'ReverseOrientation' property that is a Boolean"
+    ok s1.transformSwapsHandedness? and _.isBoolean(s1.transformSwapsHandedness), 'and a "transformSwapsHandedness" property that is a Boolean'
+    ok s1.shapeID? and _.isNumber(s1.shapeID), 'and a "ShapeID" property that is a number.'
     s2 = new Shape(o2w, w2o, true)
     s3 = new Shape(o2w, w2o, true)
     s4 = new Shape(o2w, w2o, true)
-    ok(s1? and s2? and s3? and s4?, "If we create a whole bunch of Shapes,")
-    equal(s1.ShapeID, s1.ShapeID, "s1 should have a 'ShapeID' property of #{s1.ShapeID},")
-    equal(s2.ShapeID, s1.ShapeID + 1, "s2 should have a 'ShapeID' property of #{s1.ShapeID + 1},")
-    equal(s3.ShapeID, s1.ShapeID + 2, "s3 should have a 'ShapeID' property of #{s1.ShapeID + 2},")
-    equal(s4.ShapeID, s1.ShapeID + 3, "and s4 should have a 'ShapeID' property of #{s1.ShapeID + 3}.")
-    return
-  )
+    ok s1? and s2? and s3? and s4?, 'If we create a whole bunch of Shapes,'
+    equal s1.shapeID, s1.shapeID, 's1 should have a "shapeID" property of #{s1.ShapeID},'
+    equal s2.shapeID, s1.shapeID + 1, 's2 should have a "shapeID" property of #{s1.ShapeID + 1},'
+    equal s3.shapeID, s1.shapeID + 2, 's3 should have a "shapeID" property of #{s1.ShapeID + 2},'
+    equal s4.shapeID, s1.shapeID + 3, 'and s4 should have a "shapeID" property of #{s1.ShapeID + 3}.'
   
-  module "Shape - Prototype functions"
+  module 'Shape - Prototype functions'
   
-  test("Test that all Prototype functions exist on a Shape object", ->
+  test 'Test that all Prototype functions exist on a Shape object', ->
     expect 9
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape")
-    ok(s.ObjectBound?, "it should have an 'ObjectBound' function,")
-    ok(s.WorldBound?, "and a 'WorldBound' function,")
-    ok(s.CanIntersect?, "and a 'CanIntersect' function,")
-    ok(s.Refine?, "and a 'Refine' function,")
-    ok(s.Intersect?, "and a 'Intersect' function,")
-    ok(s.IntersectP?, "and a 'IntersectP' function,")
-    ok(s.Area?, "and a 'Area' function,")
-    ok(s.GetShadingGeometry?, "and a 'GetShadingGeometry' function,")
-  )
+    ok s?, 'If we create a Shape'
+    ok s.objectBound?, 'it should have an "objectBound" function,'
+    ok s.worldBound?, 'and a "worldBound" function,'
+    ok s.canIntersect?, 'and a "canIntersect" function,'
+    ok s.refine?, 'and a "refine" function,'
+    ok s.intersect?, 'and a "intersect" function,'
+    ok s.intersectP?, 'and a "intersectP" function,'
+    ok s.area?, 'and a "area" function,'
+    ok s.getShadingGeometry?, 'and a "getShadingGeometry" function,'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.ObjectBound'", ->
+  test 'Test for "Not Implemented" Error when calling "Shape.objectBound"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape, and call its 'ObjectBound' function")
-    raises(->
-        s.ObjectBound()
-        return
-      , /Not Implemented - ObjectBound must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - ObjectBound must be implemented by Shape subclasses.'"
-    )
-    return
-  )
+    ok s?, 'If we create a Shape, and call its "objectBound" function'
+    raises ->
+        s.objectBound()
+      , /Not Implemented - objectBound must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - objectBound must be implemented by Shape subclasses."'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.WorldBound'", ->
+  test 'Test for "Not Implemented" Error when calling "Shape.worldBound"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape, and call its 'WorldBound' function")
-    raises(->
-        s.WorldBound()
-        return
-      , /Not Implemented - ObjectBound must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - ObjectBound must be implemented by Shape subclasses.' This error is thrown because although Shape.WorldBound has a default implementation, it relies on a subclass specific ObjectBound implementation."
-    )
-    return
-  )
+    ok s?, "If we create a Shape, and call its 'worldBound' function"
+    raises ->
+        s.worldBound()
+      , /Not Implemented - objectBound must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - objectBound must be implemented by Shape subclasses." This Error is thrown because although "Shape.worldBound" has a default implementation, it relies on a subclass specific "objectBound" implementation.'
   
-  test("Test that 'Shape.CanIntersect' works correctly for default Shape instance", ->
+  test 'Test that "Shape.canIntersect" works correctly for default Shape instance', ->
     expect 1
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s.CanIntersect(), "A default Shape instance should return 'true' for Shape.CanIntersect()")
-    return
-  )
+    ok s.canIntersect(), 'A default Shape instance should return "true" for "Shape.canIntersect()"'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.Refine'.", ->
+  test 'Test for "Not Implemented" Error when calling "Shape.refine"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a default Shape instance and call its 'Refine' function")
-    raises(->
-        s.Refine()
-        return
-      , /Not Implemented - Refine must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - Refine must be implemented by Shape subclasses."
-    )
-    return
-  )
+    ok s?, "If we create a default Shape instance and call its 'refine' function"
+    raises ->
+        s.refine()
+      , /Not Implemented - refine must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - refine must be implemented by Shape subclasses.'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.Intersect'", ->
+  test 'Test for "Not Implemented"" Error when calling "Shape.intersect"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape, and call its 'Intersect' function")
-    raises(->
-        s.Intersect()
-        return
-      , /Not Implemented - Intersect must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - Intersect must be implemented by Shape subclasses.'"
-    )
-    return
-  )
+    ok s?, 'If we create a Shape, and call its "intersect" function'
+    raises ->
+        s.intersect()
+      , /Not Implemented - intersect must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - intersect must be implemented by Shape subclasses."'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.IntersectP'", ->
+  test 'Test for "Not Implemented" Error when calling "Shape.intersectP"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape, and call its 'IntersectP' function")
-    raises(->
-        s.IntersectP()
-        return
-      , /Not Implemented - IntersectP must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - IntersectP must be implemented by Shape subclasses.'"
-    )
-    return
-  )
+    ok s?, 'If we create a Shape, and call its "intersectP" function'
+    raises ->
+        s.intersectP()
+      , /Not Implemented - intersectP must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - intersectP must be implemented by Shape subclasses."'
   
-  test("Test for 'Not Implemented' error when calling 'Shape.Area'", ->
+  test 'Test for "Not Implemented" Error when calling "Shape.area"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok(s?, "If we create a Shape, and call its 'Area' function")
-    raises(->
-        s.Area()
-        return
-      , /Not Implemented - Area must be implemented by Shape subclasses./, 
-      "an error is thrown: 'Not Implemented - Area must be implemented by Shape subclasses.'"
-    )
-    return
-  )
+    ok s?, 'If we create a Shape, and call its "area"function'
+    raises ->
+        s.area()
+      , /Not Implemented - area must be implemented by Shape subclasses./, 
+      'an Error is thrown: "Not Implemented - area must be implemented by Shape subclasses."'
   
-  test("Test that 'Shape.GetShadingGeometry' works correctly for default Shape instance", ->
+  test 'Test that "Shape.getShadingGeometry" works correctly for default Shape instance', ->
     expect 9
     o2w = new Transform()
     w2o = new Transform()
@@ -193,16 +155,13 @@ $(document).ready(->
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
     dg = new DifferentialGeometry(nullP, vU, vV, vU, vV, 0.5, 0.5, s)
-    ok(s?, "If we create a Shape, and call its 'GetShadingGeometry' function")
-    sg = s.GetShadingGeometry(null, dg)
-    ok(sg? and sg.constructor.name is "DifferentialGeometry", "it should return a 'DifferentialGeometry'")
-    ok(Point.Equals(dg.point, sg.point), "which should have the same 'point' property as 'dg'")
-    ok(Vector.Equals(dg.dpdu, sg.dpdu), "and the same 'dpdu' property as 'dg'")
-    ok(Vector.Equals(dg.dpdv, sg.dpdv), "and the same 'dpdv' property as 'dg'")
-    ok(Vector.Equals(dg.dndu, sg.dndu), "and the same 'dndu' property as 'dg'")
-    ok(Vector.Equals(dg.dndv, sg.dndv), "and the same 'dndv' property as 'dg'")
-    equal(dg.u, sg.u, "and the same 'u' property as 'dg'")
-    equal(dg.v, sg.v, "and the same 'v' property as 'dg'.")
-  )
-  return
-)
+    ok s?, 'If we create a Shape, and call its "getShadingGeometry" function'
+    sg = s.getShadingGeometry null, dg
+    ok sg? and sg.constructor.name is 'DifferentialGeometry', 'it should return a "DifferentialGeometry"'
+    ok Point.Equals(dg.point, sg.point), 'which should have the same "point" property as "dg"'
+    ok Vector.Equals(dg.dpdu, sg.dpdu), 'and the same "dpdu" property as "dg"'
+    ok Vector.Equals(dg.dpdv, sg.dpdv), 'and the same "dpdv" property as "dg"'
+    ok Vector.Equals(dg.dndu, sg.dndu), 'and the same "dndu" property as "dg"'
+    ok Vector.Equals(dg.dndv, sg.dndv), 'and the same "dndv" property as "dg"'
+    equal dg.u, sg.u, 'and the same "u" property as "dg"'
+    equal dg.v, sg.v, 'and the same "v" property as "dg".'
