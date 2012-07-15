@@ -16,6 +16,7 @@ task 'docs', 'create docs', ->
   exec "docco coffeescript/raytracer/geometry/transform.coffee"
   
   exec "docco coffeescript/raytracer/shape/shape.coffee"
+  exec "docco coffeescript/raytracer/shape/triangle.coffee"
   
   exec "docco coffeescript/raytracer/utils/math.coffee"
   
