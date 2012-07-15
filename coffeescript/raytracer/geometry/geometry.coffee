@@ -27,7 +27,7 @@ class Vector
   #
   # > If any of the components is `NaN`, an error is thrown.
   constructor: (@x = 0, @y = 0, @z = 0) ->
-    if isNaN @x or isNaN @y or isNaN @z
+    if isNaN(@x) or isNaN(@y) or isNaN(@z)
       throw new Error "Vector contains a NaN"
   
   # ### *Vector.FromNormal:*
@@ -222,7 +222,7 @@ class Point
   #
   # > If any of the components is `NaN`, an error is thrown.
   constructor: (@x = 0, @y = 0, @z = 0) ->
-    if isNaN @x or isNaN @y or isNaN @z
+    if isNaN(@x) or isNaN(@y) or isNaN(@z)
       throw new Error "Point contains a NaN"
     
   # ### *Point.FromPoint:*
@@ -717,7 +717,7 @@ class BoundingBox
   # > **`BoundingBox.Equals`** checks if two **`BoundingBox`**es are equal to one another. Two **`BoundingBox`**es are equal if both of their `pMin` components are the same, and both of their `pMax` components are the same.
   @Equals: (bbox1, bbox2) ->
     if bbox1.constructor.name is "BoundingBox" and bbox2.constructor.name is "BoundingBox"
-      return Point.Equals bbox1.pMin, bbox2.pMin and Point.Equals bbox1.pMax, bbox2.pMax
+      return Point.Equals(bbox1.pMin, bbox2.pMin) and Point.Equals(bbox1.pMax, bbox2.pMax)
     return false
     
   # ### *BoundingBox.Overlaps:*
@@ -735,9 +735,9 @@ class BoundingBox
   # ### *BoundingBox.LinearInterpolation:*
   # > **`BoundingBox.LinearInterpolation`** linearly interpolates between the corners of a given **`BoundingBox`**, where `bbox.pMin` has an offset of `(0, 0, 0)` and `bbox.pMax` has an offset of `(1, 1, 1)`.
   @LinearInterpolation: (bbox, tx, ty, tz) ->
-    return new Point(MathFunctions.LinearInterpolation tx, bbox.pMin.x, bbox.pMax.x,
-                     MathFunctions.LinearInterpolation ty, bbox.pMin.y, bbox.pMax.y,
-                     MathFunctions.LinearInterpolation tz, bbox.pMin.z, bbox.pMax.z)
+    return new Point(MathFunctions.LinearInterpolation(tx, bbox.pMin.x, bbox.pMax.x),
+                     MathFunctions.LinearInterpolation(ty, bbox.pMin.y, bbox.pMax.y),
+                     MathFunctions.LinearInterpolation(tz, bbox.pMin.z, bbox.pMax.z))
   
   # ### *BoundingBox.Offset:*
   # > **`BoundingBox.Offset`** returns the offset of a point against a given **`BoundingBox`**, where `(0, 0, 0)` represents `bbox.pMin`, and `(1, 1, 1)` represents `bbox.pMax`.

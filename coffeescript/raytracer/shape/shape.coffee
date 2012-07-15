@@ -106,6 +106,6 @@ class Shape
 # ___
 # ## Exports:
 
-# The **`Shape`** class is added to the global `root` object.
+# The [**`Shape`**](#shape) class is added to the global `root` object.
 root = exports ? this
 root.Shape = Shape

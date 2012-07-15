@@ -26,7 +26,7 @@
   
   <p>If any of the components is <code>NaN</code>, an error is thrown.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@x = 0, @y = 0, @z = 0) -&gt;</span>
-    <span class="k">if</span> <span class="nb">isNaN</span> <span class="nx">@x</span> <span class="o">or</span> <span class="nb">isNaN</span> <span class="nx">@y</span> <span class="o">or</span> <span class="nb">isNaN</span> <span class="nx">@z</span>
+    <span class="k">if</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">@x</span><span class="p">)</span> <span class="o">or</span> <span class="nb">isNaN</span> <span class="p">(</span><span class="nx">@y</span><span class="p">)</span> <span class="o">or</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">@z</span><span class="p">)</span>
       <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&quot;Vector contains a NaN&quot;</span>
   </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3><em>Vector.FromNormal:</em></h3>
 
@@ -248,7 +248,7 @@ operate on existing <strong><code>Vector</code></strong> instances.</p>         
   
   <p>If any of the components is <code>NaN</code>, an error is thrown.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@x = 0, @y = 0, @z = 0) -&gt;</span>
-    <span class="k">if</span> <span class="nb">isNaN</span> <span class="nx">@x</span> <span class="o">or</span> <span class="nb">isNaN</span> <span class="nx">@y</span> <span class="o">or</span> <span class="nb">isNaN</span> <span class="nx">@z</span>
+    <span class="k">if</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">@x</span><span class="p">)</span> <span class="o">or</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">@y</span><span class="p">)</span> <span class="o">or</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">@z</span><span class="p">)</span>
       <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&quot;Point contains a NaN&quot;</span>
     </pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <h3><em>Point.FromPoint:</em></h3>
 

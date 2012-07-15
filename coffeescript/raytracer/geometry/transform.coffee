@@ -71,7 +71,7 @@ class Transform
   # > **`equals`** checks a **`Transform`** for equality with another **`Transform`**. Two **`Transform`**s are equal if each of their `matrix` and `inverse` components are the same.    
   equals: (t) ->
     if t.constructor? and t.constructor.name is "Transform"
-      return Matrix4x4.Equals @matrix, t.matrix and Matrix4x4.Equals @inverse, t.inverse
+      return Matrix4x4.Equals(@matrix, t.matrix) and Matrix4x4.Equals(@inverse, t.inverse)
     return false
   
   # ### *hasScale:*
@@ -100,7 +100,7 @@ class Transform
   # > **`Transform.Equals`** checks if two **`Transform`** instances are equal to one another. Two **`Transform`**s are equal if each of their `matrix` and `inverse` components are the same.    
   @Equals: (t1, t2) ->
     if t1.constructor? and t1.constructor.name is "Transform" and t2.constructor? and t2.constructor.name is "Transform"
-      return Matrix4x4.Equals t1.matrix, t2.matrix and Matrix4x4.Equals t1.inverse, t2.inverse
+      return Matrix4x4.Equals(t1.matrix, t2.matrix) and Matrix4x4.Equals(t1.inverse, t2.inverse)
     return false
   
   # ### *Transform.IsIdentity:*
@@ -110,7 +110,7 @@ class Transform
   # >> `[0, 0, 1, 0]`  
   # >> `[0, 0, 0, 1]`
   @IsIdentity: (t) ->
-    return Matrix4x4.IsIdentity t.matrix and Matrix4x4.IsIdentity t.inverse
+    return Matrix4x4.IsIdentity(t.matrix) and Matrix4x4.IsIdentity(t.inverse)
     
   # ### *Transform.Multiply:*
   # > **`Transform.Multiply`** multiplies two **`Transform`**s into a single **`Transform`** which performs the same transformation as the two would. 
