@@ -36,7 +36,7 @@ class DifferentialGeometry
   constructor: (@point, @dpdu, @dpdv, @dndu, @dndv, @u = 0, @v = 0, @shape = null) ->
     if @dpdu? and @dpdv?
       @normalisedNormal = Normal.FromVector Vector.Normalise(Vector.Cross(@dpdu, @dpdv))
-    if @shape? and (@shape.ReverseOrientation ^ @shape.TransformSwapsHandedness)
+    if @shape? and (@shape.reverseOrientation ^ @shape.transformSwapsHandedness)
       @normalisedNormal.multiply -1
 
 # ___
