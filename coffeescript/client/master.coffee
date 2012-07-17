@@ -30,7 +30,7 @@ else
   #
   # > Provided a JavaScript object exists, we then generate a [**UUID**](http://en.wikipedia.org/wiki/Universally_unique_identifier) with [**uuid.js**](https://github.com/LiosK/UUID.js)), create the link URL and POST the render and URL to the server.
   handleFileRead = (readerOutput) ->
-    renderJSON = $.xml2json readerOutput
+    renderJSON = $.xml2json readerOutput, true
     if renderJSON? and not $.isEmptyObject renderJSON
       uuid = UUID.genV1().toString()
       WEBSITE = "#{LOCATION}:#{PORT}/render?renderId="

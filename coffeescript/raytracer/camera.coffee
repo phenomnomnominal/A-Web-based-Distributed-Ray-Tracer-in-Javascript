@@ -175,10 +175,10 @@ class PerspectiveCamera extends ProjectiveCamera
   constructor: (CameraToWorld, FieldOfView, Near = 1e-2, Far = 1000, ScreenWindow, ShutterOpen, ShutterClose, LensRadius = 0, FocalDistance = 0, Film) ->
     super(CameraToWorld, Transform.Perspective(FieldOfView, Near, Far), ScreenWindow, 
                                         ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
-    @dxCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(1, 0, 0)),
-                                             Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
-    @dyCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 1, 0)),
-                                             Transform.TransformPoint(perspective.RasterToCamera, new Point(0, 0, 0)))
+    @dxCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(@RasterToCamera, new Point(1, 0, 0)),
+                                             Transform.TransformPoint(@RasterToCamera, new Point(0, 0, 0)))
+    @dyCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(@RasterToCamera, new Point(0, 1, 0)),
+                                             Transform.TransformPoint(@RasterToCamera, new Point(0, 0, 0)))
     
   # ___
   # ### Prototypical Instance Functions:

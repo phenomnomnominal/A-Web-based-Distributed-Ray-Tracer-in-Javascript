@@ -1,0 +1,320 @@
+<!DOCTYPE html>  <html> <head>   <title>sceneHandler.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="database.html">                 database.coffee               </a>                                           <a class="source" href="index.html">                 index.coffee               </a>                                           <a class="source" href="requestHandlers.html">                 requestHandlers.coffee               </a>                                           <a class="source" href="router.html">                 router.coffee               </a>                                           <a class="source" href="sceneHandler.html">                 sceneHandler.coffee               </a>                                           <a class="source" href="server.html">                 server.coffee               </a>                                           <a class="source" href="urlShorten.html">                 urlShorten.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               sceneHandler.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><em>sceneHandler.coffee</em> takes the <a href="http://www.json.org/"><strong>JSON</strong></a> version of the <a href="http://www.collada.org"><strong>COLLADA</strong></a> file uploaded by the user and converts it into usable objects such as <a href="camera.html#camera"><strong><code>Camera</code></strong></a>s, <a href="light.html#light"><strong><code>Light</code></strong></a>s and <a href="shape.html#shape"><strong><code>Shape</code></strong></a>s.</p>
+
+<hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Requires:</h2>
+
+<p>Functionality in <em>sceneHandler.coffee</em> requires access to the following libraries:</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li><a href="http://underscorejs.org/"><strong><code>_</code></strong></a> - <em>underscore.js utility library</em></li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span> <span class="s">&#39;underscore&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li><a href="http://goessner.net/articles/JsonPath/"><strong><code>jsonpath</code></strong></a> - <em>XPath-like functionality for <a href="http://www.json.org/"><strong>JSON</strong></a></em></li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">jsonpath = </span><span class="nx">require</span> <span class="s">&#39;../../libraries/jsonpath&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Other classes from other packages are also required:</p>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <ul>
+<li>From <em>raytracer/index.html:</em></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Raytracer = </span><span class="nx">require</span> <span class="s">&#39;../raytracer/&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>The <a href="camera.html"><strong><code>Camera</code></strong></a> package and the following classes:</li>
+  </ul>
+  
+  <blockquote>
+    <ul>
+    <li><p><a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a></p></li>
+    <li><p><a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a></p></li>
+    <li><p><a href="camera.html#film"><strong><code>Film</code></strong></a></p></li>
+    </ul>
+  </blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Camera = </span><span class="nx">Raytracer</span><span class="p">.</span><span class="nx">Camera</span>
+<span class="nv">OrthographicCamera = </span><span class="nx">Raytracer</span><span class="p">.</span><span class="nx">Camera</span><span class="p">.</span><span class="nx">OrthographicCamera</span>
+<span class="nv">PerspectiveCamera = </span><span class="nx">Raytracer</span><span class="p">.</span><span class="nx">Camera</span><span class="p">.</span><span class="nx">PerspectiveCamera</span>
+<span class="nv">Film = </span><span class="nx">Camera</span><span class="p">.</span><span class="nx">Film</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>The <a href="geometry.html"><strong><code>Geometry</code></strong></a> package and the following classes:</li>
+  </ul>
+  
+  <blockquote>
+    <ul>
+    <li><a href="transform.html#transform"><strong><code>Transform</code></strong></a></li>
+    </ul>
+  </blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Geometry = </span><span class="nx">Raytracer</span><span class="p">.</span><span class="nx">Geometry</span>
+<span class="nv">Transform = </span><span class="nx">Geometry</span><span class="p">.</span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Transform</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Constants:</h2>
+
+<p>Some constants are required for this script:</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li><strong><code>SCENE</code></strong> - <em>Global placeholder for parsed JSON object</em></li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">SCENE = </span><span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li><strong><code>findInJSON</code></strong> - <em>Renamed <code>jsonpath.jsonPath</code> function</em></li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">findInJSON = </span><span class="nx">jsonpath</span><span class="p">.</span><span class="nx">jsonPath</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h2>Functions:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3><em>getValueFrom</em>:</h3>
+
+<blockquote>
+  <p><strong><code>getValueFrom</code></strong> takes an object from the converted <a href="http://www.json.org/"><strong>JSON</strong></a> and finds out the actual value that should be returned. Because we are using the <a href="http://www.fyneworks.com/jquery/xml-to-json/"><strong>xml2json</strong></a> plugin in <em>extended</em> mode, all XML nodes are converted into <code>Array</code>s which allows this conversion code to be based off the <a href="documents/collada_spec_1_5.pdf"><strong>COLLADA specification document</strong></a>.</p>
+  
+  <p>Specifically, <strong><code>getValueFrom</code></strong> handles what to do when we recieve:</p>
+  
+  <ol>
+  <li><p>An <code>Array</code> of <code>Object</code>s,</p></li>
+  <li><p>A single <code>Object</code> with a <code>text</code> property or,</p></li>
+  <li><p>An <code>Object</code> such as a <code>String</code> or <code>Number</code></p></li>
+  </ol>
+  
+  <p><strong><code>getValueFrom</code></strong> is used throughout <em>sceneHandler.coffee</em>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getValueFrom = </span><span class="nf">(obj) -&gt;</span>
+  <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">obj</span>
+    <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+      <span class="k">return</span> <span class="kc">null</span>
+    <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+      <span class="k">return</span> <span class="nx">getValueFrom</span> <span class="nx">obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
+      <span class="k">return</span> <span class="nx">obj</span>
+      
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">text</span><span class="o">?</span>
+    <span class="nv">number = </span><span class="o">+</span><span class="nx">obj</span><span class="p">.</span><span class="nx">text</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nb">isNaN</span> <span class="nx">number</span>
+      <span class="k">return</span> <span class="nx">number</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">text</span>
+
+  <span class="k">else</span>
+    <span class="nv">number = </span><span class="o">+</span><span class="nx">obj</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nb">isNaN</span> <span class="nx">number</span>
+      <span class="k">return</span> <span class="nx">number</span>
+    <span class="k">return</span> <span class="nx">obj</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3><em>parseCOLLADASceneDescriptionJSON</em>:</h3>
+
+<blockquote>
+  <p><strong><code>parseCOLLADASceneDescriptionJSON</code></strong> takes the whole <a href="http://www.json.org/"><strong>JSON</strong></a> string received by the server when the user uploads a <a href="http://www.collada.org"><strong>COLLADA</strong></a> file and parses it to an <code>Object</code>. It is then responsible for breaking the generation of the <strong><code>SCENE</code></strong> down into several smaller tasks:</p>
+  
+  <ol>
+  <li>Extract <a href="camera.html#camera"><strong><code>Camera</code></strong></a> objects from JSON</li>
+  </ol>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">parseCOLLADASceneDescriptionJSON = </span><span class="nf">(sceneDescriptionJSON) -&gt;</span>
+  <span class="nv">COLLADAScene = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">sceneDescriptionJSON</span>
+  <span class="nv">SCENE.cameras = </span><span class="nx">getCamerasIn</span> <span class="nx">COLLADAScene</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h3><em>getCamerasIn</em>:</h3>
+
+<blockquote>
+  <p><strong><code>getCamerasIn</code></strong> performs the task of finding all the <code>&lt;node&gt;</code> elements who have <code>&lt;instance_camera&gt;</code> child elements within the parsed <a href="http://www.collada.org"><strong>COLLADA</strong></a> XML document. The <a href="http://goessner.net/articles/JsonPath/"><strong><code>JSONPath</code></strong></a> expression:</p>
+  
+  <blockquote>
+    <p><code>$..node[?(@.instance_camera)]</code></p>
+  </blockquote>
+  
+  <p>searches for all <code>node</code> objects with the property <code>instance_camera</code>, and returns an <code>Array</code> of the results. </p>
+  
+  <p>Each of the results are passed to <a href="#create-camera"><strong><code>createCamera</code></strong></a> to determine the <a href="camera.html#camera"><strong><code>Camera</code></strong></a> type (<a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a> or <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a>) and create the <code>Object</code>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getCamerasIn = </span><span class="nf">(scene) -&gt;</span>
+  <span class="nv">camera_nodes = </span><span class="nx">findInJSON</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&#39;$..node[?(@.instance_camera)]&#39;</span>
+  <span class="nv">sceneCameras = </span><span class="p">[]</span>
+  <span class="k">for</span> <span class="nx">camera_node</span> <span class="k">in</span> <span class="nx">camera_nodes</span>
+    <span class="nx">sceneCameras</span><span class="p">.</span><span class="nx">concat</span> <span class="nx">createCamera</span><span class="p">(</span><span class="nx">camera_node</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3><section id='create-camera'><em>createCamera</em>:</section></h3>
+
+<blockquote>
+  <p><strong><code>createCamera</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract the relevant information needed to create a <a href="camera.html#camera"><strong><code>Camera</code></strong></a> <code>Object</code> from an <code>&lt;instance_camera&gt;</code> element. The relevant structure is as follows:</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createCamera = </span><span class="nf">(camera_node) -&gt;</span>
+  <span class="nv">cameras = </span><span class="p">[]</span>
+  <span class="nv">instanceCameras = </span><span class="nx">camera_node</span><span class="p">.</span><span class="nx">instance_camera</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>A <code>&lt;node&gt;</code> element may have <strong>0 or more</strong> <code>&lt;instance_camera&gt;</code> child elements, so we must iterate over all of them.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">for</span> <span class="nx">instanceCamera</span> <span class="k">in</span> <span class="nx">instanceCameras</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>An <code>&lt;instance_camera&gt;</code> element must have an <code>url</code> attribute which refers to a unique <code>id</code> of a <code>&lt;camera&gt;</code> element - searching for that <code>id</code> will return exactly one <code>&lt;camera&gt;</code> element.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">camera = </span><span class="nx">getValueFrom</span> <span class="nx">findInJSON</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..camera[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">instanceCamera</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
+    <span class="k">if</span> <span class="nx">camera</span><span class="o">?</span> <span class="o">and</span> <span class="nx">camera</span> <span class="o">isnt</span> <span class="kc">false</span>
+      <span class="nv">camToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">camera_node</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>A <code>&lt;camera&gt;</code> element must have exactly <strong>1</strong> <code>&lt;optics&gt;</code> child element.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">optics = </span><span class="nx">getValueFrom</span> <span class="nx">camera</span><span class="p">.</span><span class="nx">optics</span>
+      <span class="k">if</span> <span class="nx">optics</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">optics</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>An <code>&lt;optics&gt;</code> element must have exactly <strong>1</strong> <code>&lt;technique_common&gt;</code> child element.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">techniqueCommon = </span><span class="nx">getValueFrom</span> <span class="nx">optics</span><span class="p">.</span><span class="nx">technique_common</span>
+        <span class="k">if</span> <span class="nx">techniqueCommon</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">optics</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>An <code>&lt;optics&gt;</code> element must have a <code>&lt;technique_common&gt;</code> child element with either <strong>1</strong> <code>&lt;perspective&gt;</code> child element or <strong>1</strong> <code>&lt;orthographic&gt;</code> child element.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">if</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">perspective</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_isArray</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">perspective</span>
+            <span class="nx">cameras</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createPerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">getValueFrom</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">perspective</span><span class="p">)</span>
+          <span class="k">else</span> <span class="k">if</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">orthographic</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_isArray</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">orthographic</span>
+            <span class="nx">cameras</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createOrthographicCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">getValueFrom</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">orthographic</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <blockquote>
+  <p>If the structure is correct, a new <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a> or <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a> is created.
+  Otherwise the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document doesn't meet the <a href="documents/collada_spec_1_5.pdf"><strong>COLLADA specification</strong></a>, so an <code>Error</code> is thrown.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: an `optics` element must have a `technique_common` child element with either a `perspective` child element or a `orthographic` child element. A Camera was not created.&#39;</span>
+        <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: an `optics` element must have exactly  1 `technique_common` child element.&#39;</span>
+      <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: a `camera` element must have exactly 1 `optics` child element.&#39;</span>
+    <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Something is wrong with the COLLADA file: there is no `camera` element with the `id` &#39;</span><span class="si">#{</span><span class="nx">instanceCamera</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s">&#39;&quot;</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <blockquote>
+  <p>All created <a href="camera.html#camera"><strong><code>Camera</code></strong></a>s are returned to the <code>SCENE</code>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="nx">cameras</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <h3><em>createObjectToWorldTransform</em>:</h3>
+
+<blockquote>
+  <p><strong><code>createObjectToWorldTransform</code></strong> takes a <code>&lt;node&gt;</code> element, extracts the <em>Translation</em>, <em>Rotation</em> and <em>Scale</em> transforms using <a href="#get-translation"><strong><code>getTranslation</code></strong></a>, <a href="#get-rotation"><strong><code>getRotation</code></strong></a> and <a href="#get-scale"><strong><code>getScale</code></strong></a> and combines them into a single <code>objectToWorld</code> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. The relevant structure is as follows:</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createObjectToWorldTransform = </span><span class="nf">(node) -&gt;</span>
+  <span class="nv">objectToWorld = </span><span class="k">new</span> <span class="nx">Transform</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>A <code>&lt;node&gt;</code> element may have <strong>0 or more</strong> <code>&lt;translate&gt;</code> elements, so we must iterate over any and all of them.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">translates = </span><span class="nx">node</span><span class="p">.</span><span class="nx">translate</span>
+  <span class="k">if</span> <span class="nx">translates</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">translates</span>
+    <span class="nv">translateTs = </span><span class="p">(</span><span class="nx">getTranslation</span><span class="p">(</span><span class="nx">translate</span><span class="p">)</span> <span class="k">for</span> <span class="nx">translate</span> <span class="k">in</span> <span class="nx">translates</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">translateT</span> <span class="k">in</span> <span class="nx">translateTs</span>  
+      <span class="nv">objectToWorld = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">objectToWorld</span><span class="p">,</span> <span class="nx">translateT</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>A <code>&lt;node&gt;</code> element may have <strong>0 or more</strong> <code>&lt;rotate&gt;</code> elements, so we must iterate over any and all of them.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">rotates = </span><span class="nx">node</span><span class="p">.</span><span class="nx">rotate</span>
+  <span class="k">if</span> <span class="nx">rotates</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">rotates</span>
+    <span class="nv">rotateTs = </span><span class="p">(</span><span class="nx">getRotation</span><span class="p">(</span><span class="nx">rotate</span><span class="p">)</span> <span class="k">for</span> <span class="nx">rotate</span> <span class="k">in</span> <span class="nx">rotates</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">rotateT</span> <span class="k">in</span> <span class="nx">rotateTs</span>
+      <span class="nv">objectToWorld = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">objectToWorld</span><span class="p">,</span> <span class="nx">rotateT</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <blockquote>
+  <ul>
+  <li>A <code>&lt;node&gt;</code> element may have <strong>0 or more</strong> <code>&lt;scale&gt;</code> elements, so we must iterate over any and all of them.</li>
+  </ul>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">scales = </span><span class="nx">node</span><span class="p">.</span><span class="nx">scale</span>
+  <span class="k">if</span> <span class="nx">scales</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">scales</span>
+    <span class="nv">scaleTs = </span><span class="p">(</span><span class="nx">getScale</span><span class="p">(</span><span class="nx">scale</span><span class="p">)</span> <span class="k">for</span> <span class="nx">scale</span> <span class="k">in</span> <span class="nx">scales</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">scaleT</span> <span class="k">in</span> <span class="nx">scaleTs</span>
+      <span class="nv">objectToWorld = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">objectToWorld</span><span class="p">,</span> <span class="nx">scaleT</span>
+  
+  <span class="k">return</span> <span class="nx">objectToWorld</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h3><section id='get-translation'><em>getTranslation</em>:</section></h3>
+
+<blockquote>
+  <p><strong><code>getTranslation</code></strong> takes a <code>&lt;translate&gt;</code> element and creates a new <em>Translate</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;translate&gt;</code> element has the following form:</p>
+  
+  <blockquote>
+    <p><code>&lt;translate&gt;X Y Z&lt;/translate&gt;</code></p>
+  </blockquote>
+  
+  <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getTranslation = </span><span class="nf">(translate) -&gt;</span>
+  <span class="p">[</span><span class="nx">translateX</span><span class="p">,</span> <span class="nx">translateY</span><span class="p">,</span> <span class="nx">translateZ</span><span class="p">]</span> <span class="o">=</span> <span class="nx">translate</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Translate</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="o">+</span><span class="nx">translateX</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateY</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateZ</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <h3><section id='get-rotation'><em>getRotation</em>:</section></h3>
+
+<blockquote>
+  <p><strong><code>getRotation</code></strong> takes a <code>&lt;rotate&gt;</code> element and creates a new <em>Rotate</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;rotate&gt;</code> element has the following form:</p>
+  
+  <blockquote>
+    <p><code>&lt;rotate&gt;X Y Z DEGREES&lt;/rotate&gt;</code>,</p>
+  </blockquote>
+  
+  <p>where X, Y and Z are binary flags which indicate which <em>axis</em> is being rotated around.</p>
+  
+  <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).  If the <code>DEGREES</code> value is exactly divisible by <code>360</code>, an identity <a href="transform.html#transform"><strong><code>Transform</code></strong></a> is returned. If none of the <code>X</code>, <code>Y</code> or <code>Z</code> flags are set, an <code>Error</code> is thrown.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getRotation = </span><span class="nf">(rotate) -&gt;</span>
+  <span class="p">[</span><span class="nx">axisX</span><span class="p">,</span> <span class="nx">axisY</span><span class="p">,</span> <span class="nx">axisZ</span><span class="p">,</span> <span class="nx">degrees</span><span class="p">]</span> <span class="o">=</span> <span class="nx">rotate</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="o">+</span><span class="nx">degrees</span> <span class="o">%</span> <span class="mi">360</span> <span class="o">isnt</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="o">+</span><span class="nx">axisX</span> <span class="o">is</span> <span class="mi">1</span> <span class="k">then</span> <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">RotateX</span><span class="p">(</span><span class="o">+</span><span class="nx">degrees</span><span class="p">)</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="o">+</span><span class="nx">axisY</span> <span class="o">is</span> <span class="mi">1</span> <span class="k">then</span> <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">RotateY</span><span class="p">(</span><span class="o">+</span><span class="nx">degrees</span><span class="p">)</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="o">+</span><span class="nx">axisZ</span> <span class="o">is</span> <span class="mi">1</span> <span class="k">then</span> <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">RotateZ</span><span class="p">(</span><span class="o">+</span><span class="nx">degrees</span><span class="p">)</span>
+    <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: No axis bit is set in `&lt;rotate&gt;`.&#39;</span>
+  <span class="k">else</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h3><section id='get-scale'><em>getScale</em>:</section></h3>
+
+<blockquote>
+  <p><strong><code>getScale</code></strong> takes a <code>&lt;scale&gt;</code> element and creates a new <em>Scale</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;scale&gt;</code> element has the following form:</p>
+  
+  <blockquote>
+    <p><code>&lt;scale&gt;X Y Z&lt;/scale&gt;</code></p>
+  </blockquote>
+  
+  <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getScale = </span><span class="nf">(scale) -&gt;</span>
+  <span class="p">[</span><span class="nx">scaleX</span><span class="p">,</span> <span class="nx">scaleY</span><span class="p">,</span> <span class="nx">scaleZ</span><span class="p">]</span> <span class="o">=</span> <span class="nx">scale</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Scale</span> <span class="o">+</span><span class="nx">scaleX</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleY</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleZ</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <h3><em>createPerspectiveCamera</em>:</h3>
+
+<blockquote>
+  <p><strong><code>createPerspectiveCamera</code></strong> takes a <code>&lt;technique_common&gt;&lt;perspective&gt;&lt;/technique_common&gt;</code> element and creates a new <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a>. A <code>&lt;perspective&gt;</code> element must contain:</p>
+  
+  <ul>
+  <li><p>A <code>&lt;znear&gt;</code> element and</p></li>
+  <li><p>A <code>&lt;zfar&gt;</code> element,</p></li>
+  </ul>
+  
+  <p>as well as either:</p>
+  
+  <ul>
+  <li><p>A single <code>&lt;xfov&gt;</code> element</p></li>
+  <li><p>A single <code>&lt;yfov&gt;</code> element</p></li>
+  <li><p>Both an <code>&lt;xfov&gt;</code> and a <code>&lt;yfov&gt;</code> element</p></li>
+  <li><p>An <code>&lt;aspect_ratio&gt;</code> element and either <code>&lt;xfov&gt;</code> or <code>&lt;yfov&gt;</code></p></li>
+  </ul>
+  
+  <p>If the <code>aspect_ratio</code> element is not present, the aspect ratio should be calculated from the <code>xfov</code> and <code>yfov</code> elements and the current viewport.</p>
+  
+  <p>If the structure is correct, a new <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a> is created. Otherwise the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document doesn't meet the <a href="documents/collada_spec_1_5.pdf"><strong>COLLADA specification</strong></a>, so an <code>Error</code> is thrown.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createPerspectiveCamera = </span><span class="nf">(camToWorld, perspective) -&gt;</span>
+  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">znear</span><span class="o">?</span>
+    <span class="nv">near = </span><span class="nx">getValueFrom</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">znear</span>
+  <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Something is wrong with the COLLADA file: a `perspective` element must have exactly 1 `znear` child element.&quot;</span>
+  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">zfar</span><span class="o">?</span>
+    <span class="nv">far = </span><span class="nx">getValueFrom</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">zfar</span>
+  <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Something is wrong with the COLLADA file: a `perspective` element must have exactly 1 `zfar` child element.&quot;</span>
+  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">xfov</span> <span class="k">then</span> <span class="nv">xfov = </span><span class="nx">getValueFrom</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">xfov</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">yfov</span> <span class="k">then</span> <span class="nv">yfov = </span><span class="nx">getValueFrom</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">yfov</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">aspect_ratio</span> <span class="k">then</span> <span class="nv">aspectRatio = </span><span class="nx">getValueFrom</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">aspect_ratio</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">yfov</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">aspectRatio</span><span class="o">?</span>
+    <span class="nv">aspectRatio = </span><span class="nx">xfov</span> <span class="o">/</span> <span class="nx">yfov</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">yfov</span><span class="o">?</span>
+    <span class="nv">yfov = </span><span class="nx">xfov</span> <span class="o">/</span> <span class="nx">aspectRatio</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">yfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">xfov</span><span class="o">?</span>
+    <span class="nv">xfov = </span><span class="nx">yfov</span> <span class="o">*</span> <span class="nx">aspectRaio</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">yfox</span><span class="o">?</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: a `perspective` element must have either an `xfov` or a `yfov` child element.&#39;</span>
+  <span class="o">`//</span> <span class="nx">TODO</span> <span class="k">else</span> <span class="nv">aspectRatio = </span><span class="nx">getAspectRatio</span><span class="p">()</span><span class="o">`</span>
+  <span class="k">if</span> <span class="nx">aspectRatio</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="nx">aspectRatio</span><span class="p">,</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="k">else</span> 
+    <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">]</span>  
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">xfov</span><span class="p">,</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <h3><em>createOrthographicCamera</em>:</h3>
+
+<blockquote>
+  <p><strong><code>createOrthographicCamera</code></strong> takes a <code>&lt;technique_common&gt;&lt;orthographic&gt;&lt;/technique_common&gt;</code> element and creates a new <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a>. A <code>&lt;orthographic&gt;</code> element must contain:</p>
+  
+  <ul>
+  <li><p>A <code>&lt;znear&gt;</code> element and</p></li>
+  <li><p>A <code>&lt;zfar&gt;</code> element,</p></li>
+  </ul>
+  
+  <p>as well as either:</p>
+  
+  <ul>
+  <li><p>A single <code>&lt;xmag&gt;</code> element</p></li>
+  <li><p>A single <code>&lt;ymag&gt;</code> element</p></li>
+  <li><p>Both an <code>&lt;xmag&gt;</code> and a <code>&lt;ymag&gt;</code> element</p></li>
+  <li><p>An <code>&lt;aspect_ratio&gt;</code> element and either <code>&lt;xmag&gt;</code> or <code>&lt;ymag&gt;</code></p></li>
+  </ul>
+  
+  <p>If the <code>aspect_ratio</code> element is not present, the aspect ratio should be calculated from the <code>xmag</code> and <code>ymag</code> elements and the current viewport.</p>
+  
+  <p>If the structure is correct, a new <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a> is created. Otherwise the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document doesn't meet the <a href="documents/collada_spec_1_5.pdf"><strong>COLLADA specification</strong></a>, so an <code>Error</code> is thrown.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createOrthographicCamera = </span><span class="nf">(camToWorld, orthographic) -&gt;</span>
+  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">znear</span><span class="o">?</span>
+    <span class="nv">near = </span><span class="nx">getValueFrom</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">znear</span>
+  <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Something is wrong with the COLLADA file: an `orthographic` element must have exactly 1 `znear` child element.&quot;</span>
+  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">zfar</span><span class="o">?</span>
+    <span class="nv">far = </span><span class="nx">getValueFrom</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">zfar</span>
+  <span class="k">else</span> <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&quot;Something is wrong with the COLLADA file: an `orthographic` element must have exactly 1 `zfar` child element.&quot;</span>
+  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">xmag</span><span class="o">?</span> <span class="k">then</span> <span class="nv">xmag = </span><span class="nx">getValueFrom</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">xmag</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">ymag</span><span class="o">?</span> <span class="k">then</span> <span class="nv">ymag = </span><span class="nx">getValueFrom</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">ymag</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">aspect_ratio</span><span class="o">?</span> <span class="k">then</span> <span class="nv">aspectRatio = </span><span class="nx">getValueFrom</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">aspect_ratio</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="k">if</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">ymag</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">aspectRatio</span><span class="o">?</span>
+    <span class="nv">aspectRatio = </span><span class="p">(</span><span class="nx">xmag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">ymag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">ymag</span><span class="o">?</span>
+    <span class="nv">ymag = </span><span class="p">(</span><span class="nx">xmag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nx">aspectRatio</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">ymag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">xmag</span><span class="o">?</span>
+    <span class="nv">xmag = </span><span class="p">(</span><span class="nx">ymag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="nx">aspectRaio</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">ymag</span><span class="o">?</span>
+    <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Something is wrong with the COLLADA file: a `orthographic` element must have either an `xmag` or a `ymag` child element.&#39;</span>
+  <span class="o">`//</span> <span class="nx">TODO</span> <span class="k">else</span> <span class="nv">aspectRatio = </span><span class="nx">getAspectRatio</span><span class="p">()</span><span class="o">`</span>
+  <span class="k">if</span> <span class="nx">aspectRatio</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="nx">aspectRatio</span><span class="p">,</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="k">else</span> 
+    <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">]</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">OrthographicCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <hr />
+
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>The <strong><code>parseCOLLADASceneDescriptionJSON</code></strong> function is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.parse = </span><span class="nx">parseCOLLADASceneDescriptionJSON</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
