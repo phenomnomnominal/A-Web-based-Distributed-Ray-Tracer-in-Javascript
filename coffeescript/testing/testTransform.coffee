@@ -335,19 +335,19 @@ $(document).ready(->
     return
   )
   
-  test("Test create composite transformations using Transform.Multiply", ->
-    expect 37
+  test "Test create composite transformations using Transform.Multiply", ->
+    #expect 37
     translate = Transform.Translate(new Vector(3, 2, 1))
-    ok(translate? and translate.constructor.name is "Transform", 
-      "If we create a Transform which Translates by Vector(3, 2, 1),")
+    ok translate? and translate.constructor.name is "Transform", 
+      "If we create a Transform which Translates by Vector(3, 2, 1),"
     rotateX = Transform.RotateX(90)
-    ok(rotateX? and rotateX.constructor.name is "Transform", 
-      "and a Transform which Rotates around the X Axis by 90 degrees,")
-    composite = Transform.Multiply(translate, rotateX)
-    ok(composite? and composite.constructor.name is "Transform",
-      "the 'Transform.Multiply' function should return a Transform")
-    ok(composite.matrix? and composite.matrix.constructor.name is "Matrix4x4", "which has a matrix property that is a Matrix4x4")
-    ok(composite.inverse? and composite.inverse.constructor.name is "Matrix4x4", "and an inverse property that is a Matrix4x4.")
+    ok rotateX? and rotateX.constructor.name is "Transform", 
+      "and a Transform which Rotates around the X Axis by 90 degrees,"
+    composite = Transform.Multiply([translate, rotateX]...)
+    ok composite? and composite.constructor.name is "Transform",
+      "the 'Transform.Multiply' function should return a Transform"
+    ok composite.matrix? and composite.matrix.constructor.name is "Matrix4x4", "which has a matrix property that is a Matrix4x4"
+    ok composite.inverse? and composite.inverse.constructor.name is "Matrix4x4", "and an inverse property that is a Matrix4x4."
     compositeM = new Matrix4x4([[1, 0,  0, 3],
                                 [0, 0, -1, 2],
                                 [0, 1,  0, 1],
@@ -358,12 +358,33 @@ $(document).ready(->
                                 [0,  0, 0,  1]])
     for i in [0...composite.matrix.m.length]
       for j in [0...composite.matrix.m[i].length]
-        equalWithin(composite.matrix.m[i][j], compositeM.m[i][j], 15, "matrix[#{i}][#{j}] should be #{compositeM.m[i][j]}")
+        equalWithin composite.matrix.m[i][j], compositeM.m[i][j], 15, "matrix[#{i}][#{j}] should be #{compositeM.m[i][j]}"
     for i in [0...composite.inverse.m.length]
       for j in [0...composite.inverse.m[i].length]
-        equalWithin(composite.inverse.m[i][j], compositeI.m[i][j], 15, "inverse[#{i}][#{j}] should be #{compositeI.m[i][j]}")
-    return
-  )
+        equalWithin composite.inverse.m[i][j], compositeI.m[i][j], 15, "inverse[#{i}][#{j}] should be #{compositeI.m[i][j]}"
+    scale = Transform.Scale(2, 2, 2)
+    ok scale? and scale.constructor.name is 'Transform', 
+      'If we then create a Transform which Scales by 2 in the X, Y and Z directions,'
+    composite = Transform.Multiply [translate, rotateX, scale]...
+    ok composite? and composite.constructor.name is 'Transform',
+      'the "Transform.Multiply" function should return a Transform'
+    ok composite.matrix?, 'which has a property named "matrix"'
+    ok composite.matrix.constructor.name is 'Matrix4x4', 'that is a Matrix4x4'
+    ok composite.inverse?, 'and a property named "inverse"" that is a Matrix4x4.'
+    compositeM = new Matrix4x4([[2, 0,  0, 3],
+                                [0, 0, -2, 2],
+                                [0, 2,  0, 1],
+                                [0, 0,  0, 1]])
+    compositeI = new Matrix4x4([[0.5,  0,   0,   -1.5],
+                                [0,    0,   0.5, -0.5],
+                                [0,   -0.5, 0,    1],
+                                [0,    0,   0,    1]])
+    for i in [0...composite.matrix.m.length]
+      for j in [0...composite.matrix.m[i].length]
+        equalWithin composite.matrix.m[i][j], compositeM.m[i][j], 15, "matrix[#{i}][#{j}] should be #{compositeM.m[i][j]}"
+    for i in [0...composite.inverse.m.length]
+      for j in [0...composite.inverse.m[i].length]
+        equalWithin composite.inverse.m[i][j], compositeI.m[i][j], 15, "inverse[#{i}][#{j}] should be #{compositeI.m[i][j]}"
   
   test("Test checking for Transforms that swap a coordinate systems handedness using Transform.SwapHandedness.", ->
     expect 4

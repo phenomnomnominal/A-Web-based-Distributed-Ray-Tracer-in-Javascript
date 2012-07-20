@@ -113,12 +113,18 @@ class Transform
     return Matrix4x4.IsIdentity(t.matrix) and Matrix4x4.IsIdentity(t.inverse)
     
   # ### *Transform.Multiply:*
-  # > **`Transform.Multiply`** multiplies two **`Transform`**s into a single **`Transform`** which performs the same transformation as the two would. 
+  # > **`Transform.Multiply`** multiplies any number of **`Transform`**s into a single **`Transform`** which performs the same transformation as the sequence of original **`Transform`**s would. 
   #
   # > Care must be taken with the order in which the multiplications are performed as unexpected results can occur.
-  @Multiply: (t1, t2) ->
-    matrixMul = Matrix4x4.Multiply t1.matrix, t2.matrix
-    inverseMul = Matrix4x4.Multiply t2.inverse, t1.inverse
+  @Multiply: (t1, t2, tn...) ->
+    matrices = [t1.matrix, t2.matrix]
+    inverses = [t1.inverse, t2.inverse]
+    for transform in tn
+      matrices.push transform.matrix
+      inverses.push transform.inverse
+    inverses.reverse()
+    matrixMul = Matrix4x4.Multiply matrices...
+    inverseMul = Matrix4x4.Multiply inverses...
     return new Transform(matrixMul, inverseMul)
 
   # ### *Transform.SwapsHandedness:*

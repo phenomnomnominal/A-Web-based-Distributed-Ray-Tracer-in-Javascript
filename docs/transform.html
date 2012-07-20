@@ -122,12 +122,18 @@ modified and a new object is always returned.</p>             </td>             
     </pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h3><em>Transform.Multiply:</em></h3>
 
 <blockquote>
-  <p><strong><code>Transform.Multiply</code></strong> multiplies two <strong><code>Transform</code></strong>s into a single <strong><code>Transform</code></strong> which performs the same transformation as the two would. </p>
+  <p><strong><code>Transform.Multiply</code></strong> multiplies any number of <strong><code>Transform</code></strong>s into a single <strong><code>Transform</code></strong> which performs the same transformation as the sequence of original <strong><code>Transform</code></strong>s would. </p>
   
   <p>Care must be taken with the order in which the multiplications are performed as unexpected results can occur.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Multiply: </span><span class="nf">(t1, t2) -&gt;</span>
-    <span class="nv">matrixMul = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">t1</span><span class="p">.</span><span class="nx">matrix</span><span class="p">,</span> <span class="nx">t2</span><span class="p">.</span><span class="nx">matrix</span>
-    <span class="nv">inverseMul = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">t2</span><span class="p">.</span><span class="nx">inverse</span><span class="p">,</span> <span class="nx">t1</span><span class="p">.</span><span class="nx">inverse</span>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Multiply: </span><span class="nf">(t1, t2, tn...) -&gt;</span>
+    <span class="nv">matrices = </span><span class="p">[</span><span class="nx">t1</span><span class="p">.</span><span class="nx">matrix</span><span class="p">,</span> <span class="nx">t2</span><span class="p">.</span><span class="nx">matrix</span><span class="p">]</span>
+    <span class="nv">inverses = </span><span class="p">[</span><span class="nx">t1</span><span class="p">.</span><span class="nx">inverse</span><span class="p">,</span> <span class="nx">t2</span><span class="p">.</span><span class="nx">inverse</span><span class="p">]</span>
+    <span class="k">for</span> <span class="nx">transform</span> <span class="k">in</span> <span class="nx">tn</span>
+      <span class="nx">matrices</span><span class="p">.</span><span class="nx">push</span> <span class="nx">transform</span><span class="p">.</span><span class="nx">matrix</span>
+      <span class="nx">inverses</span><span class="p">.</span><span class="nx">push</span> <span class="nx">transform</span><span class="p">.</span><span class="nx">inverse</span>
+    <span class="nx">inverses</span><span class="p">.</span><span class="nx">reverse</span><span class="p">()</span>
+    <span class="nv">matrixMul = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">matrices</span><span class="p">...</span>
+    <span class="nv">inverseMul = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">inverses</span><span class="p">...</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">matrixMul</span><span class="p">,</span> <span class="nx">inverseMul</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h3><em>Transform.SwapsHandedness:</em></h3>
 
 <blockquote>
