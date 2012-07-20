@@ -11,6 +11,7 @@
   ],
   "private": true,
   "dependencies": {
+    "coffeelint": ">= 0.4.0",
     "connect": ">= 2.0.0",
     "express": ">= 2.5.8",
     "goo.gl": ">= 0.0.2",
