@@ -1,77 +1,98 @@
 exampleCollada = window.testCollada
+resultingJSON = window.testJSON
 
-$(document).ready(->
+$(document).ready ->
   
-  module("File Upload")
+  module 'User Interface - Master - File Upload'
 	
-  test("DragOver event", ->
-    $("#qunit-fixture").get(0).ondragover = window.globalFunctions.handleDragOver
-    event = $.Event("dragover", 
-      dataTransfer:
-        dropEffect: null
-    )
-    $("#qunit-fixture").trigger(event)
-    equal(event.dataTransfer.dropEffect, 'copy', "DragOver event should change the dropEffect to 'copy'")
-  )
+  test 'Test that "handleDragOver" work correctly on a "dragover" event', ->
+    expect 3
+    event = $.Event 'dragover', dataTransfer: dropEffect: null
+    ok event?, '''If we create a mock "dragover" event object with the
+                  "dataTransfor.dropEffect" property set to null'''
+    ok window.master.handleDragOver?, '''and trigger the "dragover" event
+                                         with the event object,'''
+    $('#qunit-fixture').get(0).ondragover = window.master.handleDragOver
+    $('#qunit-fixture').trigger event
+    equal event.dataTransfer.dropEffect, 'copy', '''the "dropEffect" property
+                                                    of the event object should
+                                                    change to "copy".'''
   
-  test("Drop event - no file error", ->
-    $("#qunit-fixture").get(0).ondrop = window.globalFunctions.handleFileDrop
-    event = $.Event("drop", 
-      dataTransfer:
-        files: []
-    )
-    raises(-> 
-        $("#qunit-fixture").trigger(event)
-        return
-      , /No file dropped/, "No file dropped")
-  )
+  test '''Test that "handleFileDrop" works correctly on a "drop" event when
+          no file is dropped.''', ->
+    expect 3
+    event = $.Event "drop", dataTransfer: files: []
+    ok event?, '''If we create a mock "drop" event object with the
+                  "dataTransfor.files" property set to an empty Array'''
+    ok window.master.handleFileDrop?, '''and trigger the "drop" event
+                                         with the event object,'''
+    $('#qunit-fixture').get(0).ondrop = window.master.handleFileDrop
+    raises ->
+      $('#qunit-fixture').trigger event
+      , /UI Error: No file dropped./,
+      'an Error is thrown: "UI Error: No file dropped."'
   
-  test("Drop event - incorrect file type", ->
-    $("#qunit-fixture").get(0).ondrop = window.globalFunctions.handleFileDrop
-    event = $.Event("drop", 
-      dataTransfer:
-        files: []
-    )
-    event.dataTransfer.files.push(
-      name: "file.file"
-    )
-    raises(-> 
-        $("#qunit-fixture").trigger(event)
-        return
-      , /File dropped - not COLLADA/, "Incorrect file type dropped")
-  )
+  test '''Test that "handleFileDrop" works correctly on a "drop" event when
+          an incorrect file type is dropped''', ->
+    expect 3
+    event = $.Event 'drop', dataTransfer: files: [name: 'file.file']
+    ok event?, '''If we create a mock "drop" event object with the
+                  "dataTransfor.files" property set to an Array
+                  with a mock file object of the wrong file type'''
+    ok window.master.handleFileDrop?, '''and trigger the "drop" event
+                                         with the event object,'''
+    $('#qunit-fixture').get(0).ondrop = window.master.handleFileDrop
+    raises ->
+      $('#qunit-fixture').trigger event
+      , /UI Error: The file dropped is not a COLLADA file./,
+      'an Error is thrown: "UI Error: The file dropped is not a COLLADA file."'
   
-  test("Drop event - correct file type", ->
-    $("#qunit-fixture").get(0).ondrop = window.globalFunctions.handleFileDrop
-    expect(1)
-    event = $.Event("drop", 
-      dataTransfer:
-        files: []
-    )
-    event.dataTransfer.files.push(
-      name: "file.dae"
-    )
-    $("#qunit-fixture").trigger(event)
-    ok(event.success, "COLLADA file dropped")
-  )
+  test '''Test that "handleFileDrop" works correctly on a "drop" event when
+          a correct file type is dropped''', ->
+    expect 3
+    event = $.Event 'drop', dataTransfer: files: [name: 'file.dae']
+    ok event?, '''If we create a mock "drop" event object with the
+                  "dataTransfor.files" property set to an Array
+                  with a mock file object of the correct file type'''
+    ok window.master.handleFileDrop?, '''and trigger the "drop" event
+                                         with the event object,'''
+    $("#qunit-fixture").get(0).ondrop = window.master.handleFileDrop
+    $("#qunit-fixture").trigger event
+    ok event.success, '''the "success" property of the even should be "true",
+                         indicating that a COLLADA file was dropped.'''
   
-  test("Read file, empty contents", ->
-    expect(1)
-    event = "" 
-    raises( ->
-        window.globalFunctions.handleFileRead(event)
-        return
-      , /The XML to JSON converstion returned no JSON data/, "No file contents")
-  )
+  test 'Test that "handleFileRead" works correctly on an empty file', ->
+    expect 3
+    event = ""
+    ok event?, 'If we create an empty JSON string - i.e. an empty String "" -'
+    ok window.master.handleFileRead?, '''and pass it to the handleFileRead
+                                         function'''
+    raises ->
+      window.master.handleFileRead event
+      , /UI Error: The XML to JSON conversion returned no JSON data./,
+      '''an Error is thrown: "UI Error: The XML to JSON conversion
+         returned no JSON data."'''
   
-  test("Read file, COLLADA file", ->
-    expect(2)
-    renderObject = window.globalFunctions.handleFileRead(exampleCollada)
-    notEqual(null, renderObject.url.match(/\:3000\/render\?renderId\=[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)
-    , "renderObject should have a 'urlToShorten' in the form DOMAIN:3000/render?renderId= + UUID")
-    notEqual(null, renderObject.sceneDescription
-    , "rendorObject should have a sceneDescription object")
-  )
-  
-  return
-)
+  test 'Test that "handleFileRead" works correctly on a COLLADA file', ->
+    expect 8
+    ok exampleCollada?, 'If we take the "exampleCollada" XML document'
+    ok window.master.handleFileRead?, '''and pass it to the handleFileRead
+                                         function'''
+    renderObject = window.master.handleFileRead exampleCollada
+    ok renderObject?, 'an object should be returned'
+    UUIDregex = ///
+                   \:3000/render\?renderId\=
+                   [a-f0-9]{8}-
+                   [a-f0-9]{4}-
+                   [a-f0-9]{4}-
+                   [a-f0-9]{4}-
+                   [a-f0-9]{12}
+                ///
+    ok renderObject.url?, 'which as a "url" property'
+    ok renderObject.url.match(UUIDregex),
+      'of the form DOMAIN:3000/render?renderId= + UUID.'
+    ok renderObject.sceneDescription?, '''It should also have a
+                                          sceneDescription object'''
+    ok _.isString(renderObject.sceneDescription), 'which is a JSON string'
+    equal renderObject.sceneDescription, resultingJSON,
+      'that matches resultingJSON.'
