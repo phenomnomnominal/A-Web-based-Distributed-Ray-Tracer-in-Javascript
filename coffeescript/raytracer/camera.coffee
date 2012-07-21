@@ -1,73 +1,110 @@
-# *camera.coffee* contains generic camera constructs, specifically the [**`Camera`**](#camera) interface and two subclasses which implement it:
+# *camera.coffee* contains generic camera constructs, specifically the
+#[**`Camera`**](#camera) interface and two subclasses which implement it:
 #
 # * [**`OrthographicCamera`**](#orthographic)
 #
 # * [**`PerspectiveCamera`**](#perspective)
 #
-# As well as this, is contains the [**`Film`**](#film) class, which acts as the cameras sensor and captures the resulting image from the rendering.
+# As well as this, it contains the [**`Film`**](#film) class, which acts as the
+# [**`Camera`**](#camera)'s sensor and captures the resulting image from the
+# rendering.
 
 # ___
 # ## Requires:
 
-# Classes in *camera.coffee* require access to classes from other packages and files:
+# Classes in *camera.coffee* require access to classes from other
+# packages and files:
 
 # * From [*geometry/geometry.coffee:*](geometry.html)
-Geometry = this.Geometry ? if require? then require './geometry/geometry'
+GeometryPkg = if require? then require './geometry/geometry'
 
 # > * [**`Vector`**](geometry.html#vector)
-Vector = this.Vector ? Geometry.Vector
+Vector = @Vector ? GeometryPkg.Vector
 
 # > * [**`Point`**](geometry.html#point)
-Point = this.Point ? Geometry.Point
+Point = @Point ? GeometryPkg.Point
 
 # * From [*geometry/transform.coffee:*](transform.html)
+TransformPkg = if require? then (require './geometry/transform').Transform
 
 # > * [**`Transform`**](transform.html#transform)
-Transform = this.Transform ? if require? then (require './geometry/transform').Transform
+Transform = @Transform ? TransformPkg.Transform
 
 # ___
 
 # ## <section id='camera'>Camera:</section>
 # ___
-# **`Camera`** is an abstract base class which defines the interface that all **`Camera`** subclasses must implement.
+# **`Camera`** is an abstract base class that defines an interface which
+# all **`Camera`** subclasses must implement.
 class Camera
   # ### *constructor:*
-  # > The **`Camera`** constructor requires several parameters that are appropriate for all **`Camera`** types:
+  # > The **`Camera`** constructor requires four parameters
+  # that are appropriate for all **`Camera`** types:
   #
-  # > * The `CameraToWorld` [**`AnimatedTransform`**](animatedTransform.html/#animatedTransform)
-  # 
-  # > * The `ShutterOpen` and `ShutterClose` times
+  # > * A camera-space to world-space transformation: `cameraToWorld` -
+  # must be an [**`AnimatedTransform`**](animatedTransform.html/#animT)
   #
-  # > * An instance of the [**`Film`**](#film) class
-  constructor: (@CameraToWorld, @ShutterOpen, @ShutterClose, @Film) ->
-    if @CameraToWorld.hasScale() 
-      throw Error "CameraToWorld shouldn't have any scale factors in it."
+  # > * The time when the camera shutter opens: `shutterOpen`
+  #
+  # > * The time when the camera shutter closes: `shutterClose`
+  #
+  # > * The film of the camera - `film` - must be an instance of the
+  # [**`Film`**](#film) class
+  #
+  # > If these are not supplied or are of the incorrect type, the constructor
+  # will throw an **`Error`**.
+  constructor: (@cameraToWorld, @shutterOpen, @shutterClose, @film) ->
+    unless @cameraToWorld?
+      throw Error 'Camera Constructor Error: cameraToWorld must be defined.'
+    unless @cameraToWorld.constructor.name is 'AnimatedTransform'
+      throw Error 'Camera Constructor Error: cameraToWorld must be an AnimatedTransform.'
+    unless @shutterOpen?
+      throw Error 'Camera Constructor Error: shutterOpen must be defined.'
+    unless _.isNumber @shutterOpen
+      throw Error 'Camera Constructor Error: shutterOpen must be a Number.'
+    unless @shutterClose?
+      throw Error 'Camera Constructor Error: shutterClose must be defined.'
+    unless _.isNumber @shutterClose
+      throw Error 'Camera Constructor Error: shutterClose must be a Number.'
+    unless @film?
+      throw Error 'Camera Constructor Error: film must be defined.'
+    unless @film.constructor.name is 'Film'
+      throw Error 'Camera Constructor Error: film must be a Film.'
+      
+    if @cameraToWorld.hasScale()
+      throw Error 'Camera Constructor Error: cameraToWorld shouldn\'t have any scale factors in it.'
 
   # ___
   # ### Prototypical Instance Functions:
-  
-  # These functions are attached to each instance of the **`Camera`** class - changing the function of one **`Camera`** changes the function on all other **`Camera`**s as well. 
+
+  # These functions are attached to each instance of the **`Camera`**
+  # class - changing the function of one **`Camera`** changes the
+  # function on all other **`Camera`**s as well.
 
   # ### *generateRay:*
-  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
-  # > It is required to be overridden by all subclasses of **`Camera`** class.
-  generateRay: (sample) -> 
-    throw Error "Not Implemented - GenerateRay must be implemented by Camera subclasses."
-  
+  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given
+  # image sample. It is required to be overridden by all subclasses of
+  # **`Camera`** class.
+  generateRay: (sample) ->
+    throw Error 'Not Implemented Error: generateRay must be implemented by Camera subclasses.'
+
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main
+  # [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates
+  # corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y*
+  # directions.
   generateRayDifferential: (sample) ->
-    [weight, rayDiff] = GenerateRay(sample)
+    [weight, rayDiff] = @generateRay sample
     
     shift = sample
     shift.imageX++
-    [weightX, rayX] = GenerateRay(shift)
+    [weightX, rayX] = @generateRay shift
     rayDiff.rayXOrigin = rayX.origin
     rayDiff.rayXDirection = rayX.direction
     shift.imageX--
     
     shift.imageY++
-    [weightY, rayY] = GenerateRay(shift)
+    [weightY, rayY] = @generateRay shift
     rayDiff.rayYOrigin = rayY.origin
     rayDiff.rayYDirection = rayY.direction
     
@@ -80,139 +117,252 @@ class Camera
 
 # ## <section id='projective'>ProjectiveCamera:</section>
 # ___
-# **`ProjectiveCamera`** extends the [**`Camera`**](#camera) base class to provide a common base for all *Projective* 
-# camera types.
+# **`ProjectiveCamera`** extends the [**`Camera`**](#camera) base class to
+# provide a common base for all *Projective* camera types.
 class ProjectiveCamera extends Camera
   # ### *constructor:*
-  # > The **`ProjectiveCamera`** constructor requires several parameters in addition to those required by the base class:
+  # > The **`ProjectiveCamera`** constructor requires four
+  # parameters in addition to those required by the base
+  # class:
   #
-  # > * The `ProjectiveTransform` [**`Transform`**](transform.html#transform)
-  # 
-  # > * The `ScreenWindow`
+  # > * A mapping from 3D-space to 2D-spcae: `projectiveTransform` -
+  # must be a [**`Transform`**](transform.html#transform)
   #
-  # > * The `LensRadius` and `FocalDistance` for depth of field
-  constructor: (CameraToWorld, ProjectiveTransform, ScreenWindow, ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film) ->
-    super(CameraToWorld, ShutterOpen, ShutterClose, Film)
-    @CameraToScreen = ProjectiveTransform
-    @ScreenToRaster = Transform.Multiply(Transform.Scale(Film.xResolution, Film.yResolution, 1), 
-                                         Transform.Scale(1 / (ScreenWindow[1] - ScreenWindow[0]), 1 / (ScreenWindow[2] - ScreenWindow[3]), 1),
-                                         Transform.Translate(new Vector(-ScreenWindow[0], -ScreenWindow[3], 0)))
-    @RasterToScreen = Transform.InverseTransform(@ScreenToRaster)
-    @RasterToCamera = Transform.Multiply(Transform.InverseTransform(@CameraToScreen), @RasterToScreen)
-    @LensRadius = LensRadius
-    @FocalDistance = FocalDistance
+  # > * The screen space extent of the image: `screenWindow`
+  #
+  # > * The radius of the camera lens: `lensRadius`
+  #
+  # > * the focal distance of the camera lens: `focalDistance`
+  #
+  # > If these are not supplied or are of the incorrect type, the constructor
+  # will throw an **`Error`**.
+  constructor: (cameraToWorld, shutterOpen, shutterClose, film,
+            projectiveTransform, screenWindow, @lensRadius, @focalDistance) ->
+    
+    super(cameraToWorld, shutterOpen, shutterClose, film)
+    
+    unless projectiveTransform?
+      throw Error 'ProjectiveCamera Constructor Error: projectiveTransform must be defined.'
+    unless projectiveTransform.constructor.name is 'Transform'
+      throw Error 'ProjectiveCamera Constructor Error: projectiveTransform must be a Transform.'
+    unless screenWindow?
+      throw Error 'ProjectiveCamera Constructor Error: screenWindow must be defined.'
+    unless _.isArray screenWindow
+      throw Error 'ProjectiveCamera Constructor Error: screenWindow must be an Array.'
+    unless @lensRadius?
+      throw Error 'ProjectiveCamera Constructor Error: lensRadius must be defined.'
+    unless _.isNumber @lensRadius
+      throw Error 'ProjectiveCamera Constructor Error: lensRadius must be a Number.'
+    unless @focalDistance?
+      throw Error 'ProjectiveCamera Constructor Error: focalDistance must be defined.'
+    unless _.isNumber @focalDistance
+      throw Error 'ProjectiveCamera Constructor Error: focalDistance must be a Number.'
+    
+    @cameraToScreen = projectiveTransform
+    scaleRas = Transform.Scale(film.xResolution, film.yResolution, 1)
+    scaleRes = Transform.Scale(1 / (screenWindow[1] - screenWindow[0]),
+                               1 / (screenWindow[2] - screenWindow[3]),
+                               1)
+    translate = Transform.Translate(new Vector(-screenWindow[0],
+                                               -screenWindow[3],
+                                               0))
+    @screenToRaster = Transform.Multiply([scaleRas, scaleRes, translate]...)
+    @rasterToScreen = Transform.InverseTransform(@screenToRaster)
+    screenToCamera = Transform.InverseTransform(@cameraToScreen)
+    @rasterToCamera = Transform.Multiply [screenToCamera, @rasterToScreen]...
     
 # ___
 
 # ## <section id='orthographic'>OrthographicCamera:</section>
 # ___
-# **`OrthographicCamera`** extends the [**`ProjectiveCamera`**](#projective)) base class and is based on the [**orthographic projection transformation**](http://en.wikipedia.org/wiki/Orthographic_projection).
+# **`OrthographicCamera`** extends the [**`ProjectiveCamera`**](#projective)
+# base class and is based on the **[orthographic][]** transformation.
+#
+# <!--- URLs -->
+# [orthographic]: http://en.wikipedia.org/wiki/Orthographic_projection
 class OrthographicCamera extends ProjectiveCamera
   # ### *constructor:*
-  # > The **`OrthographicCamera`** constructor requires 2 additional paramaters to those required by the **`ProjectiveCamera`** class:
+  # > The **`OrthographicCamera`** constructor takes two
+  # optional parameters in addition to those required by
+  # the **`ProjectiveCamera`** class:
   #
-  # > * The *Z* value for the `Near` projection plane
-  # 
-  # > * The *Z* value for the `Far` projection plane
-  constructor: (CameraToWorld, Near = 0, Far = 1, ScreenWindow, ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film) ->
-    super(CameraToWorld, Transform.Orthographic(Near, Far), ScreenWindow, 
-          ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
-    @dxCamera = Transform.TransformVector @RasterToCamera, new Vector(1, 0, 0)
-    @dyCamera = Transform.TransformVector @RasterToCamera, new Vector(0, 1, 0)
+  # > * A *Z* value for the near projection plane: `near` - defaults to `0`
+  #
+  # > * A *Z* value for the far projection plane: `far` - defaults to `1`
+  #
+  # > If these are supplied by the user and are of the incorrect type, the
+  # constructor will throw an **`Error`**.
+  constructor: (cameraToWorld, shutterOpen, shutterClose, film,
+                near = 0, far = 1, screenWindow, lensRadius, focalDistance) ->
+
+    unless _.isNumber near
+      throw Error 'OrthographicCamera Constructor Error: near must be a Number.'
+    unless _.isNumber far
+      throw Error 'OrthographicCamera Constructor Error: far must be a Number.'
+    
+    projectiveTransform = Transform.Orthographic(near, far)
+
+    super(cameraToWorld, shutterOpen, shutterClose, film,
+          projectiveTransform, screenWindow, lensRadius, focalDistance)
+          
+    @dxCamera = Transform.TransformVector @rasterToCamera, new Vector(1, 0, 0)
+    @dyCamera = Transform.TransformVector @rasterToCamera, new Vector(0, 1, 0)
     
   # ___
   # ### Prototypical Instance Functions:
 
-  # These functions are attached to each instance of the **`OrthographicCamera`** class - changing the function of one **`OrthographicCamera`** changes the function on all other **`OrthographicCamera`**s as well.
+  # These functions are attached to each instance of the
+  # **`OrthographicCamera`** class - changing the function of one
+  # **`OrthographicCamera`** changes the function on all other
+  # **`OrthographicCamera`**s as well.
   
   # ### *generateRay:*
-  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
-  # > It is required to be overridden by all subclasses of **`Camera`** class.
+  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given
+  # image sample. It is required to be overridden by all
+  # subclasses of [**`Camera`**](#camera) class.
   generateRay: (sample) ->
-    RasterPoint = new Point(sample.imageX, sample.imageY, 0)
-    CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
-    ray = new Ray(CameraPoint, new Vector(0, 0, 1), 0, Infinity)
-    `// TODO 
-    // if @LensRadius > 0
+    rasterPoint = new Point(sample.imageX, sample.imageY, 0)
+    cameraPoint = Transform.TransformPoint @rasterToCamera, rasterPoint
+    ray = new Ray(cameraPoint, new Vector(0, 0, 1), 0, null, Infinity)
+    `// TODO
+    // if @lensRadius > 0
     //   ray = Ray.DepthOfField(sample, ray)`
-    ray.time = MathFunctions.LinearInterpolation(sample.time, shutterOpen, shutterClose)
-    ray = Transform.TransformRay(@CameraToWorld, ray)
+    ray.time = MathFunctions.LinearInterpolation(sample.time,
+                                                 @shutterOpen,
+                                                 @shutterClose)
+    ray = AnimatedTransform.TransformRay @cameraToWorld, ray
     return [1, ray]
     
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main
+  # [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates
+  # corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y*
+  # directions.
   generateRayDifferential: (sample) ->
-    RasterPoint = new Point(sample.imageX, sample.imageY, 0)
-    CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
-    rayDiff = new RayDifferential(CameraPoint, new Vector(0, 0, 1), 0, Infinity)
+    rasterPoint = new Point(sample.imageX, sample.imageY, 0)
+    cameraPoint = Transform.TransformPoint @rasterToCamera, rasterPoint
+    
+    rayDirection = new Vector(0, 0, 1)
+    rayDiff = new RayDifferential(cameraPoint, rayDirection, 0, null, Infinity)
+    
     `// TODO
-    // if @LensRadius > 0
+    // if @lensRadius > 0
     //   rayDiff = Ray.DepthOfField(sample, rayDiff)`
-    rayDiff.time = MathFunctions.LinearInterpolation(sample.time, shutterOpen, shutterClose)
+    
+    rayDiff.time = MathFunctions.LinearInterpolation(sample.time,
+                                                     @shutterOpen,
+                                                     @shutterClose)
     rayDiff.rayXOrigin = Point.AddVectorToPoint(rayDiff.origin, @dxCamera)
     rayDiff.rayYOrigin = Point.AddVectorToPoint(rayDiff.origin, @dyCamera)
     rayDiff.rayXDirection = rayDiff.rayYDirection = rayDiff.direction
+    
     rayDiff.hasDifferentials = true
-    rayDiff = Transform.TransformRayDifferential(@CameraToWorld, ray)
+    rayDiff = AnimatedTransform.TransformRayDiff @cameraToWorld, rayDiff
     return [1, rayDiff]
 
 # ___
 
 # ## <section id='perspective'>PerspectiveCamera:</section>
 # ___
-# **`PerspectiveCamera`** extends the [**`ProjectiveCamera`**](#projective) base class and is based on the 
-# [**perspective projection transformation**](http://en.wikipedia.org/wiki/Camera_matrix).
+# **`PerspectiveCamera`** extends the [**`ProjectiveCamera`**](#projective)
+# base class and is based on the **[perspective][]** transformation.
+#
+# <!--- URLs -->
+# [perspective]: http://en.wikipedia.org/wiki/Camera_matrix
 class PerspectiveCamera extends ProjectiveCamera
   # ### *constructor:*
-  # > The **`PerspectiveCamera`** constructor requires 3 additional paramaters to those required by the **`ProjectiveCamera`** class:
-  #  
-  # > * The `FieldOfView` angle
+  # > The **`PerspectiveCamera`** constructor takes three
+  # optional parameters in addition to those required by
+  # the **`ProjectiveCamera`** class:
   #
-  # > * The *Z* value for the `Near` projection plane
-  # 
-  # > * The *Z* value for the `Far` projection plane
+  # > * The field of view angle: `fieldOfView`
   #
-  constructor: (CameraToWorld, FieldOfView, Near = 1e-2, Far = 1000, ScreenWindow, ShutterOpen, ShutterClose, LensRadius = 0, FocalDistance = 0, Film) ->
-    super(CameraToWorld, Transform.Perspective(FieldOfView, Near, Far), ScreenWindow, 
-                                        ShutterOpen, ShutterClose, LensRadius, FocalDistance, Film)
-    @dxCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(@RasterToCamera, new Point(1, 0, 0)),
-                                             Transform.TransformPoint(@RasterToCamera, new Point(0, 0, 0)))
-    @dyCamera = Point.SubtractPointFromPoint(Transform.TransformPoint(@RasterToCamera, new Point(0, 1, 0)),
-                                             Transform.TransformPoint(@RasterToCamera, new Point(0, 0, 0)))
+  # > * A *Z* value for the near projection plane: `near` - defaults to `0.01`
+  #
+  # > * A *Z* value for the far projection plane: `far` - defaults to `1000`
+  #
+  # > If these are supplied by the user and are of the incorrect type, the
+  # constructor will throw an **`Error`**.
+  constructor: (cameraToWorld, shutterOpen, shutterClose, film,
+                fieldOfView = 45, near = 1e-2, far = 1000,
+                screenWindow, lensRadius, focalDistance) ->
     
+    unless _.isNumber fieldOfView
+      throw Error 'PerspectiveCamera Constructor Error: fieldOfView must be a Number.'
+    unless _.isNumber near
+      throw Error 'PerspectiveCamera Constructor Error: near must be a Number.'
+    unless _.isNumber far
+      throw Error 'PerspectiveCamera Constructor Error: far must be a Number.'
+    
+    projectiveTransform = Transform.Perspective(fieldOfView, near, far)
+
+    super(cameraToWorld, shutterOpen, shutterClose, film,
+          projectiveTransform, screenWindow, lensRadius, focalDistance)
+
+    x = new Point(1, 0, 0)
+    y = new Point(0, 1, 0)
+    origin = new Point(0, 0, 0)
+    transformedX = Transform.TransformPoint @rasterToCamera, x
+    transformedY = Transform.TransformPoint @rasterToCamera, y
+    transformedOrigin = Transform.TransformPoint @rasterToCamera, origin
+    @dxCamera = Point.SubtractPointFromPoint transformedX, transformedOrigin
+    @dyCamera = Point.SubtractPointFromPoint transformedY, transformedOrigin
+
   # ___
   # ### Prototypical Instance Functions:
 
-  # These functions are attached to each instance of the **`ProjectiveCamera`** class - changing the function of one **`ProjectiveCamera`** changes the function on all other **`ProjectiveCamera`**s as well.
-    
+  # These functions are attached to each instance of the
+  # **`ProjectiveCamera`** class - changing the function of one
+  # **`ProjectiveCamera`** changes the function on all other
+  # **`ProjectiveCamera`**s as well.
+
   # ### *generateRay:*
-  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given image sample.
-  # > It is required to be overridden by all subclasses of **`Camera`** class.
+  # > **`generateRay`** generates a [**`Ray`**](geometry.html#ray) for a given
+  # image sample. It is required to be overridden by all
+  # subclasses of **`Camera`** class.
   generateRay: (sample, ray) ->
-    RasterPoint = new Point(sample.imageX, sample.imageY, 0)
-    CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
-    ray = new Ray(new Point(0, 0, 0), Vector.Normalize(Vector.FromPoint(CameraPoint)), 0, Infinity)
-    `// TODO 
+    rasterPoint = new Point(sample.imageX, sample.imageY, 0)
+    cameraPoint = Transform.TransformPoint @rasterToCamera, rasterPoint
+
+    rayDirection = Vector.Normalise Vector.FromPoint(cameraPoint)
+    ray = new Ray(new Point(0, 0, 0), rayDirection, 0, Infinity)
+    
+    `// TODO
     // if @LensRadius > 0
     //   ray = Ray.DepthOfField(sample, ray)`
-    ray.time = MathFunctions.LinearInterpolation(sample.time, shutterOpen, shutterClose)
-    ray = Transform.TransformRay(@CameraToWorld, ray)
+
+    ray.time = MathFunctions.LinearInterpolation(sample.time,
+                                                 @shutterOpen,
+                                                 @shutterClose)
+    ray = AnimatedTransform.TransformRay @cameraToWorld, ray
     return [1, ray]
 
   # ### *generateRayDifferential:*
-  # > **`generateRayDifferential`** generates a main **`Ray`** like **`generateRay`** but also generates corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y* directions.
+  # > **`generateRayDifferential`** generates a main
+  # [**`Ray`**](geometry.html#ray) like **`generateRay`** but also generates
+  # corresponding **`Ray`**s for pixels shifted one sample in the *X* and *Y*
+  # directions.
   generateRayDifferential: (sample, rayDiff) ->
-    RasterPoint = new Point(sample.imageX, sample.imageY, 0)
-    CameraPoint = Transform.TransformPoint(@RasterToCamera, RasterPoint)
-    rayDiff = new RayDifferential(new Point(0, 0, 0), Vector.Normalize(Vector.FromPoint(CameraPoint)), 0, Infinity)
+    rasterPoint = new Point(sample.imageX, sample.imageY, 0)
+    cameraPoint = Transform.TransformPoint @rasterToCamera, rasterPoint
+
+    rayOrigin = new Point(0, 0, 0)
+    rayDirection = Vector.Normalise Vector.FromPoint(cameraPoint)
+    rayDiff = new RayDifferential(rayOrigin, rayDirection, 0, Infinity)
+
     `// TODO
     // if @LensRadius > 0
     //   rayDiff = Ray.DepthOfField(sample, rayDiff)`
+
     rayDiff.rayXOrigin = rayDiff.rayYOrigin = rayDiff.origin
-    rayDiff.rayXDirection = Vector.Normalize(Vector.FromPoint(CameraPoint).add(dxCamera))
-    rayDiff.rayYDirection = Vector.Normalize(Vector.FromPoint(CameraPoint).add(dyCamera))
-    rayDiff.time = MathFunctions.LinearInterpolation(sample.time, shutterOpen, shutterClose)
-    rayDiff = Transform.TransformRayDifferential(@CameraToWorld, rayDiff)
+    vectorDX = Vector.FromPoint(cameraPoint).add(@dxCamera)
+    vectorDY = Vector.FromPoint(cameraPoint).add(@dyCamera)
+    rayDiff.rayXDirection = Vector.Normalise vectorDX
+    rayDiff.rayYDirection = Vector.Normalise vectorDY
+    rayDiff.time = MathFunctions.LinearInterpolation(sample.time,
+                                                     @shutterOpen,
+                                                     @shutterClose)
+    rayDiff = AnimatedTransform.TransformRayDiff(@cameraToWorld, rayDiff)
     rayDiff.hasDifferentials = true
     return [1, rayDiff]
     
@@ -220,18 +370,28 @@ class PerspectiveCamera extends ProjectiveCamera
 
 # ## <section id='film'>Film:</section>
 # ___
-# **`Film`** is an abstract base class which defines the interface that all film subclasses must implement.
+# **`Film`** is an abstract base class which defines the interface that
+# all film subclasses must implement.
 class Film
   
   # # TODO
-  
+
   constructor: (@xResolution, @yResolution) ->
-    
+
 # ___
 # ## Exports:
 
-# The [**`OrthographicCamera`**](#orthographics), [**`PerspectiveCamera`**](#perspective) and [**`Film`**](#film) classes are added to the global *root* object.
+# The [**`OrthographicCamera`**](#orthographic),
+# [**`PerspectiveCamera`**](#perspective) and [**`Film`**](#film)
+# classes are added to the global *root* object.
 root = exports ? this
 root.OrthographicCamera = OrthographicCamera
 root.PerspectiveCamera = PerspectiveCamera
 root.Film = Film
+
+# If `QUnit` is available, The [**`Camera`**](#camera),
+# and [**`ProjectiveCamera`**](#projective) classes are added to
+# the global *root* object for testing.
+if QUnit?
+  root.Camera = Camera
+  root.ProjectiveCamera = ProjectiveCamera

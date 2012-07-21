@@ -3,25 +3,32 @@ html
   head
     title = title
     link(rel="stylesheet", href="/stylesheets/qunit.css", type="text/css", media="screen")
-    // jQuery
+    // Libraries
+    // jQuery + QUnit
     script(src="/libraries/jquery.js")
+    script(type="text/javascript", src="/libraries/qunit.js")
     // underscore
     script(src="/libraries/underscore.js")
-    // Project scripts
+    // xml2json.js
+    script(type="text/javascript", src="/libraries/xml2json.js")
+    // uuid.js
+    script(type="text/javascript", src="/libraries/uuid.js")
+    // socket.io
     script(type='text/javascript', src='/socket.io/socket.io.js')
+
+    // Project scripts
+    script(type="text/javascript", src="/client/master.js")
     script(type="text/javascript", src="/raytracer/utils/math.js")
-    script(type="text/javascript", src="/raytracer/geometry/matrix.js")
-    script(type="text/javascript", src="/raytracer/geometry/geometry.js")
-    script(type="text/javascript", src="/raytracer/geometry/transform.js")
     script(type="text/javascript", src="/raytracer/geometry/animatedTransform.js")
     script(type="text/javascript", src="/raytracer/geometry/differentialGeometry.js")
+    script(type="text/javascript", src="/raytracer/geometry/geometry.js")
+    script(type="text/javascript", src="/raytracer/geometry/matrix.js")
+    script(type="text/javascript", src="/raytracer/geometry/transform.js")
+    script(type="text/javascript", src="/raytracer/camera.js")
     script(type="text/javascript", src="/raytracer/shape/shape.js")
     script(type="text/javascript", src="/raytracer/shape/triangle.js")
-    script(type="text/javascript", src="/client/master.js")
-    script(type="text/javascript", src="/libraries/xml2json.js")
-    script(type="text/javascript", src="/libraries/uuid.js")
+    
     // Testing scripts
-    script(type="text/javascript", src="/libraries/qunit.js")
     script(type="text/javascript", src="/testing/testCollada.js")
     script(type="text/javascript", src="/testing/testUI.js")
     script(type="text/javascript", src="/testing/testMath.js")
@@ -32,6 +39,7 @@ html
     script(type="text/javascript", src="/testing/testDifferentialGeometry.js")
     script(type="text/javascript", src="/testing/testShape.js")
     script(type="text/javascript", src="/testing/testTriangle.js")
+    script(type="text/javascript", src="/testing/testCamera.js")
     
   body
     h1(id='qunit-header') A Web-Based Distributed Ray-Tracer in JavaScript
