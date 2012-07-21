@@ -17,8 +17,8 @@
 # If the browser doesn't have the required APIs, an error message is
 # displayed and the page doesn't do anything.
 if not window.File or not window.FileReader or not window.FileList
-  alert '''The required APIs (File, FileReader and FileList) are not fully
-           supported by this browser.'''
+  alert 'The required APIs (File, FileReader and FileList) are not fully
+         supported by this browser.'
 # If the APIs are available, the rest of the functionality is initialised.
 else
   # ___
@@ -66,8 +66,8 @@ else
         type: 'POST'
         url: '/upload'
       return renderObject
-    else throw new Error '''UI Error: The XML to JSON conversion returned no
-                            JSON data.'''
+    else
+      throw Error 'UI Error: The XML to JSON conversion returned no JSON data.'
   
   # ### <section id='hfd'>*handleFileDrop*:</section>
   # > **`handleFileDrop`** looks at the file (or files) that have
@@ -90,8 +90,8 @@ else
           handleFileRead e.target.result
         reader.readAsText file
         e.success = true
-      else throw new Error 'UI Error: The file dropped is not a COLLADA file.'
-    else throw new Error 'UI Error: No file dropped.'
+      else throw Error 'UI Error: The file dropped is not a COLLADA file.'
+    else throw Error 'UI Error: No file dropped.'
 
   # ### <section id='hdo'>*handleDragOver*:</section>
   # > **`handleDragOver`** is called whenever the user drags a
