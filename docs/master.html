@@ -10,7 +10,7 @@ access to certain <strong><a href="http://html5.org/" title="HTML5">HTML5</a></s
 
 <!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>If the browser doesn't have the required APIs, an error message is
 displayed and the page doesn't do anything.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">if</span> <span class="o">not</span> <span class="nb">window</span><span class="p">.</span><span class="nx">File</span> <span class="o">or</span> <span class="o">not</span> <span class="nb">window</span><span class="p">.</span><span class="nx">FileReader</span> <span class="o">or</span> <span class="o">not</span> <span class="nb">window</span><span class="p">.</span><span class="nx">FileList</span>
-  <span class="nx">alert</span> <span class="s">&#39;&#39;&#39;The required APIs (File, FileReader and FileList) are not fully </span>
+  <span class="nx">alert</span> <span class="s">&#39;&#39;&#39;The required APIs (File, FileReader and FileList) are not fully</span>
 <span class="s">           supported by this browser.&#39;&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>If the APIs are available, the rest of the functionality is initialised.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">else</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <hr />
 
 <h2>Constants:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Some constants are required for this script:</p>             </td>             <td class="code">               <div class="highlight"><pre> </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <ul>
@@ -28,8 +28,8 @@ displayed and the page doesn't do anything.</p>             </td>             <t
   <p><strong><code>handleFileRead</code></strong> first converts the <em>.dae</em> file from XML
   to JSON using the <strong><a href="http://www.fyneworks.com/jquery/xml-to-json/" title="xml2json Plugin">xml2json</a></strong> <strong><a href="http://www.jquery.com" title="jQuery">jQuery</a></strong> plugin.</p>
   
-  <p>If the converstion generates a valid JavaScript object, 
-  we then generate a <strong><a href="http://en.wikipedia.org/wiki/Universally_unique_identifier" title="UUID">UUID</a></strong> with <strong><a href="https://github.com/LiosK/UUID.js" title="uuid.js library">uuid.js</a></strong>, create the link 
+  <p>If the converstion generates a valid JavaScript object,
+  we then generate a <strong><a href="http://en.wikipedia.org/wiki/Universally_unique_identifier" title="UUID">UUID</a></strong> with <strong><a href="https://github.com/LiosK/UUID.js" title="uuid.js library">uuid.js</a></strong>, create the link
   URL and POST the render data and URL to the server.</p>
 </blockquote>
 
@@ -48,14 +48,14 @@ displayed and the page doesn't do anything.</p>             </td>             <t
         <span class="nv">type: </span><span class="s">&#39;POST&#39;</span>
         <span class="nv">url: </span><span class="s">&#39;/upload&#39;</span>
       <span class="k">return</span> <span class="nx">renderObject</span>
-    <span class="k">else</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;UI Error: The XML to JSON conversion returned no JSON data.&#39;</span>
+    <span class="k">else</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;&#39;&#39;UI Error: The XML to JSON conversion returned no</span>
+<span class="s">                            JSON data.&#39;&#39;&#39;</span>
   </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3><section id='hfd'><em>handleFileDrop</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>handleFileDrop</code></strong> looks at the file (or files) that have
   been dropped by the user, selects the first one and
-  checks that it is a <strong><a href="http://www.collada.org/" title="COLLADA">COLLADA</a></strong> file with the extension 
+  checks that it is a <strong><a href="http://www.collada.org/" title="COLLADA">COLLADA</a></strong> file with the extension
   <em>.dae</em>. If it is, the file is passed to the <a href="#hfr"><strong><code>handleFileRead</code></strong></a>
   function for parsing, otherwise an error is thrown.</p>
 </blockquote>
@@ -116,8 +116,8 @@ the newly created rendering operation</em></li>
       <span class="nv">fileDrop.ondragover = </span><span class="nx">handleDragOver</span>
       <span class="nv">fileDrop.ondrop = </span><span class="nx">handleFileDrop</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <hr />
 
-<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>The <a href="#hfr"><strong><code>handleFileRead</code></strong></a>, <a href="#hfd"><strong><code>handleFileDrop</code></strong></a> 
-and <a href="#hdo"><strong><code>handleDragOver</code></strong></a> functions are added to the global 
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>The <a href="#hfr"><strong><code>handleFileRead</code></strong></a>, <a href="#hfd"><strong><code>handleFileDrop</code></strong></a>
+and <a href="#hdo"><strong><code>handleDragOver</code></strong></a> functions are added to the global
 <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
   <span class="nv">root.master =</span>
     <span class="nv">handleFileRead: </span><span class="nx">handleFileRead</span>
