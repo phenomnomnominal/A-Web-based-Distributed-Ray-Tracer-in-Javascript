@@ -9,7 +9,7 @@ class TriangleMesh extends Shape
   # ### *constructor:*
   # > The **`TriangleMesh`** constructor requires the same arguments as the **`Shape`** [**`constructor`**](shape.html#shape-cons).
   #
-  # > It also requires both the number of **`Triangle`**s that make up the mesh (`numberTriangles`). the number of vertices that make up those **`Triangle`**s (`numberVertices`) and an `Array` of numbers which correspond to the indices of the vertices (`vertexIndices`).
+  # > It also requires both the number of **`Triangle`**s that make up the mesh (`numberTriangles`), the number of vertices that make up those **`Triangle`**s (`numberVertices`) and an `Array` of numbers which correspond to the indices of the vertices (`vertexIndices`).
   #
   # > The vertex indices are used to look up the vertex positions in `positions`.
   #
