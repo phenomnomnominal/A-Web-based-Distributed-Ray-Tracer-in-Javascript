@@ -94,6 +94,10 @@ a {
 p {
   margin: 0 0 15px 0;
 }
+blockquote {
+  margin-left: 30px;
+  margin-right: 30px;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Glasgow';
   letter-spacing: 2px;
@@ -169,7 +173,7 @@ table td {
     padding: 10px 25px 1px 50px;
     overflow-x: hidden;
     vertical-align: top;
-    text-align: left;
+    text-align: justify;
   }
     .docs pre {
       margin: 15px 0 15px;
