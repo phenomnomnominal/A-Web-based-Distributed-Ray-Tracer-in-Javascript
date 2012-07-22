@@ -10,9 +10,9 @@
 
 # > * [`server`](server.html) - *Server initialisation and configuration, as well as core server functionality*
 server = require './server'
-# * [`router`](router.html) - *Generic routing functionality*
+# > * [`router`](router.html) - *Generic routing functionality*
 router = require './router'
-# * [`requestHandlers`](requestHandlers.html) - *Handler functions for specific server requests*
+# > * [`requestHandlers`](requestHandlers.html) - *Handler functions for specific server requests*
 requestHandlers = require './requestHandlers'
 #___
 
