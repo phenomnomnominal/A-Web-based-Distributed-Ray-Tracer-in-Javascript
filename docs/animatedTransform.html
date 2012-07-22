@@ -1,6 +1,10 @@
-<!DOCTYPE html>  <html> <head>   <title>animatedTransform.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               animatedTransform.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><em>animatedTransform.coffee</em> contains classes for animating transforms, specifically the <a href="#quaternion"><strong><code>Quaternion</code></strong></a> class and the <a href="#animatedTransform"><strong><code>AnimatedTransform</code></strong></a>.</p>
+<!DOCTYPE html>  <html> <head>   <title>animatedTransform.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               animatedTransform.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><em>animatedTransform.coffee</em> contains classes for animating transforms,
+specifically the <strong><a href="#quat" title="Quaternion"><code>Quaternion</code></a></strong> class and the
+<strong><a href="#animT" title="AnimatedTransform"><code>AnimatedTransform</code></a></strong>.</p>
 
-<hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2><section id='quaternion'>Quaternion:</section></h2>
+<hr />
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2><section id='quat'>Quaternion:</section></h2>
 
 <hr />
 
@@ -10,104 +14,144 @@
   <p><em>x + yi</em>, with <em>i<sup>2</sup> = &minus;1</em>.</p>
 </blockquote>
 
-<p>A <strong><code>Quaternion</code></strong> is a generalisation of imaginary numbers into four dimensions</p>
+<p>A <strong><code>Quaternion</code></strong> is a generalisation of imaginary numbers into four
+dimensions</p>
 
 <blockquote>
   <p><em>q = (x, y, z, w) = w + xi + yj + zk</em></p>
 </blockquote>
 
-<p>where </p>
+<p>where</p>
 
 <blockquote>
-  <p><em>i<sup>2</sup> = j<sup>2</sup> = k<sup>2</sup> = i × j × k = &minus;1.</em>
-  <strong><code>Quaternion</code></strong>s provide an elegant representation of a rotation, which leads to elegant - and correct - methods for interpolating between rotations, which are used for animations.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Quaternion</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
+  <p><em>i<sup>2</sup> = j<sup>2</sup> = k<sup>2</sup> = i × j × k = &minus;1.</em></p>
+</blockquote>
+
+<p><strong><code>Quaternion</code></strong>s provide an elegant representation of a rotation, which
+leads to elegant - and correct - methods for interpolating between rotations,
+which are used for animations.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Quaternion</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
 
 <blockquote>
-  <p>The <strong><code>Quaternion</code></strong> constructor uses a <a href="geometry.html#vector"><strong><code>Vector</code></strong></a> to represent the <em>X</em>, <em>Y</em> and <em>Z</em> components of the <strong><code>Quaternion</code></strong>, so that existing <strong><code>Vector</code></strong> functions can be reused. A number is used to represent the <em>W</em> component.</p>
+  <p>The <strong><code>Quaternion</code></strong> constructor requires two parameters:</p>
+  
+  <ul>
+  <li><p>A <strong><a href="geometry.html#vector" title="Vector"><code>Vector</code></a></strong> to represent the <em>X</em>, <em>Y</em> and <em>Z</em> components of the
+  <strong><code>Quaternion</code></strong>: <code>v</code> - must be a <strong><code>Vector</code></strong></p></li>
+  <li><p>A number to represent the <em>W</em> component: <code>w</code></p></li>
+  </ul>
+  
+  <p>If these are supplied by the user and are of the incorrect type, the
+  constructor will throw an <strong><code>Error</code></strong>.</p>
   
   <p>If no arguments are provided, a unit <strong><code>Quaternion</code></strong> is initialised:</p>
   
   <blockquote>
     <p><em>q = (0, 0, 0, 1)</em></p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(v, w) -&gt;</span>
-    <span class="k">if</span> <span class="o">not</span> <span class="nx">v</span><span class="o">?</span> <span class="k">then</span> <span class="vi">@v = </span><span class="k">new</span> <span class="nx">Vector</span><span class="p">()</span>
-    <span class="k">else</span> <span class="vi">@v = </span><span class="nx">v</span> 
-    <span class="k">if</span> <span class="o">not</span> <span class="nx">w</span><span class="o">?</span> <span class="k">then</span> <span class="vi">@w = </span><span class="mi">1</span>
-    <span class="k">else</span> <span class="vi">@w = </span><span class="nx">w</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <hr />
+</blockquote>
 
-<h3>Prototypical Instance Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>These functions are attached to each instance of the <strong><code>Quaternion</code></strong> class - changing the function of one <strong><code>Quaternion</code></strong> changes the function on all other <strong><code>Quaternion</code></strong>s as well. These functions act on a <strong><code>Quaternion</code></strong> in place - the original object is modified.</p>             </td>             <td class="code">               <div class="highlight"><pre>    </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3><strong>Arithmetic methods:</strong></h3>
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="p">(</span><span class="vi">@v = </span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(),</span> <span class="vi">@w = </span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span>
+
+    <span class="nx">unless</span> <span class="nx">@v</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&#39;Vector&#39;</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Quaternion Constructor Error: v must be a Vector&#39;</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">@w</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;Quaternion Constructor Error: w must be a Number&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <hr />
+
+<h3>Prototypical Instance Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>These functions are attached to each instance of the <strong><code>Quaternion</code></strong> class
+- changing the function of one <strong><code>Quaternion</code></strong> changes the function on all
+other <strong><code>Quaternion</code></strong>s as well. These functions act on a <strong><code>Quaternion</code></strong>
+in place - the original object is modified.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3><strong>Arithmetic methods:</strong></h3>
 
 <blockquote>
-  <p>Arithmetic with <strong><code>Quaternion</code></strong> instances is performed component-wise, for example:</p>
+  <p>Arithmetic with <strong><code>Quaternion</code></strong> instances is performed component-wise,
+  for example:</p>
   
   <p><em>q + q' = (w + w'), (x + x') × i, (y + y') × j, (z + z') × k</em></p>
   
   <p><em>q × 3 = (w × 3), (x × 3) × i, (y × 3) × j, (z × 3) × k</em></p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <blockquote>
   <h3><em>add:</em></h3>
   
   <blockquote>
-    <p><strong><code>add</code></strong> uses <a href="geometry.html#vector-add"><strong><code>Vector.add</code></strong></a> to add the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components and simple addition for the <em>W</em> component.</p>
+    <p><strong><code>add</code></strong> uses <strong><a href="geometry.html#vector-add" title="Vector.add"><code>Vector.add</code></a></strong> to add the <em>X</em>, <em>Y</em> and <em>Z</em>
+    <strong><code>Vector</code></strong> components and simple addition for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
   <span class="nv">add: </span><span class="nf">(q) -&gt;</span>
     <span class="nx">@v</span><span class="p">.</span><span class="nx">add</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span>
     <span class="nx">@w</span> <span class="o">+=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">w</span>
-    <span class="k">return</span> <span class="nx">@</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <blockquote>
+    <span class="k">return</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <blockquote>
   <h3><em>subtract:</em></h3>
   
   <blockquote>
-    <p><strong><code>subtract</code></strong> uses <a href="geometry.html#vector-subtract"><strong><code>Vector.subtract</code></strong></a> to subtract the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components and simple subtraction for the <em>W</em> component.</p>
+    <p><strong><code>subtract</code></strong> uses <strong><a href="geometry.html#vector-subtract" title="Vector.subtract"><code>Vector.subtract</code></a></strong> to subtract the <em>X</em>, <em>Y</em>
+    and <em>Z</em> <strong><code>Vector</code></strong> components and simple subtraction for the <em>W</em>
+    component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
   <span class="nv">subtract: </span><span class="nf">(q) -&gt;</span>
     <span class="nx">@v</span><span class="p">.</span><span class="nx">subtract</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span>
     <span class="nx">@w</span> <span class="o">-=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">w</span>
-    <span class="k">return</span> <span class="nx">@</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <blockquote>
+    <span class="k">return</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <blockquote>
   <h3><em>multiply:</em></h3>
   
   <blockquote>
-    <p><strong><code>multiply</code></strong> uses <a href="geometry.html#vector-muliply"><strong><code>Vector.multiply</code></strong></a> to multiply the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components and simple multiplication for the <em>W</em> component.</p>
+    <p><strong><code>multiply</code></strong> uses <strong><a href="geometry.html#vector-muliply" title="Vector.multiply"><code>Vector.multiply</code></a></strong> to multiply the <em>X</em>, <em>Y</em>
+    and <em>Z</em> <strong><code>Vector</code></strong> components and simple multiplication for the <em>W</em>
+    component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
-  <span class="nv">multiply: </span><span class="nf">(f) -&gt;</span>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">multiply: </span><span class="nf">(f) -&gt;</span>
     <span class="nx">@v</span><span class="p">.</span><span class="nx">multiply</span> <span class="nx">f</span>
     <span class="nx">@w</span> <span class="o">*=</span> <span class="nx">f</span>
-    <span class="k">return</span> <span class="nx">@</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <blockquote>
+    <span class="k">return</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <blockquote>
   <h3><em>divide:</em></h3>
   
   <blockquote>
-    <p><strong><code>divide</code></strong> uses <a href="geometry.html#vector-divide"><strong><code>Vector.divide</code></strong></a> to divide the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components and simple division for the <em>W</em> component.</p>
+    <p><strong><code>divide</code></strong> uses <strong><a href="geometry.html#vector-divide" title="Vector.divide"><code>Vector.divide</code></a></strong> to divide the <em>X</em>, <em>Y</em> and
+    <em>Z</em> <strong><code>Vector</code></strong> components and simple division for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
   <span class="nv">divide: </span><span class="nf">(f) -&gt;</span>
     <span class="nx">@v</span><span class="p">.</span><span class="nx">divide</span> <span class="nx">f</span>
     <span class="nx">@w</span> <span class="o">/=</span> <span class="nx">f</span>
-    <span class="k">return</span> <span class="nx">@</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <hr />
+    <span class="k">return</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <hr />
 
-<h3>Static Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>These functions belong to the <strong><code>Quaternion</code></strong> class - any object arguments are not modified and a new object is always returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>    </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3><em>Quaternion.ToTransform:</em></h3>
+<h3>Static Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>These functions belong to the <strong><code>Quaternion</code></strong> class - any object arguments
+are not modified and a new object is always returned.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3><em>Quaternion.ToTransform:</em></h3>
 
 <blockquote>
-  <p><strong><code>Quaternion.ToTransform</code></strong> provides the ability to generate a <a href="transform.html#transform"><strong><code>Transform</code></strong></a> that represents the same rotation as an existing <strong><code>Quaternion</code></strong>. Transforming a <a href="geometry.html#point"><strong><code>Point</code></strong></a> by a <strong><code>Quaternion</code></strong> is given by:</p>
+  <p><strong><code>Quaternion.ToTransform</code></strong> provides the ability to generate a
+  <strong><a href="transform.html#transform" title="Transform"><code>Transform</code></a></strong> that represents the same rotation as an existing
+  <strong><code>Quaternion</code></strong>.</p>
+  
+  <p>Transforming a <strong><a href="geometry.html#point" title="Point"><code>Point</code></a></strong> by a <strong><code>Quaternion</code></strong> is given by:</p>
   
   <blockquote>
     <p><em>p' = q × p × q<sup>&minus;1</sup></em>.</p>
   </blockquote>
   
-  <p>By expanding out and simplifying the multiplication of </p>
+  <p>By expanding out and simplifying the multiplication of</p>
   
   <blockquote>
     <p><em>q × p × q<sup>&minus;1</sup></em></p>
   </blockquote>
   
-  <p>we can find the matrix that represents the same transformation and generate a new <strong><code>Transform</code></strong>.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@ToTransform: </span><span class="nf">(q) -&gt;</span>
+  <p>we can find the matrix that represents the same transformation and
+  generate a new <strong><code>Transform</code></strong>. Note that the 4th Row and Column are
+  unspecified, so the <strong><a href="matrix.html#matrix" title="Matrix4x4"><code>Matrix4x4</code></a></strong> constructor will fill the
+  <code>Transform.matrix</code> and <code>Transform.inverse</code> properties with values from the
+  identity matrix.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@ToTransform: </span><span class="nf">(q) -&gt;</span>
     <span class="nv">xx = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span> <span class="nv">yy = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span> <span class="nv">zz = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">z</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">z</span>
     <span class="nv">xy = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span> <span class="nv">xz = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">z</span><span class="p">;</span> <span class="nv">yz = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">z</span>
     <span class="nv">wx = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">w</span><span class="p">;</span> <span class="nv">wy = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">w</span><span class="p">;</span> <span class="nv">wz = </span><span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">.</span><span class="nx">z</span> <span class="o">*</span> <span class="nx">q</span><span class="p">.</span><span class="nx">w</span>
@@ -123,28 +167,34 @@
     <span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="nx">yz</span> <span class="o">-</span> <span class="nx">wx</span><span class="p">)</span>
     <span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="nx">xx</span> <span class="o">+</span> <span class="nx">yy</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Transpose</span><span class="p">(</span><span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">(</span><span class="nx">m</span><span class="p">)),</span> <span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">(</span><span class="nx">m</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3><em>Quaternion.FromTransform:</em></h3>
+    <span class="nv">matrix = </span><span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+    <span class="nv">transpose = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Transpose</span> <span class="nx">matrix</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">transpose</span><span class="p">,</span> <span class="nx">matrix</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3><em>Quaternion.FromTransform:</em></h3>
 
 <blockquote>
-  <p><strong><code>Quaternion.FromTransform</code></strong> provides the ability to generate a <strong><code>Quaternion</code></strong> object from an existing <strong><code>Transform</code></strong></p>
+  <p><strong><code>Quaternion.FromTransform</code></strong> provides the ability to generate a
+  <strong><code>Quaternion</code></strong> object from an existing <strong><a href="transform.html#transform" title="Transform"><code>Transform</code></a></strong></p>
   
-  <p>This implementation is from Shoemake's 1991 paper <a href="http://www.cs.ucr.edu/~vbz/resources/quatut.pdf"><strong>Quaternions</strong></a>.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@FromTransform: </span><span class="nf">(t) -&gt;</span>
+  <p>This implementation is from Shoemake's 1991 paper <strong><a href="http://www.cs.ucr.edu/~vbz/resources/quatut.pdf">Quaternions</a></strong>.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@FromTransform: </span><span class="nf">(t) -&gt;</span>
     <span class="nv">m = </span><span class="nx">t</span><span class="p">.</span><span class="nx">matrix</span>
     <span class="nv">trace = </span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">if</span> <span class="nx">trace</span> <span class="o">&gt;</span> <span class="mi">0</span>
       <span class="nv">s = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">trace</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
       <span class="nv">w = </span><span class="nx">s</span> <span class="o">*</span> <span class="mf">0.5</span>
       <span class="nv">s = </span><span class="mf">0.5</span> <span class="o">/</span> <span class="nx">s</span>
-      <span class="k">return</span> <span class="k">new</span> <span class="nx">Quaternion</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vector</span><span class="p">((</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span><span class="p">,</span> 
-                                       <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span><span class="p">,</span> 
-                                       <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span><span class="p">),</span> <span class="nx">w</span><span class="p">)</span>
+      <span class="nv">x = </span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span>
+      <span class="nv">y = </span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span>
+      <span class="nv">z = </span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="nx">s</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">Quaternion</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">z</span><span class="p">),</span> <span class="nx">w</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="nv">next = </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
       <span class="nv">q = </span><span class="p">[]</span>
       <span class="nv">i = </span><span class="mi">0</span>
-      <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">then</span> <span class="nv">i = </span><span class="mi">1</span><span class="p">;</span>
-      <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span> <span class="k">then</span> <span class="nv">i = </span><span class="mi">2</span><span class="p">;</span>
+      <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">then</span> <span class="nv">i = </span><span class="mi">1</span>
+      <span class="k">if</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span> <span class="k">then</span> <span class="nv">i = </span><span class="mi">2</span>
       <span class="nv">j = </span><span class="nx">next</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
       <span class="nv">k = </span><span class="nx">next</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span>
       <span class="nv">s = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">((</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">+</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">k</span><span class="p">][</span><span class="nx">k</span><span class="p">]))</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -156,14 +206,21 @@
       <span class="k">return</span> <span class="k">new</span> <span class="nx">Quaternion</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nx">w</span><span class="p">)</span>
   </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3><strong>Arithmetic methods:</strong></h3>
 
-<p>Static implementations of basic arithmetic functions are also available. These functions
-operate on existing <strong><code>Quaternion</code></strong> instances and use their static counterparts from the <strong><code>Vector</code></strong> class.</p>             </td>             <td class="code">               <div class="highlight"><pre>      </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <blockquote>
+<p>Static implementations of basic arithmetic functions are also available.
+These functions operate on existing <strong><code>Quaternion</code></strong> instances and use
+their static counterparts from the <strong><a href="geometry.html#vector" title="Vector"><code>Vector</code></a></strong> class.</p>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>        </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <blockquote>
   <h3><em>Quaternion.Add:</em></h3>
   
   <blockquote>
-    <p><strong><code>Quaternion.Add</code></strong> uses <a href="geometry.html#vector-Add"><strong><code>Vector.Add</code></strong></a> to add the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong>  components from each <strong><code>Quaternion</code></strong> and simple addition for the <em>W</em> component.</p>
+    <p><strong><code>Quaternion.Add</code></strong> uses <strong><a href="geometry.html#vector-Add" title="Vector.Add"><code>Vector.Add</code></a></strong> to add the <em>X</em>, <em>Y</em> and
+    <em>Z</em> <strong><code>Vector</code></strong>  components from each <strong><code>Quaternion</code></strong> and simple addition
+    for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
   <span class="vi">@Add: </span><span class="nf">(q1, q2) -&gt;</span>
     <span class="nv">v = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Add</span> <span class="nx">q1</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">v</span>
     <span class="nv">w = </span><span class="nx">q1</span><span class="p">.</span><span class="nx">w</span> <span class="o">+</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">w</span>
@@ -171,9 +228,13 @@ operate on existing <strong><code>Quaternion</code></strong> instances and use t
   <h3><em>Quaternion.Subtract:</em></h3>
   
   <blockquote>
-    <p><strong><code>Quaternion.Subtract</code></strong> uses <a href="geometry.html#vector-Subtract"><strong><code>Vector.Subtract</code></strong></a> to subtract the <em>X</em>, <em>Y</em> and <em>Z</em> <strong>Vector</strong> components from each <strong><code>Quaternion</code></strong> and simple subtraction for the <em>W</em> component.</p>
+    <p><strong><code>Quaternion.Subtract</code></strong> uses <strong><a href="geometry.html#vector-Subtract" title="Vector.Subtract"><code>Vector.Subtract</code></a></strong> to subtract
+    the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and
+    simple subtraction for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
   <span class="vi">@Subtract: </span><span class="nf">(q1, q2) -&gt;</span>
     <span class="nv">v = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Subtract</span> <span class="nx">q1</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">v</span>
     <span class="nv">w = </span><span class="nx">q1</span><span class="p">.</span><span class="nx">w</span> <span class="o">-</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">w</span>
@@ -181,10 +242,13 @@ operate on existing <strong><code>Quaternion</code></strong> instances and use t
   <h3><em>Quaternion.Multiply:</em></h3>
   
   <blockquote>
-    <p><strong><code>Quaternion.Multiply</code></strong> uses <a href="geometry.html#vector-Multiply"><strong><code>Vector.Multiply</code></strong></a> to mutliply the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and simple multiplication for the <em>W</em> component.</p>
+    <p><strong><code>Quaternion.Multiply</code></strong> uses <strong><a href="geometry.html#vector-Multiply" title="Vector.Multiply"><code>Vector.Multiply</code></a></strong> to mutliply
+    the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and
+    simple multiplication for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
-  <span class="vi">@Multiply: </span><span class="nf">(q, f) -&gt;</span>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Multiply: </span><span class="nf">(q, f) -&gt;</span>
     <span class="nv">v = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span> <span class="nx">f</span>
     <span class="nv">w = </span><span class="nx">q</span><span class="p">.</span><span class="nx">w</span> <span class="o">*</span> <span class="nx">f</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Quaternion</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">w</span><span class="p">)</span>
@@ -192,9 +256,14 @@ operate on existing <strong><code>Quaternion</code></strong> instances and use t
   <h3><em>Quaternion.Divide:</em></h3>
   
   <blockquote>
-    <p><strong><code>Quaternion.Divide</code></strong> uses <a href="geometry.html#vector-Divide"><strong><code>Vector.Divide</code></strong></a> to divide the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and simple division for the <em>W</em> component.</p>
+    <p><strong><code>Quaternion.Divide</code></strong> uses <strong><a href="geometry.html#vector-Divide" title="Vector.Divide"><code>Vector.Divide</code></a></strong> to divide the <em>X</em>,
+    <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and simple
+    division for the <em>W</em> component.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Divide: </span><span class="nf">(q, f) -&gt;</span>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  
+  <span class="vi">@Divide: </span><span class="nf">(q, f) -&gt;</span>
     <span class="nv">v = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Divide</span> <span class="nx">q</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span> <span class="nx">f</span>
     <span class="nv">w = </span><span class="nx">q</span><span class="p">.</span><span class="nx">w</span> <span class="o">/</span> <span class="nx">f</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Quaternion</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">w</span><span class="p">)</span>
@@ -202,104 +271,177 @@ operate on existing <strong><code>Quaternion</code></strong> instances and use t
   <h3><em>Quaternion.Dot:</em></h3>
   
   <blockquote>
-    <p><strong><code>Quaternion.Dot</code></strong> uses <a href="geometry.html#vector-Dot"><strong><code>Vector.Dot</code></strong></a> to perform the <a href="http://en.wikipedia.org/wiki/Dot_product"><strong>Dot Product</strong></a> of the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from each <strong><code>Quaternion</code></strong> and adds the product of the <em>W</em> components.</p>
+    <p><strong><code>Quaternion.Dot</code></strong> uses <strong><a href="geometry.html#vector-Dot" title="Vector.Dot"><code>Vector.Dot</code></a></strong> to perform the
+    <strong><a href="http://en.wikipedia.org/wiki/Dot_product" title="Dot Product">Dot Product</a></strong> of the <em>X</em>, <em>Y</em> and <em>Z</em> <strong><code>Vector</code></strong> components from
+    each <strong><code>Quaternion</code></strong> and adds the product of the <em>W</em> components.</p>
   </blockquote>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>    
   <span class="vi">@Dot: </span><span class="nf">(q1, q2) -&gt;</span>
     <span class="k">return</span> <span class="p">(</span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Dot</span> <span class="nx">q1</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span> <span class="o">+</span> <span class="nx">q1</span><span class="p">.</span><span class="nx">w</span> <span class="o">*</span> <span class="nx">q2</span><span class="p">.</span><span class="nx">w</span>
   </pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h3><em>Quaternion.Normalise:</em></h3>
 
-<p>A <strong><code>Quaternion</code></strong> can be <a href="http://en.wikipedia.org/wiki/Unit_vector"><strong>Normalised</strong></a> by diving itself by its length, which is computed as the 
-square-root of its <a href="http://en.wikipedia.org/wiki/Dot_product"><strong>Dot Product</strong></a> with itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>  
-  <span class="vi">@Normalise: </span><span class="nf">(q) -&gt;</span>
+<blockquote>
+  <p>A <strong><code>Quaternion</code></strong> can be <strong><a href="http://en.wikipedia.org/wiki/Unit_vector" title="Normalise">Normalised</a></strong> by dividing itself by its
+  length, which is computed as the square-root of its <strong><a href="http://en.wikipedia.org/wiki/Dot_product" title="Dot Product">Dot Product</a></strong>
+  with itself.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Normalise: </span><span class="nf">(q) -&gt;</span>
     <span class="k">return</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Divide</span> <span class="nx">q</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Dot</span><span class="p">(</span><span class="nx">q</span><span class="p">,</span> <span class="nx">q</span><span class="p">))</span>
   </pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <h3><section id='slerp'><em>Quaternion.SphericalLinearInterpolation:</em><section></h3>
 
-<p><strong><code>SphericalLinearInterpolation</code></strong> (sometime known as <em>slerp</em>) is used to interpolate between <strong><code>Quaternion</code></strong> instances, and provides more robust and correct results than simple <em>Linear Interpolation</em> for two reasons.</p>
-
-<ol>
-<li>The path to get between two rotations is the shortest possible path in rotation space</li>
-<li>The speed of interpolation is constant across the interpolation range</li>
-</ol>
-
-<p>If two <strong><code>Quaternion</code></strong> instances are nearly parallel, regular <em>Linear Interpolation</em> is sufficient.</p>
-
-<p>Otherwise, a <strong><code>Quaternion</code></strong> that is orthogonal to <code>q1</code> and <code>q2</code> is found with</p>
-
 <blockquote>
-  <p><em>q<sub>orth</sub> = q<sub>2</sub> &minus; (q<sub>1</sub> . q<sub>2</sub>) × q<sub>1</sub></em>,  </p>
-</blockquote>
-
-<p>and the interpolation is computed with</p>
-
-<blockquote>
-  <p><em>q<sub>int</sub> = q<sub>1</sub> × cos(&theta; × time) + q<sub>orth</sub> × sin(&theta; × time)</em></p>
+  <p><strong><code>SphericalLinearInterpolation</code></strong> (sometime known as <em>slerp</em>) is used to
+  interpolate between <strong><code>Quaternion</code></strong> instances, and provides more robust
+  and correct results than simple <em>Linear Interpolation</em> for two reasons.</p>
+  
+  <ol>
+  <li>The path to get between two rotations is the shortest possible path in
+  rotation space</li>
+  <li>The speed of interpolation is constant across the interpolation range</li>
+  </ol>
+  
+  <p>If two <strong><code>Quaternion</code></strong> instances are nearly parallel, regular <em>Linear
+  Interpolation</em> is sufficient.</p>
+  
+  <p>Otherwise, a <strong><code>Quaternion</code></strong> that is orthogonal to <code>q1</code> and <code>q2</code> is
+  found with</p>
+  
+  <blockquote>
+    <p><em>q<sub>orth</sub> = q<sub>2</sub> &minus; (q<sub>1</sub> .
+    q<sub>2</sub>) × q<sub>1</sub></em>,</p>
+  </blockquote>
+  
+  <p>and the interpolation is computed with</p>
+  
+  <blockquote>
+    <p><em>q<sub>int</sub> = q<sub>1</sub> × cos(&theta; × t) + q<sub>orth</sub>
+    × sin(&theta; × t)</em></p>
+  </blockquote>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@SphericalLinearInterpolation: </span><span class="nf">(t, q1, q2) -&gt;</span>
     <span class="nv">cosTheta = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Dot</span> <span class="nx">q1</span><span class="p">,</span> <span class="nx">q2</span>
     <span class="k">if</span> <span class="nx">cosTheta</span> <span class="o">&gt;</span> <span class="mf">0.9995</span>
-      <span class="k">return</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Normalise</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">t</span><span class="p">)),</span> 
-                                                 <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q2</span><span class="p">,</span> <span class="nx">t</span><span class="p">)))</span>
+      <span class="nv">q1Part = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">t</span><span class="p">))</span>
+      <span class="nv">q2Part = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q2</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Normalise</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">q1Part</span><span class="p">,</span> <span class="nx">q2Part</span><span class="p">))</span>
+             
     <span class="k">else</span>
-      <span class="nv">theta = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">acon</span><span class="p">(</span><span class="nx">MathFunction</span><span class="p">.</span><span class="nx">Clamp</span><span class="p">(</span><span class="nx">cosTheta</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="nv">theta = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">acos</span> <span class="nx">MathFunction</span><span class="p">.</span><span class="nx">Clamp</span><span class="p">(</span><span class="nx">cosTheta</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
       <span class="nv">thetap = </span><span class="nx">theta</span> <span class="o">*</span> <span class="nx">t</span>
-      <span class="nv">qperp = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Normalise</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Subtract</span><span class="p">(</span><span class="nx">q2</span><span class="p">,</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="nx">cosTheta</span><span class="p">))</span>
-      <span class="k">return</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Add</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">thetap</span><span class="p">)),</span> 
-                            <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">qperp</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">thetap</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h2><section id='animatedTransform'>AnimatedTransform:</section></h2>
+      <span class="nv">q1Cos = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="nx">cosTheta</span><span class="p">)</span>
+      <span class="nv">qperp = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Normalise</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Subtract</span><span class="p">(</span><span class="nx">q2</span><span class="p">,</span> <span class="nx">q1Cos</span><span class="p">))</span>
+      <span class="k">return</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">q1</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">thetap</span><span class="p">)),</span>
+                            <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">qperp</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">thetap</span><span class="p">)))</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h2><section id='animT'>AnimatedTransform:</section></h2>
 
-<hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>An <strong><code>AnimatedTransform</code></strong> describes a transformation on an object over time from a <code>startTransform</code>
-to an <code>endTransform</code>. These can be interpolated between to get a <a href="transform.html#transform"><strong><code>Transform</code></strong></a> that describes the
-transformation at a given time.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">AnimatedTransform</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
+<hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>An <strong><code>AnimatedTransform</code></strong> describes a transformation on an object over time
+from a <code>startTransform</code> to an <code>endTransform</code>. These can be interpolated
+between to get a <strong><a href="transform.html#transform" title="Transform"><code>Transform</code></a></strong> that describes the transformation at a
+given time.</p>
 
-<p>The <strong><code>AnimatedTransform</code></strong> constructor takes two <strong><code>Transform</code></strong> instances and
-time values that are associated with them.</p>
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">AnimatedTransform</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
 
-<p>The boolean <code>actuallyAnimated</code> flag is set when the <code>startTransform</code> and <code>endTransform</code> are different.</p>
+<blockquote>
+  <p>The <strong><code>AnimatedTransform</code></strong> constructor requires four parameters:</p>
+  
+  <ul>
+  <li><p>The starting transformation: <code>startTransform</code> - must be a
+  <strong><code>Transform</code></strong></p></li>
+  <li><p>A time value assosciated with the <code>startTransform</code>: <code>startTime</code></p></li>
+  <li><p>The end transformation: <code>endTransform</code> - must be a <strong><code>Transform</code></strong></p></li>
+  <li><p>A time value assosciated with the <code>endTransform</code>: <code>endTime</code></p></li>
+  </ul>
+  
+  <p>If these are not supplied or are of the incorrect type, the constructor
+  will throw an <strong><code>Error</code></strong>.</p>
+  
+  <p>The boolean <code>actuallyAnimated</code> flag is set when the <code>startTransform</code> and
+  <code>endTransform</code> are different.</p>
+  
+  <p>The <code>startTransform</code> and <code>endTransform</code> are each decomposed into:</p>
+  
+  <ul>
+  <li><p><strong><code>Transform</code></strong> translation</p></li>
+  <li><p><strong><a href="#quat" title="Quaternion"><code>Quaternion</code></a></strong> rotation</p></li>
+  <li><p><strong><code>Transform</code></strong> scale</p></li>
+  </ul>
+  
+  <p>which are associated as <code>start</code>:<code>end</code> pairs.</p>
+</blockquote>
 
-<p>The <code>startTransform</code> and <code>endTransform</code> are each decomposed into:</p>
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@startTransform, @startTime, @endTransform, @endTime) -&gt;</span>
+    
+    <span class="nx">unless</span> <span class="nx">@startTransform</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;startTransform must be defined.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@startTransform</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&#39;Transform&#39;</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;startTransform must be a Transform.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@startTime</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;startTime must be defined.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">@startTime</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;startTime must be a Number.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@endTransform</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;endTransform must be defined.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@endTransform</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span> <span class="o">is</span> <span class="s">&#39;Transform&#39;</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;endTransform must be a Transform.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@endTime</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;endTime must be defined.&quot;&#39;</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">@endTime</span>
+      <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;AnimatedTransform Constructor Error: &quot;endTime must be a Number.&quot;&#39;</span>
 
-<ul>
-<li><p><strong><code>Transform</code></strong> translation</p></li>
-<li><p><a href="#quaternion"><strong><code>Quaternion</code></strong></a> rotation</p></li>
-<li><p><strong><code>Transform</code></strong> scale</p></li>
-</ul>
-
-<p>which are associated as <code>start</code>:<code>end</code> pairs.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(startTransform, startTime, endTransform, endTime) -&gt;</span>
-    <span class="vi">@startTransform = </span><span class="nx">startTransform</span>
-    <span class="vi">@startTime = </span><span class="nx">startTime</span>
-    <span class="vi">@endTransform = </span><span class="nx">endTransform</span>
-    <span class="vi">@endTime = </span><span class="nx">endTime</span>
-    <span class="vi">@actuallyAnimated = </span><span class="o">!</span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Equals</span><span class="p">(</span><span class="nx">startTransform</span><span class="p">,</span> <span class="nx">endTransform</span><span class="p">)</span>
-    <span class="nv">decomposeStart = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Decompose</span> <span class="nx">@startTrasform</span><span class="p">.</span><span class="nx">matrix</span>
-    <span class="nv">decomposeEnd = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Decompose</span> <span class="nx">@endTrasform</span><span class="p">.</span><span class="nx">matrix</span>
+    <span class="vi">@actuallyAnimated = </span><span class="o">!</span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Equals</span> <span class="nx">@startTransform</span><span class="p">,</span> <span class="nx">@endTransform</span>
+    <span class="nv">decomposeStart = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Decompose</span> <span class="nx">@startTransform</span><span class="p">.</span><span class="nx">matrix</span>
+    <span class="nv">decomposeEnd = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Decompose</span> <span class="nx">@endTransform</span><span class="p">.</span><span class="nx">matrix</span>
     <span class="vi">@translation = </span><span class="nv">start: </span><span class="nx">decomposeStart</span><span class="p">.</span><span class="nx">t</span><span class="p">,</span> <span class="nv">end: </span><span class="nx">decomposeEnd</span><span class="p">.</span><span class="nx">t</span>
     <span class="vi">@rotation = </span><span class="nv">start: </span><span class="nx">decomposeStart</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span> <span class="nv">end: </span><span class="nx">decomposeEnd</span><span class="p">.</span><span class="nx">r</span>
     <span class="vi">@scale = </span><span class="nv">start: </span><span class="nx">decomposeStart</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nv">end: </span><span class="nx">decomposeEnd</span><span class="p">.</span><span class="nx">s</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <hr />
 
-<h3>Static Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>These functions belong to the <strong><code>AnimatedTransform</code></strong> class - any object arguments are not 
-modified and a new object is always returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h3><em>AnimatedTransform.Decompose:</em></h3>
+<h3>Prototypical Instance Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>These functions are attached to each instance of the
+<strong><code>AnimatedTransform</code></strong> class - changing the function of one
+<strong><code>AnimatedTransform</code></strong> changes the function on all other
+<strong><code>AnimatedTransform</code></strong>s as well. These functions act on a
+<strong><code>AnimatedTransform</code></strong> instance in place - the original object is
+modified.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h3><em>hasScale:</em></h3>
 
 <blockquote>
-  <p><strong><code>Decompose</code></strong> takes the an overall transformation and splits it into its translation, rotation and scaling components. This allows the rotation to be turned into an equivalent <strong><code>Quaternion</code></strong> to allow the <strong><code>AnimatedTransform</code></strong> to be interpolated correctly.</p>
+  <p><strong><code>hasScale</code></strong> checks whether either the <code>startTransform</code> or the
+  <code>endTransform</code> properties have any scaling factors in them.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">hasScale: </span><span class="o">-&gt;</span>
+    <span class="k">return</span> <span class="nx">@startTransform</span><span class="p">.</span><span class="nx">hasScale</span><span class="p">()</span> <span class="o">||</span> <span class="nx">@endTransform</span><span class="p">.</span><span class="nx">hasScale</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <hr />
+
+<h3>Static Functions:</h3>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>These functions belong to the <strong><code>AnimatedTransform</code></strong> class - any object
+arguments are not modified and a new object is always returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h3><em>AnimatedTransform.Decompose:</em></h3>
+
+<blockquote>
+  <p><strong><code>Decompose</code></strong> takes an overall transformation and splits it into
+  its translation, rotation and scaling components. This allows the rotation
+  to be turned into an equivalent <strong><a href="#quat" title="Quaternion"><code>Quaternion</code></a></strong> to allow the
+  <strong><code>AnimatedTransform</code></strong> to be interpolated correctly.</p>
   
   <p>The translation component can be read directly from the matrix.</p>
   
-  <p>Then, a copy of the matrix is made and the translation values are removed.</p>
+  <p>Then, a copy of the matrix is made and the translation values are
+  removed.</p>
   
-  <p>Polar decomposition is then used to extract the rotation component (R) from M, by successively averaging M to its inverse transpose:</p>
+  <p>Polar decomposition is then used to extract the rotation component (R)
+  from M, by successively averaging M to its inverse transpose:</p>
   
   <blockquote>
-    <p><em>M<sub>(i+1)</sub> = (M<sub>i</sub> + (M<sub>i</sub><sup>T</sup>)<sup>&minus;1</sup>) / 2</em></p>
+    <p><em>M<sub>(i+1)</sub> = (M<sub>i</sub> + (M<sub>i</sub><sup>T</sup>)
+    <sup>&minus;1</sup>) / 2</em></p>
   </blockquote>
   
-  <p>Lastly, since we know M and R, and we know that </p>
+  <p>Lastly, since we know M and R, and we know that</p>
   
   <blockquote>
     <p><em>M = R * S,</em></p>
   </blockquote>
   
   <p>we can find S, which represents the scale component.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Decompose: </span><span class="nf">(m) -&gt;</span>
-    <span class="nv">translation: </span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Decompose: </span><span class="nf">(m) -&gt;</span>
+    <span class="nv">translation = </span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="nx">m</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
     <span class="nv">M = </span><span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">()</span>
     <span class="k">for</span> <span class="nx">copyRow</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="mi">4</span><span class="p">]</span>
       <span class="k">for</span> <span class="nx">copyColumn</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="mi">4</span><span class="p">]</span>
@@ -331,19 +473,28 @@ modified and a new object is always returned.</p>             </td>             
     <span class="nv">rotation = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">FromTransform</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">R</span><span class="p">)</span>
     <span class="nv">scale = </span><span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">Matrix4x4</span><span class="p">.</span><span class="nx">Inverse</span><span class="p">(</span><span class="nx">R</span><span class="p">),</span> <span class="nx">M</span>
     <span class="k">return</span> <span class="nv">t: </span><span class="nx">translation</span><span class="p">,</span> <span class="nv">r: </span><span class="nx">rotation</span><span class="p">,</span> <span class="nv">s: </span><span class="nx">scale</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h3><em>AnimatedTransform.Interpolate:</em></h3>
+  </pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <h3><em>AnimatedTransform.Interpolate:</em></h3>
 
 <blockquote>
-  <p><strong><code>Interpolate</code></strong> computes the interpolated value of an <strong><code>AnimatedTransform</code></strong> at a given time. </p>
+  <p><strong><code>Interpolate</code></strong> computes the interpolated value of an
+  <strong><code>AnimatedTransform</code></strong> at a given <code>time</code>.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, or the given time is less than the <code>startTime</code>, the <code>startTransform</code> is returned.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, or the given <code>time</code> is less than
+  the <code>startTime</code>, the <code>startTransform</code> is returned.</p>
   
-  <p>Similarly, if the given time is greated than the <code>endTime</code>, the <code>endTransform</code> is returned.</p>
+  <p>Similarly, if the given <code>time</code> is greated than the <code>endTime</code>, the
+  <code>endTransform</code> is returned.</p>
   
-  <p>Otherwise, the <a href="math.html#lerp"><strong><code>LinearInterpolation</code></strong></a> of the translation components is computed, as well as the <a href="#slerp"><strong><code>SphericalLinearInterpolation</code></strong></a> of the rotation components, and the <a href="math.html#lerp"><strong><code>LinearInterpolation</code></strong></a> of the scale components.</p>
+  <p>Otherwise, the <strong><a href="math.html#lerp" title="LinearInterpolation"><code>LinearInterpolation</code></a></strong> of the
+  translation components is computed, as well as the
+  <strong><a href="#slerp" title="SphericalLinearInterpolation"><code>SphericalLinearInterpolation</code></a></strong> of the rotation components, and the
+  <strong><code>LinearInterpolation</code></strong> of the scale components.</p>
   
-  <p>The product of the three component interpolations is the final resulting interpolation.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Interpolate: </span><span class="nf">(at, time) -&gt;</span>
+  <p>The product of the three component interpolations is the final resulting
+  interpolation.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@Interpolate: </span><span class="nf">(at, time) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span> <span class="o">or</span> <span class="nx">time</span> <span class="o">&lt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
       <span class="k">return</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span>
       
@@ -351,100 +502,155 @@ modified and a new object is always returned.</p>             </td>             
       <span class="k">return</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTransform</span>
       
     <span class="nv">dt = </span><span class="p">(</span><span class="nx">time</span> <span class="o">-</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span> <span class="o">-</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span><span class="p">)</span>
-    <span class="nv">translation = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Add</span> <span class="nx">Vector</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">dt</span><span class="p">)),</span> 
-                             <span class="nx">Vector</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">end</span><span class="p">,</span> <span class="nx">dt</span><span class="p">)</span>
-    <span class="nv">rotate = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">SphericalLinearInterpolation</span> <span class="nx">dt</span><span class="p">,</span> <span class="nx">at</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="nx">at</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">end</span>
+    <span class="nv">tStart = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">dt</span><span class="p">))</span>
+    <span class="nv">tEnd = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Multiply</span><span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">end</span><span class="p">,</span> <span class="nx">dt</span><span class="p">)</span>
+    <span class="nv">translation = </span><span class="nx">Vector</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">tStart</span><span class="p">,</span> <span class="nx">tEnd</span><span class="p">)</span>
+    <span class="nv">rStart = </span><span class="nx">at</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">start</span>
+    <span class="nv">rEnd = </span><span class="nx">at</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">end</span>
+    <span class="nv">rotate = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">SphericalLinearInterpolation</span> <span class="nx">dt</span><span class="p">,</span> <span class="nx">rStart</span><span class="p">,</span> <span class="nx">rEnd</span>
     <span class="nv">scale = </span><span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">()</span>
     <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="mi">3</span><span class="p">]</span>
       <span class="k">for</span> <span class="nx">j</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="mi">3</span><span class="p">]</span>
-        <span class="nx">scale</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">MathFunctions</span><span class="p">.</span><span class="nx">LinearInterpolation</span> <span class="nx">dt</span><span class="p">,</span> <span class="nx">at</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">start</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">],</span> <span class="nx">at</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">end</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span>
-    <span class="nv">transform = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Translate</span><span class="p">(</span><span class="nx">translation</span><span class="p">),</span> <span class="nx">Quaternion</span><span class="p">.</span><span class="nx">ToTrasform</span><span class="p">(</span><span class="nx">rotate</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">transform</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">scale</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformRay:</em></h3>
+        <span class="nv">sStart = </span><span class="nx">at</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">start</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span>
+        <span class="nv">sEnd = </span><span class="nx">at</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">end</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span>
+        <span class="nx">scale</span><span class="p">.</span><span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">MathFunctions</span><span class="p">.</span><span class="nx">LinearInterpolation</span> <span class="nx">dt</span><span class="p">,</span> <span class="nx">sStart</span><span class="p">,</span> <span class="nx">sEnd</span>
+    <span class="nv">translateT = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Translate</span> <span class="nx">translation</span>
+    <span class="nv">rotateT = </span><span class="nx">Quaternion</span><span class="p">.</span><span class="nx">ToTrasform</span> <span class="nx">rotate</span>
+    <span class="nv">scaleT = </span><span class="k">new</span> <span class="nx">Transform</span><span class="p">(</span><span class="nx">scale</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="p">[</span><span class="nx">translate</span><span class="p">,</span> <span class="nx">rotate</span><span class="p">,</span> <span class="nx">scale</span><span class="p">]...</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformRay:</em></h3>
 
 <blockquote>
-  <p><strong><code>TransformRay</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a <a href="geometry.html#ray"><strong><code>Ray</code></strong></a> instance using the <code>time</code> of the <strong><code>Ray</code></strong>.</p>
+  <p><strong><code>TransformRay</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a <strong><a href="geometry.html#ray" title="Ray"><code>Ray</code></a></strong>
+  instance using the <code>time</code> of the <strong><code>Ray</code></strong>.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> of the <strong><code>Ray</code></strong> is less than the <code>startTime</code>, of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Ray</code></strong> is transformed by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> of the <strong><code>Ray</code></strong>
+  is less than the <code>startTime</code>, of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Ray</code></strong>
+  is transformed by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Similarly, if the <code>time</code> of the <strong><code>Ray</code></strong> is greated than the <code>endTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Ray</code></strong> is transformed by the <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>Similarly, if the <code>time</code> of the <strong><code>Ray</code></strong> is greated than the <code>endTime</code>
+  of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Ray</code></strong> is transformed by the
+  <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct time and the <strong><code>Ray</code></strong> is transformed by the resulting transformation.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformRay: </span><span class="nf">(at, ray) -&gt;</span>
+  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct
+  time and the <strong><code>Ray</code></strong> is transformed by the resulting transformation.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformRay: </span><span class="nf">(at, ray) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span> <span class="o">or</span> <span class="nx">ray</span><span class="p">.</span><span class="nx">time</span> <span class="o">&lt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span><span class="p">,</span> <span class="nx">ray</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">ray</span><span class="p">.</span><span class="nx">time</span> <span class="o">&lt;</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTansform</span><span class="p">,</span> <span class="nx">ray</span>
     <span class="nv">t = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Interpolate</span> <span class="nx">at</span><span class="p">,</span> <span class="nx">ray</span><span class="p">.</span><span class="nx">time</span>
-    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">ray</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformRayDiff:</em></h3>
+    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">ray</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformRayDiff:</em></h3>
 
 <blockquote>
-  <p><strong><code>TransformRayDiff</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a <a href="geometry.html#raydiff"><strong><code>RayDifferential</code></strong></a> instance using the <code>time</code> of the <strong><code>RayDifferential</code></strong>.</p>
+  <p><strong><code>TransformRayDiff</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a
+  <strong><a href="geometry.html#raydiff" title="RayDifferential"><code>RayDifferential</code></a></strong> instance using the <code>time</code> of the
+  <strong><code>RayDifferential</code></strong>.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> of the <strong><code>RayDifferential</code></strong> is less than the <code>startTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>RayDifferential</code></strong> is transformed by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> of the
+  <strong><code>RayDifferential</code></strong> is less than the <code>startTime</code> of the
+  <strong><code>AnimatedTransform</code></strong>, the <strong><code>RayDifferential</code></strong> is transformed by the
+  <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Similarly, if the <code>time</code> of the <strong><code>RayDifferential</code></strong> is greated than the <code>endTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>RayDifferential</code></strong> is transformed by the <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>Similarly, if the <code>time</code> of the <strong><code>RayDifferential</code></strong> is greated than the
+  <code>endTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>RayDifferential</code></strong> is
+  transformed by the <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct time and the <strong><code>RayDifferential</code></strong> is transformed by the resulting transformation.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformRayDiff: </span><span class="nf">(at, rayDiff) -&gt;</span>
+  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct
+  time and the <strong><code>RayDifferential</code></strong> is transformed by the resulting
+  transformation.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformRayDiff: </span><span class="nf">(at, rayDiff) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span> <span class="o">or</span> <span class="nx">rayDiff</span><span class="p">.</span><span class="nx">time</span> <span class="o">&lt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span><span class="p">,</span> <span class="nx">rayDiff</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">rayDiff</span><span class="p">.</span><span class="nx">time</span> <span class="o">&lt;</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTansform</span><span class="p">,</span> <span class="nx">rayDiff</span>
     <span class="nv">t = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Interpolate</span> <span class="nx">at</span><span class="p">,</span> <span class="nx">rayDiff</span><span class="p">.</span><span class="nx">time</span>
     <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformRay</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">rayDiff</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformPoint:</em></h3>
+  </pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformPoint:</em></h3>
 
 <blockquote>
-  <p><strong><code>TransformPoint</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a <a href="geometry.html#point"><strong><code>Point</code></strong></a> instance for a given <em>time</em>.</p>
+  <p><strong><code>TransformPoint</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a
+  <strong><a href="geometry.html#point" title="Point"><code>Point</code></a></strong> instance for a given <code>time</code>.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> is less than the <code>startTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Point</code></strong> is transformed by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> is less than the
+  <code>startTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Point</code></strong> is transformed
+  by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Similarly, if the <code>time</code> is greated than the <code>endTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Point</code></strong> is transformed by the <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>Similarly, if the <code>time</code> is greated than the <code>endTime</code> of the
+  <strong><code>AnimatedTransform</code></strong>, the <strong><code>Point</code></strong> is transformed by the
+    <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct time, and the <strong><code>Point</code></strong> is transformed by the resulting transformation.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformPoint: </span><span class="nf">(at, time, point) -&gt;</span>
+  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct
+  time, and the <strong><code>Point</code></strong> is transformed by the resulting transformation.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformPoint: </span><span class="nf">(at, time, point) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span> <span class="o">or</span> <span class="nx">time</span> <span class="o">&lt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformPoint</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span><span class="p">,</span> <span class="nx">point</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">time</span> <span class="o">&gt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformPoint</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTransform</span><span class="p">,</span> <span class="nx">point</span>
     <span class="nv">t = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Interpolate</span> <span class="nx">at</span><span class="p">,</span> <span class="nx">time</span>
-    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformPoint</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">point</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformVector:</em></h3>
+    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformPoint</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">point</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <h3><em>AnimatedTransform.TransformVector:</em></h3>
 
 <blockquote>
-  <p><strong><code>TransformVector</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a <a href="geometry.html#vector"><strong><code>Vector</code></strong></a> instance for a given <code>time</code>.</p>
+  <p><strong><code>TransformVector</code></strong> applies the <strong><code>AnimatedTransform</code></strong> to a
+  <strong><a href="geometry.html#vector" title="Vector"><code>Vector</code></a></strong> instance for a given <code>time</code>.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> is less than the <code>startTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Vector</code></strong> is transformed by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, or the <code>time</code> is less than the
+  <code>startTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Vector</code></strong> is transformed
+  by the <code>startTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Similarly, if the <code>time</code> is greated than the <code>endTime</code> of the <strong><code>AnimatedTransform</code></strong>, the <strong><code>Vector</code></strong> is transformed by the <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
+  <p>Similarly, if the <code>time</code> is greated than the <code>endTime</code> of the
+  <strong><code>AnimatedTransform</code></strong>, the <strong><code>Vector</code></strong> is transformed by the
+  <code>endTransform</code> of the <strong><code>AnimatedTransform</code></strong>.</p>
   
-  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct time, and the <strong>Vector</strong> is transformed by the resulting transformation.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformVector: </span><span class="nf">(at, time, vector) -&gt;</span>
+  <p>Otherwise, the <strong><code>AnimatedTransform</code></strong> is interpolated for the correct
+  time, and the <strong>Vector</strong> is transformed by the resulting transformation.</p>
+</blockquote>
+
+<!-- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@TransformVector: </span><span class="nf">(at, time, vector) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span> <span class="o">or</span> <span class="nx">time</span> <span class="o">&lt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span><span class="p">,</span> <span class="nx">vector</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">time</span> <span class="o">&gt;=</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
-        <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTransform</span><span class="p">,</span> <span class="nx">vector</span>
+      <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTransform</span><span class="p">,</span> <span class="nx">vector</span>
     <span class="nv">t = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Interpolate</span> <span class="nx">at</span><span class="p">,</span> <span class="nx">time</span>
-    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">vector</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <h3><em>AnimatedTransform.MotionBounds:</em></h3>
+    <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">vector</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <h3><em>AnimatedTransform.MotionBounds:</em></h3>
 
 <blockquote>
-  <p><strong><code>MotionBounds</code></strong> creates a <a href="geometry.html#bbox"><strong><code>BoundingBox</code></strong></a> that encapsulates the entire volume that an object occupies as it undergoes a transformation.</p>
+  <p><strong><code>MotionBounds</code></strong> creates a <a href="geometry.html#bbox"><strong><code>BoundingBox</code></strong></a> that
+  encapsulates the entire volume that an object occupies as it undergoes a
+  transformation.</p>
   
-  <p>If the <code>actuallyAnimated</code> flag isn't set, then return the result of transforming <code>b</code> by the Inverse of <code>startTransform</code>.</p>
+  <p>If the <code>actuallyAnimated</code> flag isn't set, then return the result of
+  transforming <code>b</code> by the Inverse of <code>startTransform</code>.</p>
   
-  <p>Otherwise create an overall <strong><code>BoundingBox</code></strong> by incrementally interpolating the <strong><code>AnimatedTransform</code></strong> and performing the <a href="http://en.wikipedia.org/wiki/Union_(set_theory)"><strong>Union</strong></a> operation on the result of applying the interpolated transform to the current <strong><code>BoundingBox</code></strong>.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@MotionBounds: </span><span class="nf">(at, b, useInverse) -&gt;</span>
+  <p>Otherwise create an overall <strong><code>BoundingBox</code></strong> by incrementally
+  interpolating the <strong><code>AnimatedTransform</code></strong> and performing the <strong><a href="http://en.wikipedia.org/wiki/Union_" title="set_theory\) &quot;Union">Union</a></strong>
+  operation on the result of applying the interpolated transform to the
+  current <strong><code>BoundingBox</code></strong>.</p>
+</blockquote>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="vi">@MotionBounds: </span><span class="nf">(at, b, useInverse) -&gt;</span>
     <span class="k">if</span> <span class="o">not</span> <span class="nx">at</span><span class="p">.</span><span class="nx">actuallyAnimated</span>
       <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformBBox</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Inverse</span><span class="p">(</span><span class="nx">at</span><span class="p">.</span><span class="nx">startTransform</span><span class="p">),</span> <span class="nx">b</span>
     <span class="nv">bRet = </span><span class="k">new</span> <span class="nx">BoundingBox</span><span class="p">()</span>
     <span class="nv">nSteps = </span><span class="mi">128</span>
     <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="nx">nSteps</span><span class="p">]</span>
-      <span class="nv">time = </span><span class="nx">MathFunctions</span><span class="p">.</span><span class="nx">LinearInterpolation</span> <span class="nx">i</span> <span class="o">/</span> <span class="p">(</span><span class="nx">nsteps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span><span class="p">,</span> <span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
+      <span class="nv">st = </span><span class="nx">at</span><span class="p">.</span><span class="nx">startTime</span>
+      <span class="nv">et = </span><span class="nx">at</span><span class="p">.</span><span class="nx">endTime</span>
+      <span class="nv">time = </span><span class="nx">MathFunctions</span><span class="p">.</span><span class="nx">LinearInterpolation</span><span class="p">(</span><span class="nx">i</span> <span class="o">/</span> <span class="p">(</span><span class="nx">nsteps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="nx">st</span><span class="p">,</span> <span class="nx">et</span><span class="p">)</span>
       <span class="nv">t = </span><span class="nx">AnimatedTransform</span><span class="p">.</span><span class="nx">Interpolate</span> <span class="nx">at</span><span class="p">,</span> <span class="nx">time</span>
       <span class="k">if</span> <span class="nx">useInverse</span> <span class="k">then</span> <span class="nv">t = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Inverse</span> <span class="nx">t</span>
       <span class="nv">bRet = </span><span class="nx">BoundingBox</span><span class="p">.</span><span class="nx">UnionBBoxAndBBox</span> <span class="nx">bRet</span><span class="p">,</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformBBox</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">bRet</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <hr />
+    <span class="k">return</span> <span class="nx">bRet</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <hr />
 
-<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>The <a href="#quaternion"><strong><code>Quaternion</code></strong></a> and <a href="#animatedTransform"><strong><code>AnimatedTransform</code></strong></a> classes are added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>The <strong><a href="#quat" title="Quaternion"><code>Quaternion</code></a></strong> and <strong><a href="#animT" title="AnimatedTransform"><code>AnimatedTransform</code></a></strong> classes are added
+to the global <code>root</code> object.</p>
+
+<!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
 <span class="nv">root.Quaternion = </span><span class="nx">Quaternion</span>
 <span class="nv">root.AnimatedTransform = </span><span class="nx">AnimatedTransform</span>
 
