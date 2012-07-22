@@ -1,7 +1,10 @@
 {spawn, exec} = require 'child_process'
 
 task 'compile', 'compile everything', ->
-  exec 'coffee -o javascript/ -cw coffeescript/'
+  exec 'coffee -o javascript/client/ -cw coffeescript/client/'
+  exec 'coffee -j javascript/raytracer/raytracer.js -cw coffeescript/raytracer/'
+  exec 'coffee -o javascript/server/ -cw coffeescript/server/'
+  exec 'coffee -o javascript/testing/ -cw coffeescript/testing/'
   console.log 'Done compile, now watching for changes...'
   
 task 'docs', 'create docs', ->

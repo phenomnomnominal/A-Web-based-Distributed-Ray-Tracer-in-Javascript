@@ -10,27 +10,6 @@
 # rendering.
 
 # ___
-# ## Requires:
-
-# Classes in *camera.coffee* require access to classes from other
-# packages and files:
-
-# * From [*geometry/geometry.coffee:*](geometry.html)
-GeometryPkg = if require? then require './geometry/geometry'
-
-# > * [**`Vector`**](geometry.html#vector)
-Vector = @Vector ? GeometryPkg.Vector
-
-# > * [**`Point`**](geometry.html#point)
-Point = @Point ? GeometryPkg.Point
-
-# * From [*geometry/transform.coffee:*](transform.html)
-TransformPkg = if require? then (require './geometry/transform').Transform
-
-# > * [**`Transform`**](transform.html#transform)
-Transform = @Transform ? TransformPkg.Transform
-
-# ___
 
 # ## <section id='camera'>Camera:</section>
 # ___

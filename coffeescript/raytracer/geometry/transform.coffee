@@ -1,36 +1,6 @@
 # *matrix.coffee* contains the [**`Transform`**](#transform) class.
 # ___
 
-# ## Requires:
-# Classes in *transform.coffee* require access to classes from other packages and files:
-
-# * From [*utils/mathfunctions.coffee:*](math.html)
-
-# > * [**MathFunctions**](math.html#math)
-MathFunctions = this.MathFunctions ? if require? then require("../utils/math").MathFunctions
-
-# * From [*geometry/geometry.coffee:*](geometry.html)
-Geometry = this.Geometry ? if require? then require("./geometry")
-
-# > * [**`Vector`**](geometry.html#vector)
-Vector = this.Vector ? Geometry.Vector
-
-# > * [**`Point`**](geometry.html#point)
-Point = this.Point ? Geometry.Point
-
-# > * [**`Normal`**](geometry.html#normal)
-Normal = this.Normal ? Geometry.Normal
-
-# > * [**`BoundingBox`**](geometry.html#bbox)
-BoundingBox = this.BoundingBox ? Geometry.BoundingBox
-
-# * From [*geometry/matrix.coffee:*](matrix.html)
-
-# > * [**`Matrix4x4`**](matrix.html#matrix)
-Matrix4x4 = this.Matrix4x4 ? if require? then require("./matrix").Matrix4x4
-
-# ___
-
 # ## <section id='transform'>Transform:</section>
 # ___
 # A **`Transform`** represents a mapping from **`Point`**s to **`Point`**s and from **`Vector`**s to **`Vector`**s in 3-dimensional space using 4-dimensional [**Homogenous Coordinates**](http://en.wikipedia.org/wiki/Homogeneous_coordinates).

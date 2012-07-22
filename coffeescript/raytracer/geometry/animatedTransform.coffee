@@ -7,6 +7,13 @@
 # [1]: #quat "Quaternion"
 # [2]: #animT "AnimatedTransform"
 
+# ## Requires:
+# Classes in *animatedTransform.coffee* require access to the following
+# libraries:
+
+# > * [**`_`**](http://underscorejs.org/) - *underscore.js utility library*
+_ = this._ ? if require? then require 'underscore'
+
 # ## <section id='quat'>Quaternion:</section>
 # ___
 #

@@ -1,3 +1,2 @@
-exports.Camera = require("./camera")
-exports.Geometry = require("./geometry")
-exports.Utils = require("./utils")
+root = exports ? this
+root.Raytracer = if require? then require './raytracer'
