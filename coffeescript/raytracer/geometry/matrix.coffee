@@ -111,7 +111,7 @@ class Matrix4x4
         if ipiv[j] isnt 1
           for k in [0...4]
             if ipiv[k] is 0
-              if Math.abs minv[j][k] >= big
+              if Math.abs(minv[j][k]) >= big
                 big = Math.abs minv[j][k]
                 irow = j
                 icol = k
