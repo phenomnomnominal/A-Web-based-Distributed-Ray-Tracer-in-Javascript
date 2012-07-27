@@ -104,7 +104,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0px 0 15px 0;
 }
   hr {
-    background: #3CFEAD;
+    background: #BBB;
     border: none;
     height: 1px;    
   }
@@ -121,7 +121,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 #background {
   position: fixed;
-  top: 0; left: 525px; right: 0; bottom: 0;
+  top: 0; left: 550px; right: 0; bottom: 0;
   background: #f5f5ff;
   border-left: 1px solid #3CFEAD;
   z-index: -1;
@@ -167,21 +167,22 @@ table td {
   outline: 0;
 }
   td.docs, th.docs {
-    max-width: 450px;
-    min-width: 450px;
+    max-width: 475px;
+    min-width: 475px;
     min-height: 5px;
     padding: 10px 25px 1px 50px;
     overflow-x: hidden;
     vertical-align: top;
-    text-align: justify;
+    text-align: left;
   }
     .docs pre {
       margin: 15px 0 15px;
       padding-left: 15px;
     }
-    .docs p tt, .docs p code {
-      background: #F0FFF5;
+    .docs p tt, .docs p code, .docs li code {
+      background: #F0F0F0;
       border: 1px solid #C6C6C5;
+      border-radius: 3px;
       font-size: 15px;
       letter-spacing: 0px;
       padding: 0 0.2em;
@@ -210,7 +211,7 @@ table td {
     border-left: 1px solid #3CFEAD;
   }
     pre, tt, code {
-      font-size: 15px; line-height: 21px;
+      font-size: 14px; line-height: 20px;
       font-family: 'Lekton', Menlo, Monaco, Consolas, "Lucida Console", monospace;
       margin: 0; padding: 0;
     }
