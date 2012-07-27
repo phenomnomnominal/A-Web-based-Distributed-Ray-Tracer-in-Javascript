@@ -4,16 +4,16 @@
 # ## Requires:
 # Functionality in *router.coffee* requires access to the following [**node.js**](http://nodejs.org/) modules:  
 
-# * [`fs`](http://nodejs.org/api/fs.html) - *File System I/O*
+# * [`fs`](http://nodejs.org/api/fs.html) - File System I/O
 fs = require 'fs'
-# * [`path`](http://nodejs.org/api/path.html) - *File path handling and transforming*
+# * [`path`](http://nodejs.org/api/path.html) - File path handling and transforming
 path = require 'path'
 # ___
 
-# ## Functions:
+# ## Routing functions:
 
-# ### <section id='route'>*RouteRequest*:</section>
-# > **`RouteRequest`** takes generic requests to the server and searches for a path specific function in the `handle` object. There are two distinct types of requests:  
+# ### <section id='route'>*routeRequest*:</section>
+# > **`routeRequest`** takes generic requests and searches for a path specific function in the `handle` object. There are two distinct types of requests:  
 #
 # > 1. Requests with a specific handler function
 #
@@ -24,7 +24,7 @@ path = require 'path'
 # > In the second case, we look for a static path to the requested file. If one is found, the static file (e.g. a *'.css'* or *'.js'* file) is returned to the client, otherwise a **404** error is sent.
 # 
 # > Care is taken to ensure that the correct [**ContentType**](http://en.wikipedia.org/wiki/List_of_HTTP_header_fields) header is set in the response.
-RouteRequest = (handle, pathname, response, sessionID, postData) ->
+routeRequest = (handle, pathname, response, sessionID, postData) ->
   extension = path.extname pathname
   switch extension
     when '.js' then contentType = 'text/javascript'
@@ -51,6 +51,6 @@ RouteRequest = (handle, pathname, response, sessionID, postData) ->
 # ___
 # ## Exports:
 
-# The [**`RouteRequest`**](#route) function is added to the global `root` object.
+# The [**`routeRequest`**](#route) function is added to the global `root` object.
 root = exports ? this
-root.route = RouteRequest
+root.route = routeRequest
