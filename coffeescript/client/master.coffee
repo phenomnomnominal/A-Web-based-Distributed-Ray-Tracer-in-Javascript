@@ -54,7 +54,7 @@ else
   handleFileRead = (readerOutput) ->
     renderJSON = $.xml2json readerOutput, true
     if renderJSON? and not $.isEmptyObject renderJSON
-      uuid = UUID.genV1().toString()
+      uuid = UUID.genV4().toString()
       WEBSITE = "#{LOCATION}:#{PORT}/render?renderId="
       renderObject =
         url: WEBSITE + uuid

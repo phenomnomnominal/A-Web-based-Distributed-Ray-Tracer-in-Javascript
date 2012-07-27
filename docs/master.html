@@ -36,7 +36,7 @@ displayed and the page doesn't do anything.</p>             </td>             <t
 <!--- URLs -->             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">handleFileRead = </span><span class="nf">(readerOutput) -&gt;</span>
     <span class="nv">renderJSON = </span><span class="nx">$</span><span class="p">.</span><span class="nx">xml2json</span> <span class="nx">readerOutput</span><span class="p">,</span> <span class="kc">true</span>
     <span class="k">if</span> <span class="nx">renderJSON</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">$</span><span class="p">.</span><span class="nx">isEmptyObject</span> <span class="nx">renderJSON</span>
-      <span class="nv">uuid = </span><span class="nx">UUID</span><span class="p">.</span><span class="nx">genV1</span><span class="p">().</span><span class="nx">toString</span><span class="p">()</span>
+      <span class="nv">uuid = </span><span class="nx">UUID</span><span class="p">.</span><span class="nx">genV4</span><span class="p">().</span><span class="nx">toString</span><span class="p">()</span>
       <span class="nv">WEBSITE = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">LOCATION</span><span class="si">}</span><span class="s">:</span><span class="si">#{</span><span class="nx">PORT</span><span class="si">}</span><span class="s">/render?renderId=&quot;</span>
       <span class="nv">renderObject =</span>
         <span class="nv">url: </span><span class="nx">WEBSITE</span> <span class="o">+</span> <span class="nx">uuid</span>
