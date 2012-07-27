@@ -12,20 +12,12 @@ sceneHandler = require './sceneHandler'
 urlShorten = require './urlShorten'
 # ___
 
-# ## Constants:
-# Some constants are required for this script:
-
-# > * **`VIEW_LOCATION`** - Directory location for [**Jade**](http://jade-lang.com/) view templates
-VIEW_LOCATION = __dirname + '/../../views/'
-
-# ___
-
 # ## Request Handler functions:
 
 # ### <section id='master'>*renderMaster*:</section>
 # > **`renderMaster`** takes the [**Jade**](http://jade-lang.com/) template from *'/views/master.jade'* and returns the generated HTML from the template.
 renderMaster = (response) ->
-  response.render VIEW_LOCATION + 'master', title: 'Master'
+  response.render 'master', title: 'Master'
 
 # ### <section id='upload'>*uploadRenderFile*:</section>
 # > **`uploadRenderFile`** sends the [**COLLADA**](http://www.collada.org) from the `renderUpload` object to [*sceneHandler.coffee*](sceneHandler.html) for parsing and inserts the resulting object into the database. A shortened URL that contains the unique identifier of the render is returned to the client with the correct `sessionID`.
@@ -37,7 +29,7 @@ uploadRenderFile = (response, render, sessionID) ->
 # ### <section id='render'>*renderSlave*:</section>
 # > **`renderSlave`** takes the [**Jade**](http://jade-lang.com/) template from *'/views/index.jade'* and returns the generated HTML from the template.
 renderSlave = (response) ->
-  response.render VIEW_LOCATION + 'index', title: 'Slave'
+  response.render 'index', title: 'Slave'
   
 # ### <section id='get-render'>*getRenderFromDatabase*:</section>
 # > **`getRenderFromDatabase`** searches the database for the render described by the `getRender` object and returns it to the client with the correct `sessionID`.
@@ -47,7 +39,7 @@ getRenderFromDatabase = (response, getRender, sessionID) ->
 # ### <section id='test'>*renderTest*:</section>
 # > **`renderTest`** takes the [**Jade**](http://jade-lang.com/) template from *'/views/test.jade'* and returns the generated HTML from the template.
 renderTest = (response) ->
-  response.render VIEW_LOCATION + 'test', layout: false
+  response.render 'test', layout: false
 
 # ___
 # ## Exports:

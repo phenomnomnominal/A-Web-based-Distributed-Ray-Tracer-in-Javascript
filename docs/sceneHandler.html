@@ -71,7 +71,6 @@
   <li><p>Extract <a href="shape.html"><strong><code>Shapes</code></strong></a> from <code>scene</code></p></li>
   </ol>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">parseCOLLADASceneDescriptionJSON = </span><span class="nf">(sceneDescriptionJSON) -&gt;</span>
-  
   <span class="nv">scene = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">sceneDescriptionJSON</span>
   <span class="nv">render = </span>
     <span class="nv">cameras: </span><span class="nx">getCamerasFrom</span> <span class="nx">scene</span>
@@ -114,13 +113,11 @@
 <blockquote>
   <p><strong><code>getObjectsFrom</code></strong> returns all objects within the <code>root</code> object which match the <a href="http://goessner.net/articles/JsonPath/"><strong>JSONPath</strong></a> <code>path</code>.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getObjectsFrom = </span><span class="nf">(root, path) -&gt;</span>
-  
   <span class="k">return</span> <span class="nx">getValueOf</span> <span class="nx">jsonpath</span><span class="p">.</span><span class="nx">jsonPath</span> <span class="nx">root</span><span class="p">,</span> <span class="nx">path</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3><em>atLeastOnePropertyIn</em>:</h3>
 
 <blockquote>
   <p><strong><code>atLeastOnePropertyIn</code></strong> returns a <code>Boolean</code> for whether <code>obj</code> has a property with a name from the <code>properties</code> list.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">atLeastOnePropertyIn = </span><span class="nf">(obj, properties)-&gt;</span>
-  
   <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">any</span> <span class="nx">properties</span><span class="p">,</span> <span class="p">(</span><span class="nf">(property) -&gt;</span> <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span><span class="o">?</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h2>Transform Handling:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h3><em>createObjectToWorldTransform</em>:</h3>
 
 <blockquote>
@@ -140,7 +137,6 @@
     </ul>
   </blockquote>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createObjectToWorldTransform = </span><span class="nf">(node) -&gt;</span>
-  
   <span class="nv">objectToWorld = </span><span class="k">new</span> <span class="nx">Transform</span><span class="p">()</span>
   
   <span class="nv">translates = </span><span class="nx">node</span><span class="p">.</span><span class="nx">translate</span>
@@ -172,7 +168,6 @@
   
   <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getTranslation = </span><span class="nf">(translate) -&gt;</span>
-  
   <span class="p">[</span><span class="nx">translateX</span><span class="p">,</span> <span class="nx">translateY</span><span class="p">,</span> <span class="nx">translateZ</span><span class="p">]</span> <span class="o">=</span> <span class="nx">translate</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
   
   <span class="nx">unless</span> <span class="nx">translateX</span><span class="o">?</span> <span class="o">and</span> <span class="nx">translateY</span><span class="o">?</span> <span class="o">and</span> <span class="nx">translateZ</span><span class="o">?</span>
@@ -193,7 +188,6 @@
   
   <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).  </p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getRotation = </span><span class="nf">(rotate) -&gt;</span>
-  
   <span class="p">[</span><span class="nx">axisX</span><span class="p">,</span> <span class="nx">axisY</span><span class="p">,</span> <span class="nx">axisZ</span><span class="p">,</span> <span class="nx">degrees</span><span class="p">]</span> <span class="o">=</span> <span class="nx">rotate</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
   
   <span class="nx">unless</span> <span class="nx">axisX</span><span class="o">?</span> <span class="o">and</span> <span class="nx">axisY</span><span class="o">?</span> <span class="o">and</span> <span class="nx">axisZ</span><span class="o">?</span> <span class="o">and</span> <span class="nx">degrees</span><span class="o">?</span>
@@ -222,7 +216,6 @@
   
   <p>Because the data gets extracted as a <code>String</code>, it is split and each component is cast to a number (<code>+</code>).</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getScale = </span><span class="nf">(scale) -&gt;</span>
-  
   <span class="p">[</span><span class="nx">scaleX</span><span class="p">,</span> <span class="nx">scaleY</span><span class="p">,</span> <span class="nx">scaleZ</span><span class="p">]</span> <span class="o">=</span> <span class="nx">scale</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
   
   <span class="nx">unless</span> <span class="nx">scaleX</span><span class="o">?</span> <span class="o">and</span> <span class="nx">scaleY</span><span class="o">?</span> <span class="o">and</span> <span class="nx">scaleZ</span><span class="o">?</span>
@@ -252,7 +245,6 @@
   
   <p>Each of the results is passed to <a href="#create-camera"><strong><code>createCamera</code></strong></a> to determine the <a href="camera.html#camera"><strong><code>Camera</code></strong></a> type and create it.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getCamerasFrom = </span><span class="nf">(scene) -&gt;</span>
-  
   <span class="nv">camera_nodes = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&#39;$..node[?(@.instance_camera)]&#39;</span>
   <span class="k">if</span> <span class="nx">camera_nodes</span> <span class="o">isnt</span> <span class="kc">false</span>
     <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">camera_nodes</span>
@@ -265,7 +257,6 @@
   
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createCamera = </span><span class="nf">(camera_node, scene) -&gt;</span>
-  
   <span class="nv">cameras = </span><span class="p">[]</span>
   <span class="nv">camToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">camera_node</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <blockquote>
   <ul>
@@ -321,7 +312,6 @@
   <li>A <code>&lt;perspective&gt;</code> element must contain:</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createPerspectiveCamera = </span><span class="nf">(camToWorld, perspective) -&gt;</span>
-  
   <span class="nv">camToWorld = </span><span class="k">new</span> <span class="nx">AnimatedTransform</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
   </pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <blockquote>
   <blockquote>
@@ -390,7 +380,6 @@
   <li>An <code>&lt;orthographic&gt;</code> element must contain:</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createOrthographicCamera = </span><span class="nf">(camToWorld, orthographic) -&gt;</span>
-  
   <span class="nv">camToWorld = </span><span class="k">new</span> <span class="nx">AnimatedTransform</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
   </pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <blockquote>
   <blockquote>
@@ -470,7 +459,6 @@
   
   <p>Each of the results is passed to <a href="#create-shapes"><strong><code>createShapes</code></strong></a> to determine the <a href="shape.html#shape"><strong><code>Shape</code></strong></a> type and create it.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getShapesFrom = </span><span class="nf">(scene) -&gt;</span>
-  
   <span class="nv">geometry_nodes = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&#39;$..node[?(@.instance_geometry)]&#39;</span>
   <span class="k">if</span> <span class="nx">geometry_nodes</span> <span class="o">isnt</span> <span class="kc">false</span>
     <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">geometry_nodes</span>
@@ -484,7 +472,6 @@
   
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createShapes = </span><span class="nf">(geometry_node, scene) -&gt;</span>
-  
   <span class="nv">shapes = </span><span class="p">[]</span>
   <span class="nv">shapeToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">geometry_node</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <blockquote>
   <ul>
@@ -572,7 +559,6 @@
   
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getVerticesFrom = </span><span class="nf">(mesh) -&gt;</span>
-  
   <span class="nv">positionSemanticCount = </span><span class="mi">0</span>
   <span class="nv">inputs = </span><span class="p">[]</span>
   </pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <blockquote>
@@ -643,7 +629,6 @@
   
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getPolylistsFrom = </span><span class="nf">(mesh) -&gt;</span>
-  
   <span class="nv">polylists = </span><span class="p">[]</span>
   </pre></div>             </td>           </tr>                               <tr id="section-71">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-71">&#182;</a>               </div>               <blockquote>
   <ul>
@@ -761,7 +746,6 @@
   
   <p>There are some subtleties to the way that the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document organises mesh data. In general, the combination of the <code>offset</code> attributes for each <code>&lt;input&gt;</code>, the list of indices in the <code>&lt;p&gt;</code> or <code>&lt;v&gt;</code> elements and the number of vertices per polygon face (either implicit or from <code>&lt;vcount&gt;</code>) indicate which <code>&lt;source&gt;</code> values belong together.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createTriangleMesh = </span><span class="nf">(objectToWorld, vertices, primitive, primitiveType) -&gt;</span>
-  
   <span class="nv">verticesSourceObjects = </span><span class="nx">createSourceObjects</span><span class="p">(</span><span class="nx">vertices</span><span class="p">)</span>
   <span class="nv">primitiveSourceObjects = </span><span class="nx">createSourceObjects</span><span class="p">(</span><span class="nx">primitive</span><span class="p">)</span>
   

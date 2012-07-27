@@ -80,7 +80,6 @@ class UnsupportedDataError extends Error
 #
 # > 2. Extract [**`Shapes`**](shape.html) from `scene`
 parseCOLLADASceneDescriptionJSON = (sceneDescriptionJSON) ->
-  
   scene = JSON.parse sceneDescriptionJSON
   render = 
     cameras: getCamerasFrom scene
@@ -122,14 +121,12 @@ getValueOf = (obj) ->
 # ### *getObjectsFrom*:
 # > **`getObjectsFrom`** returns all objects within the `root` object which match the [**JSONPath**](http://goessner.net/articles/JsonPath/) `path`.
 getObjectsFrom = (root, path) ->
-  
   return getValueOf jsonpath.jsonPath root, path
 
 
 # ### *atLeastOnePropertyIn*:
 # > **`atLeastOnePropertyIn`** returns a `Boolean` for whether `obj` has a property with a name from the `properties` list.
 atLeastOnePropertyIn = (obj, properties)->
-  
   return _.any properties, ((property) -> return obj[property]?)
 
 # ___
@@ -149,7 +146,6 @@ atLeastOnePropertyIn = (obj, properties)->
 #
 # >> * **0 or more** `<scale>` elements
 createObjectToWorldTransform = (node) ->
-  
   objectToWorld = new Transform()
   
   translates = node.translate
@@ -179,7 +175,6 @@ createObjectToWorldTransform = (node) ->
 #
 # > Because the data gets extracted as a `String`, it is split and each component is cast to a number (`+`).
 getTranslation = (translate) ->
-  
   [translateX, translateY, translateZ] = translate.split ' '
   
   unless translateX? and translateY? and translateZ?
@@ -198,7 +193,6 @@ getTranslation = (translate) ->
 #
 # > Because the data gets extracted as a `String`, it is split and each component is cast to a number (`+`).  
 getRotation = (rotate) ->
-  
   [axisX, axisY, axisZ, degrees] = rotate.split ' '
   
   unless axisX? and axisY? and axisZ? and degrees?
@@ -225,7 +219,6 @@ getRotation = (rotate) ->
 #
 # > Because the data gets extracted as a `String`, it is split and each component is cast to a number (`+`).
 getScale = (scale) ->
-  
   [scaleX, scaleY, scaleZ] = scale.split ' '
   
   unless scaleX? and scaleY? and scaleZ?
@@ -253,7 +246,6 @@ getScale = (scale) ->
 #
 # > Each of the results is passed to [**`createCamera`**](#create-camera) to determine the [**`Camera`**](camera.html#camera) type and create it.
 getCamerasFrom = (scene) ->
-  
   camera_nodes = getObjectsFrom scene, '$..node[?(@.instance_camera)]'
   if camera_nodes isnt false
     if _.isArray camera_nodes
@@ -266,7 +258,6 @@ getCamerasFrom = (scene) ->
 #
 # > **The relevant structure is as follows:**
 createCamera = (camera_node, scene) ->
-  
   cameras = []
   camToWorld = createObjectToWorldTransform camera_node
 
@@ -315,7 +306,6 @@ createCamera = (camera_node, scene) ->
 #
 # > * A `<perspective>` element must contain:
 createPerspectiveCamera = (camToWorld, perspective) ->
-  
   camToWorld = new AnimatedTransform(camToWorld, 0, camToWorld, 0)
   
   # >> * **1** `<znear>` element
@@ -371,7 +361,6 @@ createPerspectiveCamera = (camToWorld, perspective) ->
 #
 # > * An `<orthographic>` element must contain:
 createOrthographicCamera = (camToWorld, orthographic) ->
-  
   camToWorld = new AnimatedTransform(camToWorld, 0, camToWorld, 0)
   
   # >> * **1** `<znear>` element
@@ -438,7 +427,6 @@ createOrthographicCamera = (camToWorld, orthographic) ->
 #
 # > Each of the results is passed to [**`createShapes`**](#create-shapes) to determine the [**`Shape`**](shape.html#shape) type and create it.
 getShapesFrom = (scene) ->
-  
   geometry_nodes = getObjectsFrom scene, '$..node[?(@.instance_geometry)]'
   if geometry_nodes isnt false
     if _.isArray geometry_nodes
@@ -451,7 +439,6 @@ getShapesFrom = (scene) ->
 #
 # > **The relevant structure is as follows:**
 createShapes = (geometry_node, scene) ->
-  
   shapes = []
   shapeToWorld = createObjectToWorldTransform geometry_node
 
@@ -517,7 +504,6 @@ createShapes = (geometry_node, scene) ->
 #
 # > **The relevant structure is as follows:**
 getVerticesFrom = (mesh) ->
-  
   positionSemanticCount = 0
   inputs = []
   
@@ -571,7 +557,6 @@ getVerticesFrom = (mesh) ->
 #
 # > **The relevant structure is as follows:**
 getPolylistsFrom = (mesh) ->
-  
   polylists = []
   
   # > * A `<mesh>` element may contain **0 or more** `<polylist>` elements
@@ -659,7 +644,6 @@ getPolylistsFrom = (mesh) ->
 # > There are some subtleties to the way that the [**COLLADA**](http://www.collada.org) document organises mesh data. In general, the combination of the `offset` attributes for each `<input>`, the list of indices in the `<p>` or `<v>` elements and the number of vertices per polygon face (either implicit or from `<vcount>`) indicate which `<source>` values belong together.
 #
 createTriangleMesh = (objectToWorld, vertices, primitive, primitiveType) ->
-  
   verticesSourceObjects = createSourceObjects(vertices)
   primitiveSourceObjects = createSourceObjects(primitive)
   
