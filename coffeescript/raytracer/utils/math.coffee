@@ -6,7 +6,7 @@
 # The **`MathFunction`** object contains additional mathematical methods that are used throughout this project.
 MathFunctions = {}
 
-# Reassign `Math.PI` to `π` for readability:
+# `Math.PI` is reassigned to `π` for readability:
 π = Math.PI
 
 #___
@@ -15,9 +15,11 @@ MathFunctions = {}
 # ### *Clamp:*
 # > **`MathFunctions.Clamp`** clamps a given value between a high and a low value.
 MathFunctions.Clamp = (val, low, high) ->
-  if val < low then return low
-  else if val > high then return high
-  else return val
+  if val < low 
+    return low
+  else if val > high
+   return high
+  return val
 
 # ### *Degrees:*
 # > **`MathFunctions.Degrees`** converts an angle expressed as radians into degrees.
@@ -30,7 +32,7 @@ MathFunctions.Radians = (deg) ->
   return (π / 180) * deg
 
 # ### <section id='lerp'>*LinearInterpolation:*</section>
-# > **`MathFunctions.LinearInterpolation`** performs a Linear Interpolation between two values, with the position given by the parameter `t`.
+# > **`MathFunctions.LinearInterpolation`** performs a Linear Interpolation between two values, with the interpolation value given by the parameter `t`.
 MathFunctions.LinearInterpolation = (t, v1, v2) ->
   return (1 - t) * v1 + t * v2
 
@@ -47,11 +49,13 @@ MathFunctions.Mod = (a, b) ->
 # If the system can be solved, `consistency` is set to `true`, and `x0` and `x1` set to the results, otherwise, `consistency` is set to `false`, and `x0` and `x1` are `null`.
 MathFunctions.SolveLinearSystem2x2 = (a, b) ->
   determinant = a[0][0]*a[1][1] - a[0][1]*a[1][0]
-  if Math.abs determinant < 0.0000000001 then return [false, null, null]
+  if Math.abs(determinant) < 0.0000000001 
+    return [false, null, null]
   x0 = (a[1][1]*b[0] - a[0][1]*b[1]) / determinant
   x1 = (a[0][0]*b[1] - a[1][0]*b[0]) / determinant
-  if isNaN(x0) or isNaN(x1) then return [false, null, null]
-  else return [true, x0, x1]
+  if isNaN(x0) or isNaN(x1)
+    return [false, null, null]
+  return [true, x0, x1]
     
 # ___
 # ## Exports:

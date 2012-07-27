@@ -1,64 +1,85 @@
-$(document).ready(->
+$(document).ready ->
   
-  module("Math")
+  module 'MathFunctions - functions'
   
-  test("MathFunctions.Clamp", ->
-    low = 0
-    middle = 5
-    high = 10
-    clampLow = MathFunctions.Clamp(-10, low, high)
-    equal(clampLow, low, "clampLow is expected to be equal to low")
-    clampHigh = MathFunctions.Clamp(20, low, high)
-    equal(clampHigh, high, "clampHigh is expected to be equal to high")
-    clampMiddle = MathFunctions.Clamp(middle, low, high)
-    equal(clampMiddle, middle, "clampMiddle is expected to be equal to middle")
-    return
-  )
+  test 'Test that all functions exist on the MathFunctions object:', ->
+    expect 7
+    ok MathFunctions?, 'If we look at the MathFunctions object'
+    ok MathFunctions.Clamp?, 'it should have the "Clamp" function'
+    ok MathFunctions.Degrees?, 'and the "Degrees" function'
+    ok MathFunctions.Radians?, 'and the "Radians" function'
+    ok MathFunctions.LinearInterpolation?, 'and the "LinearInterpolation" function'
+    ok MathFunctions.Mod?, 'and the "Mod" function'
+    ok MathFunctions.SolveLinearSystem2x2?, 'and the "SolveLinearSystem2x2" function'
   
-  test("MathFunctions.Degrees", ->
-    equalWithin(MathFunctions.Degrees(Math.PI * 2), 360, 12, "2 * Pi Radians is expected to be equal to 360 Degrees")
-    equalWithin(MathFunctions.Degrees(Math.PI), 180, 12, "Pi Radians is expected to be equal to 180 Degrees")
-    equalWithin(MathFunctions.Degrees(Math.PI / 2), 90, 12, "Pi / 2 Radians is expected to be equal to 90 Degrees")
-    equalWithin(MathFunctions.Degrees(Math.PI / 3), 60, 12, "Pi / 3 Radians is expected to be equal to 60 Degrees")
-    equalWithin(MathFunctions.Degrees(Math.PI / 4), 45, 12, "Pi / 4 Radians is expected to be equal to 45 Degrees")
-    equalWithin(MathFunctions.Degrees(Math.PI / 6), 30, 12, "Pi / 6 Radians is expected to be equal to 30 Degrees")
-    return
-  )
+  test 'Test that "MathFunctions.Clamp" works correctly for various inputs:', ->
+    expect 3
+    testClamp = (val, low, high, expected) ->
+      result = MathFunctions.Clamp val, low, high
+      equal result, expected, "The result of 'Clamp #{val}, #{low}, #{high}' is expected to be #{expected}."
+    testClamp -5, 0, 10, 0
+    testClamp 15, 0, 10, 10
+    testClamp 5, 0, 10, 5
   
-  test("MathFunctions.Radians", ->
-    equal(MathFunctions.Radians(360), Math.PI * 2, "360 Degrees is expected to be equal to 2 * Pi Radians")  
-    equal(MathFunctions.Radians(180), Math.PI, "180 Degrees is expected to be equal to Pi Radians")
-    equal(MathFunctions.Radians(90), Math.PI / 2, "90 Degrees is expected to be equal to Pi / 2 Radians")
-    equal(MathFunctions.Radians(60), Math.PI / 3, "60 Degrees is expected to be equal to Pi / 3 Radians")
-    equal(MathFunctions.Radians(45), Math.PI / 4, "45 Degrees is expected to be equal to Pi / 4 Radians")
-    equal(MathFunctions.Radians(30), Math.PI / 6, "30 Degrees is expected to be equal to Pi / 6 Radians")
-    return
-  )
+  test 'Test that "MathFunctions.Degrees" works correctly for various inputs:', ->
+    expect 9
+    π = Math.PI
+    testDegrees = (radians, expected) ->
+      result = MathFunctions.Degrees radians
+      equalWithin result, expected, 12, "The result of 'Degrees #{radians}' is expected to be #{expected}"
+    testDegrees 2 * π, 360
+    testDegrees π, 180
+    testDegrees π / 2, 90
+    testDegrees π / 3, 60
+    testDegrees π / 4, 45
+    testDegrees π / 6, 30
+    testDegrees π / 9, 20
+    testDegrees π / 12, 15
+    testDegrees π / 18, 10
   
-  test("MathFunction.LinearInterpolation", ->
-    equal(MathFunctions.LinearInterpolation(0.666, 0, 10), 6.66, "LinearInterpolation of 0.666 from 0 to 10 is expected to be 6.66")
-    equal(MathFunctions.LinearInterpolation(-0.5, 0, 10), -5, "LinearInterpolation of -0.5 from 0 to 10 is expected to be -5")
-  )
+  test 'Test that "MathFunctions.Radians" works correctly for various inputs:', ->
+    expect 9
+    π = Math.PI
+    testDegrees = (degrees, expected) ->
+      result = MathFunctions.Radians degrees
+      equal result, expected, "The result of 'Radians #{degrees}' is expected to be #{expected}"
+    testDegrees 360,  2 * π
+    testDegrees 180, π
+    testDegrees 90, π / 2
+    testDegrees 60, π / 3
+    testDegrees 45, π / 4
+    testDegrees 30, π / 6
+    testDegrees 20, π / 9
+    testDegrees 15, π / 12
+    testDegrees 10, π / 18
   
-  test("MathFunctions.Mod", ->
-    equal(MathFunctions.Mod(27, 16), 11, "27 % 16 is expected to equal 11")
-    equal(MathFunctions.Mod(4, 4), 0, "4 % 4 is expected to equal 0")
-    equal(MathFunctions.Mod(-3, 4), 1, "-3 % 4 is expected to equal 1")
-    return
-  )
+  test 'Test that "MathFunction.LinearInterpolation" works correctly for various inputs:', ->
+    expect 4
+    testLerp = (t, v1, v2, expected) ->
+      result = MathFunctions.LinearInterpolation t, v1, v2
+      equal result, expected, "The result of 'LinearInterpolation #{t}, #{v1}, #{v2}' is expected to be #{expected}"
+    testLerp 2, 0, 5, 10
+    testLerp 0.666, 0, 10, 6.66
+    testLerp -0.5, 0, 10, -5
+    testLerp -4, 0, 4, -16
   
-  test("MathFunctions.SolveLinearSystem2x2", ->
-    a = [[2,3],[4,9]]
-    b = [6,15]
-    [consistent, x1, x2] = MathFunctions.SolveLinearSystem2x2(a, b)
-    equal(consistent, true, "consistent is expected to be equal to true")
-    equal(x1, 1.5, "x1 is expected to be equal to 1.5")
-    equal(x2, 1, "x2 is expected to be equal to 1")
-    a = [[3,2],[3,2]]
-    b = [6,12]
-    [consistent, x1, x2] = MathFunctions.SolveLinearSystem2x2(a, b)
-    equal(consistent, false, "consistent is expected to be equal to false")
-    equal(x1, null, "x1 is expected to be equal to null")
-    equal(x2, null, "x2 is expected to be equal to null")
-  )
-)
+  test 'Test that "MathFunctions.Mod" works correctly for various inputs:', ->
+    expect 3
+    testMod = (a, b, expected) ->
+      result = MathFunctions.Mod(a, b)
+      equal result, expected, "The result of 'Mod(#{a}, #{b})' is expected to be #{expected}"
+    testMod 27, 16, 11
+    testMod 4, 4, 0
+    testMod -3, 4, 1
+  
+  test 'Test that "MathFunctions.SolveLinearSystem2x2" works correctly for various inputs:', ->
+    expect 6
+    testSolveLinear = (a, b, expected) ->
+      [consistent, x0, x1] = MathFunctions.SolveLinearSystem2x2 a, b
+      [resultC, resultX0, resultX1] = expected
+      isConsistent = if resultC then 'consistent.' else 'inconsistent.'
+      equal consistent, resultC, "The result of 'SolveLinearSystem2x2 #{a}, #{b}' is expected to be #{isConsistent}"
+      equal x0, resultX0, "For 'SolveLinearSystem2x2 #{a}, #{b}', X0 is expected to be #{resultX0}"
+      equal x1, resultX1, "For 'SolveLinearSystem2x2 #{a}, #{b}', X1 is expected to be #{resultX1}"
+    testSolveLinear [[2,3],[4,9]], [6,15], [true, 1.5, 1]
+    testSolveLinear [[3,2],[3,2]], [6,12], [false, null, null]
