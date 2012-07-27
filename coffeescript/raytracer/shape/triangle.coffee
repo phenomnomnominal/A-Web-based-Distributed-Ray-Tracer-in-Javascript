@@ -59,8 +59,6 @@ class TriangleMesh extends Shape
       unless _.isArray(uvs)
         throw Error "uvs must be an Array."
         
-    @numberTriangles = numberTriangles
-    @numberVertices = numberVertices
     @vertexIndices = []
     for vi in vertexIndices
       @vertexIndices.push vi
