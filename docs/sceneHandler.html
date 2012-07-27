@@ -706,13 +706,13 @@
         <span class="k">if</span> <span class="nx">sourceElement</span><span class="o">?</span> <span class="o">and</span> <span class="nx">sourceElement</span> <span class="o">is</span> <span class="kc">false</span>
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;source&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
         </pre></div>             </td>           </tr>                               <tr id="section-78">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-78">&#182;</a>               </div>               <blockquote>
-  <p>An <code>Object</code> containing the <code>semantic</code>, <code>source</code> id, the <code>&lt;source&gt;</code> element, and the <code>offset</code> is created for each <code>&lt;input&gt; (shared)</code>.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">inputObj = </span>
+  <p>An <code>input</code> containing the <code>semantic</code>, <code>source</code> id, the <code>&lt;source&gt;</code> element, and the <code>offset</code> is created for each <code>&lt;input&gt; (shared)</code>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">input = </span>
           <span class="nv">semantic: </span><span class="nx">semantic</span><span class="p">,</span> 
           <span class="nv">source: </span><span class="nx">id</span><span class="p">,</span>
           <span class="nv">sourceElement: </span><span class="nx">sourceElement</span><span class="p">,</span>
           <span class="nv">offset: </span><span class="nx">getValueOf</span> <span class="nx">polylistInput</span><span class="p">.</span><span class="nx">offset</span>
-        <span class="nx">inputs</span><span class="p">.</span><span class="nx">push</span> <span class="nx">inputObj</span>
+        <span class="nx">inputs</span><span class="p">.</span><span class="nx">push</span> <span class="nx">input</span>
       </pre></div>             </td>           </tr>                               <tr id="section-79">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-79">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;polylist&gt;</code> element must have a <code>count</code> attribute, which specifies the number of polygon primitives</li>
