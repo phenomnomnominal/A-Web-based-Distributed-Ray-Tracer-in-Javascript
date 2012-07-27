@@ -29,10 +29,10 @@ RenderMaster = (response) ->
 
 # ### <section id='upload'>*InsertRenderIntoDatabase*:</section>
 # > **`InsertRenderIntoDatabase`** sends the [**COLLADA**](http://www.collada.org) from the `renderUpload` object to [*sceneHandler.coffee*](sceneHandler.html) for parsing and inserts the resulting object into the database. A shortened URL that contains the unique identified of the render is returned to the client with the correct `sessionID`.
-InsertRenderIntoDatabase = (response, renderUpload, sessionID) ->
-  sceneHandler.parse renderUpload.sceneDescription
-  database.insert renderUpload.uuid, renderUpload
-  urlShorten.shortenURL renderUpload.url, sessionID
+InsertRenderIntoDatabase = (response, render, sessionID) ->
+  render.sceneDescription = sceneHandler.parse render.sceneDescription
+  database.insert render.uuid, render
+  urlShorten.shortenURL render.url, sessionID
 
 # ### <section id='render'>*RenderSlave*:</section>
 # > **`RenderSlave`** takes the [**Jade**](http://jade-lang.com/) template from *'/views/index.jade'* and returns the generated HTML from the template.
