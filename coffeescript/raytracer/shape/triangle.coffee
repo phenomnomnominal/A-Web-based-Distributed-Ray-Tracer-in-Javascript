@@ -1,32 +1,46 @@
 # *triangle.coffee* contains the [**`TriangleMesh`**](#mesh) and [**`Triangle`**](#triangle) classes.
 # ___
 
+# ## Error Types:
+# Some specific **`Error`** types for these classes:
+  
+# <section id='tmce'></section>
+#
+# * **`TriangleMeshConstructorError`**:
+#
+# >> These errors are thrown when something is wrong in the [**`TriangleMesh`**](#mesh) constructor
+class TriangleMeshConstructorError extends Error
+
 # ## <section id='mesh'>TriangleMesh:</section>
 # ___
-# The **`TriangleMesh`** class is an extension of the [**`Shape`**](shape.html#shape) class that provides a way to store the data from large numbers of [**`Triangle`**](#triangle)s so that their per-vertex data, such as position, normals etc. can be shared among many triangles, thus saving memory.
+# The **`TriangleMesh`** class is an extension of the [**`Shape`**](shape.html#shape) class that provides a way to store the data from large numbers of [**`Triangles`**](#triangle) so that their per-vertex data, such as position, normals etc. can be shared among many triangles, in order to save memory.
 class TriangleMesh extends Shape
-  
   # ### *constructor:*
-  # > The **`TriangleMesh`** constructor requires the same arguments as the **`Shape`** [**`constructor`**](shape.html#shape-cons).
+  # > The **`TriangleMesh`** constructor requires the same parameters as the **`Shape`** [**`constructor`**](shape.html#shape-cons).
   #
-  # > It also requires both the number of **`Triangle`**s that make up the mesh (`numberTriangles`), the number of vertices that make up those **`Triangle`**s (`numberVertices`) and an `Array` of numbers which correspond to the indices of the vertices (`vertexIndices`).
+  # > In addition, it requires several other parameters:
   #
-  # > The vertex indices are used to look up the vertex positions in `positions`.
+  # > * The number of **`Triangles`** that make up the mesh: `numberTriangles`
   #
-  # > If these are not supplied, the constructor will throw an **`Error`**.
+  # > * The number of vertices that make up those **`Triangles`**: `numberVertices`
+  #
+  # > * The `Array` of numbers which correspond to the indices of the vertices: `vertexIndices`
+  #
+  # > * The `Array` of vertex positions: `positions`.
+  #
+  # > If these are not supplied or are of the incorrect type, the constructor will throw a [**`TriangleMeshConstructorError`**](#tmce).
   # 
   # > There are also several optional arguments:
   #
-  # > * `normals` - *An `Array` of [**`Normal`**](geometry.html#normal)s, used to compute shading geometry*
+  # > * An `Array` of [**`Normals`**](geometry.html#normal), used to compute shading geometry: `normals`
   #
-  # > * `tangents` - *An `Array` of [**`Vector`**](geometry.html#vector)s, also used to compute shading geometry*
+  # > * An `Array` of [**`Vectors`**](geometry.html#vector), used to compute shading geometry: `tangents`
   #
-  # > * `uvs` - *An `Array` of parameterised (U,V) coordinates, used for intersections and texture mapping*
+  # > * An `Array` of parameterised (U,V) coordinates, used for intersections and texture mapping: `uvs`
   #
-  # > * `alphaTexture` - *A Texture used to remove part of the **`Triangle`** surfaces*
-  #
+  # > * A Texture used to remove part of the **`Triangle`** surfaces: `alphaTexture`
   # 
-  # > All the constructor arguments are copied before being stored in the TriangleMesh object. This is so that the caller retains ownership of the data that is passed in.
+  # > All the constructor arguments are copied before being stored in the **`TriangleMesh`** object. This is so that the caller retains ownership of the data that is passed in.
   constructor: (objectToWorld, worldToObject, reverseOrientation, 
                 @numberTriangles, @numberVertices, vertexIndices, positions, 
                 normals = [], tangents = [], uvs = [], alphaTexture = null) ->
@@ -35,28 +49,29 @@ class TriangleMesh extends Shape
     
     unless @numberTriangles?
       throw Error "numberTriangles must be defined."
-    unless _.isNumber(@numberTriangles)
+    unless _.isNumber @numberTriangles
       throw Error "numberTriangles must be a Number."
     unless @numberVertices?
       throw Error "numberVertices must be defined."
-    unless _.isNumber(@numberVertices)
+    unless _.isNumber @numberVertices
       throw Error "numberVertices must be a Number."
     unless vertexIndices?
       throw Error "vertexIndices must be defined."
-    unless _.isArray(vertexIndices)
+    unless _.isArray vertexIndices
       throw Error "vertexIndices must be an Array."
     unless positions?
       throw Error "positions must be defined."
-    unless _.isArray(positions)
+    unless _.isArray positions
       throw Error "positions must be an Array."
+      
     if normals?
-      unless _.isArray(normals)
+      unless _.isArray normals
         throw Error "normals must be an Array."
     if tangents?
-      unless _.isArray(tangents)
+      unless _.isArray tangents
         throw Error "tangents must be an Array."
     if uvs?
-      unless _.isArray(uvs)
+      unless _.isArray uvs
         throw Error "uvs must be an Array."
         
     @vertexIndices = []
@@ -73,15 +88,15 @@ class TriangleMesh extends Shape
       @tangents.push Vector.Clone(t)
     @uvs = []
     for uv in uvs
-      @uvs.push([uv[0], uv[1]])
+      @uvs.push [uv[0], uv[1]]
     `//TODO: triangleMesh.alphaTesture = AlphaTexture(alphaTexture)`
   
   # ### *objectBound:*
-  # > **`objectBound`** returns a [**`BoundingBox`**](geometry.html#bbox) of the **`TriangleMesh`** in the **`TriangleMesh`**'s object-space. This is achieved by first creating an empty **`BoundingBox`**, then transforming all of the [**`Point`**](geometry.html#point)s in `positions` with [**`Transform.TransformPoint`**](transform.html#transform-point) and expanding the **`BoundingBox`** to encapsulate each one using the [**`BoundingBox.UnionBBoxAndPoint`**](geometry.html#bbox-unionbp) function.
+  # > **`objectBound`** returns a [**`BoundingBox`**](geometry.html#bbox) of the **`TriangleMesh`** in the **`TriangleMesh`**'s object-space. This is achieved by first creating an empty **`BoundingBox`**, then transforming all of the [**`Points`**](geometry.html#point) in `positions` with [**`Transform.TransformPoint`**](transform.html#transform-point) and expanding the **`BoundingBox`** to encapsulate each one using the [**`BoundingBox.UnionBBoxAndPoint`**](geometry.html#bbox-unionbp) function.
   objectBound: ->
     objectBoundingBox = new BoundingBox
     for p in @positions
-      transformed = Transform.TransformPoint(@worldToObject, p)
+      transformed = Transform.TransformPoint @worldToObject, p
       objectBoundingBox = BoundingBox.UnionBBoxAndPoint objectBoundingBox, transformed
     return objectBoundingBox
   
@@ -94,12 +109,12 @@ class TriangleMesh extends Shape
     return worldBoundingBox
   
   # ### *canIntersect:*
-  # > **`canIntersect`** indicates whether a **`Shape`** can compute [**`Ray`**](geometry.html#ray) intersections. Because a **`TriangleMesh`** must first be refined into a set of [**`Triangle`**](#triangle)s, `canIntersect` returns `false`.
+  # > **`canIntersect`** indicates whether a **`Shape`** can compute [**`Ray`**](geometry.html#ray) intersections. Because a **`TriangleMesh`** must first be refined into a set of [**`Triangles`**](#triangle), `canIntersect` returns `no`.
   canIntersect: ->
-    return false
+    no
     
   # ### *refine:*
-  # > **`refine`** is called whenever a [**`Shape`**](shape.html#shape) that cannot be intersected is encountered. It provides the functionality to split the **`Shape`** into a group of smaller **`Shape`**s, some of which may be intersectable, some that may need further refinement. For **`TriangleMesh`**, this simply involves creating an `Array` of [**`Triangle`**](#triangle)s.
+  # > **`refine`** is called whenever a [**`Shape`**](shape.html#shape) that cannot be intersected is encountered. It provides the functionality to split the **`Shape`** into a group of smaller **`Shapes`**, some of which may be intersectable, some that may need further refinement. For **`TriangleMesh`**, this involves creating an `Array` of [**`Triangles`**](#triangle).
   refine: ->
     triangles = []
     for n in [0...@numberTriangles]
@@ -111,8 +126,7 @@ class TriangleMesh extends Shape
 # ## <section id='triangle'>Triangle:</section>
 # ___
 class Triangle extends Shape
-  constructor: (objectToWorld, worldToObject, reverseOrientation, 
-                triangleMesh, n) ->
+  constructor: (objectToWorld, worldToObject, reverseOrientation, triangleMesh, n) ->
                   
     super(objectToWorld, worldToObject, reverseOrientation)
     
@@ -206,24 +220,24 @@ class Triangle extends Shape
         nv1 = Normal.Multiply(@mesh.normals[@v], b0)
         nv2 = Normal.Multiply(@mesh.normals[@v + 1], b1)
         nv3 = Normal.Multiply(@mesh.normals[@v + 2], b2)
-        n = Normal.Add(Normal.Add(nv1, nv2), nv3)
-        ns = Normal.Normalise(Transform.TransformNormal(n))
+        n = Normal.Add Normal.Add(nv1, nv2), nv3
+        ns = Normal.Normalise Transform.TransformNormal(n)
       else 
         ns = dg.nn
       if @mesh.tangents?
-        tv1 = Vector.Multiply(@mesh.tangents[@v], b0)
-        tv2 = Vector.Multiply(@mesh.tangents[@v + 1], b1)
-        tv3 = Vector.Multiply(@mesh.tangents[@v + 2], b2)
-        v = Vector.Add(Vector.Add(tv1, tv2), tv3)
-        ss = Vector.Normalise(Transform.TransformVector(v))
+        tv1 = Vector.Multiply @mesh.tangents[@v], b0
+        tv2 = Vector.Multiply @mesh.tangents[@v + 1], b1
+        tv3 = Vector.Multiply @mesh.tangents[@v + 2], b2
+        v = Vector.Add Vector.Add(tv1, tv2), tv3
+        ss = Vector.Normalise Transform.TransformVector(v)
       else 
-        ss = Vector.Normalise(dg.dpdu)
-      ts = Vector.Cross(ss, ns)
+        ss = Vector.Normalise dg.dpdu
+      ts = Vector.Cross ss, ns
       if (ts.x * ts.x + ts.y * ts.y + ts.z * ts.z) > 0
-        ts = Vector.Normalise(ts)
-        ss = Vector.Cross(ts, ns)
+        ts = Vector.Normalise ts
+        ss = Vector.Cross ts, ns
       else
-        [ns, ss, ts] = Vector.CoordinateSystem(ns)
+        [ns, ss, ts] = Vector.CoordinateSystem ns
       if @mesh.normals
         if @mesh.uvs?
           uvs = [[@mesh.uvs[2 * @v], @mesh.uvs[2 * @v + 1]],
@@ -235,8 +249,8 @@ class Triangle extends Shape
         du2 = uvs[1][0] - uvs[2][0]
         dv1 = uvs[0][1] - uvs[2][1]
         dv2 = uvs[1][1] - uvs[2][1]
-        dn1 = Normal.Subtract(@mesh.normals[v], mesh.normals[v + 2])
-        dn2 = Normal.Subtract(@mesh.normals[v + 1], mesh.normals[v + 2])
+        dn1 = Normal.Subtract @mesh.normals[v], mesh.normals[v + 2]
+        dn2 = Normal.Subtract @mesh.normals[v + 1], mesh.normals[v + 2]
         determinant = du1 * dv2 - dv1 * du2;
         if determinant is 0
           dndu = dndv = new Normal(0,0,0);
