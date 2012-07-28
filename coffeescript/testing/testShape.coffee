@@ -1,30 +1,27 @@
 $(document).ready ->
   module 'Shape - constructor'
   
-  test 'Test for Errors when passing incorrect arguments to the required parameters of the Shape constructor', ->
-    expect 23
+  test 'Test for Errors when passing incorrect arguments to the required parameters of the Shape constructor:', ->
+    expect 12
     ok Shape?, 'If we create a Shape by calling "new Shape" with no arguments'
     raises ->
         s = new Shape()
-      , /objectToWorld must be defined./, 
-      'an Error is thrown (by the Shape constructor): "objectToWorld must be defined."'
+      , /objectToWorld must be defined./, 'a ShapeConstructorError is thrown: "objectToWorld must be defined."'
     notTransform = 'NOT A TRANSFORM'
     ok notTransform?, "If we pass a non-Transform object into the constructor as objectToWorld"
     raises ->
         s = new Shape(notTransform)
-      , /objectToWorld must be a Transform./, 
-      'an Error is thrown (by the Shape constructor): "objectToWorld must be a Transform."'
+      , /objectToWorld must be a Transform./, 'a ShapeConstructorError is thrown: "objectToWorld must be a Transform."'
     o2w = new Transform()
     ok o2w?, 'If we create an objectToWorld transform and pass in into the constructor'
     raises ->
         s = new Shape(o2w)
-      , /worldToObject must be defined./,
-      'an Error is thrown (by the Shape constructor): "worldToObject must be defined."'
+      , /worldToObject must be defined./, 'a ShapeConstructorError is thrown: "worldToObject must be defined."'
+    notTransform = 'NOT A TRANSFORM'
     ok notTransform?, 'If we pass a non-Transform object into the constructor as worldToObject'
     raises ->
         s = new Shape(o2w, notTransform)
-      , /worldToObject must be a Transform./, 
-      'an Error is thrown (by the Shape constructor): "worldToObject must be a Transform."'
+      , /worldToObject must be a Transform./, 'a ShapeConstructorError is thrown: "worldToObject must be a Transform."'
     w2o = new Transform()
     ok w2o?, 'If we create an worldToObject transform and pass in into the constructor'
     raises ->
@@ -35,12 +32,16 @@ $(document).ready ->
     ok notBoolean?, 'If we pass a non-Boolean object into the constructor as reverseOrientation'
     raises ->
         s = new Shape(o2w, w2o, notBoolean)
-      , /reverseOrientation must be a Boolean./,
-      'an Error is thrown (by the Shape constructor): "reverseOrientation must be a Boolean."'
+      , /reverseOrientation must be a Boolean./, 'a ShapeConstructorError is thrown: "reverseOrientation must be a Boolean."'
+      
+  test 'Test for Errors when passing incorrect values to the parameters of the Shape constructor that have default arguments:', ->
+    expect 11
+    o2w = new Transform()
+    w2o = new Transform()
     s1 = new Shape(o2w, w2o, true)
-    ok s1? and s1.constructor.name is 'Shape', 'If we create a Shape by calling "new Shape" with the correct arguments, the constructor should return a Shape'
-    ok s1.objectToWorld? and s1.objectToWorld.constructor.name is 'Transform', 'which has an "objectToWorld" property that is a Transform'
-    ok s1.worldToObject? and s1.worldToObject.constructor.name is 'Transform', 'and a "worldToObject" property that is a Transform'
+    ok s1? and s1 instanceof Shape, 'If we create a Shape by calling "new Shape" with the correct arguments, the constructor should return a Shape'
+    ok s1.objectToWorld? and s1.objectToWorld instanceof Transform, 'which has an "objectToWorld" property that is a Transform'
+    ok s1.worldToObject? and s1.worldToObject instanceof Transform, 'and a "worldToObject" property that is a Transform'
     ok s1.reverseOrientation? and _.isBoolean(s1.reverseOrientation), "and a 'ReverseOrientation' property that is a Boolean"
     ok s1.transformSwapsHandedness? and _.isBoolean(s1.transformSwapsHandedness), 'and a "transformSwapsHandedness" property that is a Boolean'
     ok s1.shapeID? and _.isNumber(s1.shapeID), 'and a "ShapeID" property that is a number.'
@@ -55,7 +56,7 @@ $(document).ready ->
   
   module 'Shape - Prototype functions'
   
-  test 'Test that all Prototype functions exist on a Shape object', ->
+  test 'Test that all Prototype functions exist on a Shape object:', ->
     expect 9
     o2w = new Transform()
     w2o = new Transform()
@@ -70,7 +71,7 @@ $(document).ready ->
     ok s.area?, 'and a "area" function,'
     ok s.getShadingGeometry?, 'and a "getShadingGeometry" function,'
   
-  test 'Test for "Not Implemented" Error when calling "Shape.objectBound"', ->
+  test 'Test for "MustBeOverriddenError" when calling "Shape.objectBound":', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -78,10 +79,9 @@ $(document).ready ->
     ok s?, 'If we create a Shape, and call its "objectBound" function'
     raises ->
         s.objectBound()
-      , /Not Implemented - objectBound must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - objectBound must be implemented by Shape subclasses."'
+      , /objectBound must be implemented by Shape subclasses./, 'a MustBeOverriddenError is thrown: "objectBound must be implemented by Shape subclasses."'
   
-  test 'Test for "Not Implemented" Error when calling "Shape.worldBound"', ->
+  test 'Test for "MustBeOverriddenError" when calling "Shape.worldBound":', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -89,17 +89,16 @@ $(document).ready ->
     ok s?, "If we create a Shape, and call its 'worldBound' function"
     raises ->
         s.worldBound()
-      , /Not Implemented - objectBound must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - objectBound must be implemented by Shape subclasses." This Error is thrown because although "Shape.worldBound" has a default implementation, it relies on a subclass specific "objectBound" implementation.'
+      , /objectBound must be implemented by Shape subclasses./, 'a MustBeOverriddenError is thrown: "objectBound must be implemented by Shape subclasses." This Error is thrown because although "Shape.worldBound" has a default implementation, it relies on a subclass specific "objectBound" implementation.'
   
   test 'Test that "Shape.canIntersect" works correctly for default Shape instance', ->
     expect 1
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    ok s.canIntersect(), 'A default Shape instance should return "true" for "Shape.canIntersect()"'
+    ok s.canIntersect(), 'A default Shape instance should return "yes" for "Shape.canIntersect()"'
   
-  test 'Test for "Not Implemented" Error when calling "Shape.refine"', ->
+  test 'Test for "MustBeOverriddenError" when calling "Shape.refine"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -107,10 +106,9 @@ $(document).ready ->
     ok s?, "If we create a default Shape instance and call its 'refine' function"
     raises ->
         s.refine()
-      , /Not Implemented - refine must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - refine must be implemented by Shape subclasses.'
+      , /refine must be implemented by Shape subclasses./, 'a MustBeOverriddenError is thrown: "refine must be implemented by Shape subclasses."'
   
-  test 'Test for "Not Implemented"" Error when calling "Shape.intersect"', ->
+  test 'Test for "Not MustBeOverriddenError"" when calling "Shape.intersect"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -118,10 +116,9 @@ $(document).ready ->
     ok s?, 'If we create a Shape, and call its "intersect" function'
     raises ->
         s.intersect()
-      , /Not Implemented - intersect must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - intersect must be implemented by Shape subclasses."'
+      , /intersect must be implemented by Shape subclasses./, 'a MustBeOverriddenError is thrown: "intersect must be implemented by Shape subclasses."'
   
-  test 'Test for "Not Implemented" Error when calling "Shape.intersectP"', ->
+  test 'Test for "MustBeOverriddenError" when calling "Shape.intersectP"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -129,10 +126,9 @@ $(document).ready ->
     ok s?, 'If we create a Shape, and call its "intersectP" function'
     raises ->
         s.intersectP()
-      , /Not Implemented - intersectP must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - intersectP must be implemented by Shape subclasses."'
+      , /intersectP must be implemented by Shape subclasses./, 'a MustBeOverriddenError is thrown: "intersectP must be implemented by Shape subclasses."'
   
-  test 'Test for "Not Implemented" Error when calling "Shape.area"', ->
+  test 'Test for "MustBeOverriddenError" when calling "Shape.area"', ->
     expect 2
     o2w = new Transform()
     w2o = new Transform()
@@ -140,8 +136,7 @@ $(document).ready ->
     ok s?, 'If we create a Shape, and call its "area"function'
     raises ->
         s.area()
-      , /Not Implemented - area must be implemented by Shape subclasses./, 
-      'an Error is thrown: "Not Implemented - area must be implemented by Shape subclasses."'
+      , /area must be implemented by Shape subclasses./,  'a MustBeOverriddenError is thrown: "area must be implemented by Shape subclasses."'
   
   test 'Test that "Shape.getShadingGeometry" works correctly for default Shape instance', ->
     expect 9
