@@ -58,7 +58,7 @@ $(document).ready ->
     dg = new DifferentialGeometry(p, dpdu, dpdv, dndu, dndv)
     ok dg?, 'we will get a DifferentialGeoemetry Object'
     
-  test 'Test for Errors when passing incorrect values to the parameters of the TriangleMesh constructor that have default arguments:', ->
+  test 'Test for Errors when passing incorrect values to the parameters of the DifferentialGeometry constructor that have default arguments:', ->
     expect 6
     p = new Point()
     dpdu = new Vector(1, 0, 0)
