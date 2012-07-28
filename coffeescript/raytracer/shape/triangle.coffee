@@ -10,6 +10,8 @@
 #
 # >> These errors are thrown when something is wrong in the [**`TriangleMesh`**](#mesh) constructor
 class TriangleMeshConstructorError extends Error
+  
+# ___
 
 # ## <section id='mesh'>TriangleMesh:</section>
 # ___
