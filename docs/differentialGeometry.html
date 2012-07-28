@@ -57,19 +57,19 @@ It contains:</p>
     <span class="nx">unless</span> <span class="nx">@dndu</span><span class="o">?</span>
       <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;dndu must be defined.&#39;</span>
     <span class="nx">unless</span> <span class="nx">@dndu</span> <span class="k">instanceof</span> <span class="nx">Normal</span>
-      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;dndu must be a Normal&#39;</span>
+      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;dndu must be a Normal.&#39;</span>
     <span class="nx">unless</span> <span class="nx">@dndv</span><span class="o">?</span>
       <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;dndv must be defined.&#39;</span>
     <span class="nx">unless</span> <span class="nx">@dndv</span> <span class="k">instanceof</span> <span class="nx">Normal</span>
       <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;dndv must be a Normal.&#39;</span>
     
     <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">@u</span>
-      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;u must be a Number&#39;</span>
+      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;u must be a Number.&#39;</span>
     <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">@v</span>
-      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;v must be a Number&#39;</span>
+      <span class="k">throw</span> <span class="nx">DiffGeoConstructorError</span> <span class="s">&#39;v must be a Number.&#39;</span>
       
     <span class="k">if</span> <span class="nx">@shape</span><span class="o">?</span>
-      <span class="nx">unless</span> <span class="nx">@shape</span> <span class="k">instanceof</span> <span class="s">&#39;Shape&#39;</span>
+      <span class="nx">unless</span> <span class="nx">@shape</span> <span class="k">instanceof</span> <span class="nx">Shape</span>
         <span class="k">throw</span> <span class="nb">Error</span> <span class="s">&#39;shape must be a Shape.&#39;</span>
     
     <span class="vi">@dudx = </span><span class="mi">0</span>
