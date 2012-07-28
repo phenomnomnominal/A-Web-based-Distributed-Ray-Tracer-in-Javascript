@@ -150,18 +150,20 @@ $(document).ready ->
     nullP = new Point(0, 0, 0)
     vU = new Vector(0, 0, 1)
     vV = new Vector(1, 0, 0)
+    nU = new Normal(0, 0, 1)
+    nV = new Normal(1, 0, 0)
     normNorm = new Normal(0, -1, 0)
     o2w = new Transform()
     w2o = new Transform()
     s = new Shape(o2w, w2o, true)
-    dg = new DifferentialGeometry(nullP, vU, vV, vU, vV, 0.5, 0.5, s)
+    dg = new DifferentialGeometry(nullP, vU, vV, nU, nV, 0.5, 0.5, s)
     ok s?, 'If we create a Shape, and call its "getShadingGeometry" function'
     sg = s.getShadingGeometry null, dg
     ok sg? and sg.constructor.name is 'DifferentialGeometry', 'it should return a "DifferentialGeometry"'
     ok Point.Equals(dg.point, sg.point), 'which should have the same "point" property as "dg"'
     ok Vector.Equals(dg.dpdu, sg.dpdu), 'and the same "dpdu" property as "dg"'
     ok Vector.Equals(dg.dpdv, sg.dpdv), 'and the same "dpdv" property as "dg"'
-    ok Vector.Equals(dg.dndu, sg.dndu), 'and the same "dndu" property as "dg"'
-    ok Vector.Equals(dg.dndv, sg.dndv), 'and the same "dndv" property as "dg"'
+    ok Normal.Equals(dg.dndu, sg.dndu), 'and the same "dndu" property as "dg"'
+    ok Normal.Equals(dg.dndv, sg.dndv), 'and the same "dndv" property as "dg"'
     equal dg.u, sg.u, 'and the same "u" property as "dg"'
     equal dg.v, sg.v, 'and the same "v" property as "dg".'
