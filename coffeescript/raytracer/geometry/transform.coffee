@@ -32,7 +32,7 @@ class Transform
   # >> `[0, 0, 1, 0]`  
   # >> `[0, 0, 0, 1]`
   #
-  # If the arguments are of the incorrect type, the constructor will throw a [**`TransformConstructorError`**](#tce).
+  # > If the arguments are of the incorrect type, the constructor will throw a [**`TransformConstructorError`**](#tce).
   constructor: (matrix, inverse) ->
     
     if matrix?

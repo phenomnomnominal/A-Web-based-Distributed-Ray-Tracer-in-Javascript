@@ -36,16 +36,16 @@
     <code>[0, 0, 1, 0]</code> <br />
     <code>[0, 0, 0, 1]</code></p>
   </blockquote>
-</blockquote>
-
-<p>If the arguments are of the incorrect type, the constructor will throw a <a href="#tce"><strong><code>TransformConstructorError</code></strong></a>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(matrix, inverse) -&gt;</span>
+  
+  <p>If the arguments are of the incorrect type, the constructor will throw a <a href="#tce"><strong><code>TransformConstructorError</code></strong></a>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(matrix, inverse) -&gt;</span>
     
     <span class="k">if</span> <span class="nx">matrix</span><span class="o">?</span>
       <span class="nx">unless</span> <span class="nx">matrix</span> <span class="k">instanceof</span> <span class="nx">Matrix4x4</span>
-        <span class="k">throw</span> <span class="nx">TransformConstructorError</span> <span class="s">&#39;matrix must be a Matrix4x4&#39;</span>
+        <span class="k">throw</span> <span class="nx">TransformConstructorError</span> <span class="s">&#39;matrix must be a Matrix4x4.&#39;</span>
     <span class="k">if</span> <span class="nx">inverse</span><span class="o">?</span>
       <span class="nx">unless</span> <span class="nx">inverse</span> <span class="k">instanceof</span> <span class="nx">Matrix4x4</span>
-        <span class="k">throw</span> <span class="nx">TransformConstructorError</span> <span class="s">&#39;inverse must be a Matrix4x4&#39;</span>
+        <span class="k">throw</span> <span class="nx">TransformConstructorError</span> <span class="s">&#39;inverse must be a Matrix4x4.&#39;</span>
     
     <span class="k">if</span> <span class="o">not</span> <span class="nx">matrix</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">inverse</span><span class="o">?</span>
       <span class="vi">@matrix = </span><span class="k">new</span> <span class="nx">Matrix4x4</span><span class="p">()</span>
