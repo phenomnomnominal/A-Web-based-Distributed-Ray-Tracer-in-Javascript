@@ -1,18 +1,55 @@
 # *matrix.coffee* contains the **`Matrix4x4`** class.
 # ___
 
-# ## <section id='matrix'>Matrix4x4:</section>
+# ## Error Types:
+# Some specific **`Error`** types for these classes:
+  
+# <section id='mce'></section>
+#
+# * **`MatrixConstructorError`**:
+#
+# >> These errors are thrown when something is wrong in the [**`Matrix4x4`**](#matrix) constructor
+class MatrixConstructorError extends Error
+
+# <section id='mie'></section>
+#
+# * **`MatrixInverseError`**:
+#
+# >> These errors are thrown when something is wrong in the [**`Matrix.Inverse`**](#matrix-inverse) function
+class MatrixInverseError extends Error
+
 # ___
 
+# ## <section id='matrix'>Matrix4x4:</section>
+# ___
 # The **`Matrix4x4`** class provides a low-level representation of 4 x 4 Matrices.
 class Matrix4x4
   # ### *constructor:*
-  # >The constructor function takes an `Array[4][4]` as a representation of the matrix, and if any value is `undefined` then it is set to the corresponding value from the identity matrix:
+  # >The constructor function takes a single optional parameter.
+  #
+  # > * A `Array[4][4]` as a representation of the matrix: `matrix`
+  #
+  # > If any value is `undefined` then it is set to the corresponding value from the identity matrix:
   # >> `[1, 0, 0, 0]`  
   # >> `[0, 1, 0, 0]`  
   # >> `[0, 0, 1, 0]`  
   # >> `[0, 0, 0, 1]`  
+  #
+  # > If the arguments are of the incorrect type, the constructor will throw a [**`MatrixConstructorError`**](#mce).
   constructor: (matrix) ->
+    if matrix?
+      unless _.isArray matrix
+        throw MatrixConstructorError 'matrix must be an Array.'
+      unless matrix.length is 4
+        throw MatrixConstructorError 'matrix must have a length of 4.'
+      for row in matrix
+        unless _.isArray row
+          throw MatrixConstructorError 'each row must be an Array.'
+        for val in row
+          if val?
+            unless _.isNumber val
+              throw MatrixConstructorError 'each defined value must be a Number.'
+    
     @m = [[],[],[],[]]
     @m[0][0] = if matrix? and matrix[0]? and matrix[0][0]? then matrix[0][0] else 1 
     @m[0][1] = if matrix? and matrix[0]? and matrix[0][1]? then matrix[0][1] else 0
@@ -31,20 +68,20 @@ class Matrix4x4
     @m[3][2] = if matrix? and matrix[3]? and matrix[3][2]? then matrix[3][2] else 0
     @m[3][3] = if matrix? and matrix[3]? and matrix[3][3]? then matrix[3][3] else 1
     
-    # ___  
-    # ### Prototypical Instance Functions:
+  # ___  
+  # ### Prototypical Instance Functions:
 
-    # These functions are attached to each instance of the **`Matrix4x4`** class - changing the function of one **`Matrix4x4`** changes the function on all other **`Matrix4x4`**s as well. These functions act on a **`Matrix4x4`** instance in place - the original object is modified.
+  # These functions are attached to each instance of the **`Matrix4x4`** class - changing the function of one **`Matrix4x4`** changes the function on all other **`Matrix4x4s`** as well. These functions act on a **`Matrix4x4`** instance in place - the original object is modified.
   
   # ### *equals:*
-  # > **`equals`** checks a **`Matrix4x4`** for equality with another **`Matrix4x4`**. Two **Matrix4x4** instances are equal if each of their components are all the same.
+  # > **`equals`** checks a **`Matrix4x4`** for equality with another **`Matrix4x4`**. Two **Matrix4x4** instances are equal if each of their components are the same.
   equals: (m) ->
-    if m.constructor? and m.constructor.name is "Matrix4x4"
+    if m? and m instanceof Matrix4x4
       for i in [0..3]
         for j in [0..3]
-          if @m[i][j] isnt m.m[i][j] then return false;
-      return true
-    return false
+          if @m[i][j] isnt m.m[i][j] then return no
+      return yes
+    return no
     
   # ___  
   # ### Static Functions:
@@ -53,14 +90,14 @@ class Matrix4x4
   # modified and a new object is always returned.
 
   # ### *Matrix4x4.Equals:*
-  # > **`Matrix4x4.Equals`** checks a **`Matrix4x4`** for equality with another **`Matrix4x4`**. Two **`Matrix4x4`** instances are equal if each of their components are all the same.
+  # > **`Matrix4x4.Equals`** checks a **`Matrix4x4`** for equality with another **`Matrix4x4`**. Two **`Matrix4x4`** instances are equal if each of their components are the same.
   @Equals: (m1, m2) ->
-    if m1.constructor? and m1.constructor.name is "Matrix4x4" and m2.constructor? and m2.constructor.name is "Matrix4x4"
+    if m1? and m1 instanceof Matrix4x4 and m2? and m2 instanceof Matrix4x4
       for i in [0..3]
         for j in [0..3]
-          if m1.m[i][j] isnt m2.m[i][j] then return false;
-      return true
-    return false
+          if m1.m[i][j] isnt m2.m[i][j] then return no
+      return yes
+    return no
   
   # ### *Matrix.IsIdentity:*
   # > **`Matrix.IsIdentity`** checks if a given **`Matrix4x4`** is an identity matrix.
@@ -116,7 +153,7 @@ class Matrix4x4
                 irow = j
                 icol = k
             else if ipiv[k] > 1
-              throw Error "Singular matrix in MatrixInvert"
+              throw MatrixInverseError 'Singular matrix has no inverse'
       ipiv[icol]++
       if irow isnt icol
         for k in [0...4]
@@ -126,7 +163,7 @@ class Matrix4x4
       indxr[i] = irow
       indxc[i] = icol
       if minv[icol][icol] is 0
-        throw Error "Singular matrix in MatrixInvert"
+        throw MatrixInverseError 'Singular matrix has no inverse'
       pivinv = 1 / minv[icol][icol]
       minv[icol][icol] = 1
       for j in [0...4]
