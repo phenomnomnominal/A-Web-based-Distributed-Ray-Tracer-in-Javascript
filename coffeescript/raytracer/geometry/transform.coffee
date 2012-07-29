@@ -1,22 +1,47 @@
-# *matrix.coffee* contains the [**`Transform`**](#transform) class.
+# *transform.coffee* contains the [**`Transform`**](#transform) class.
+# ___
+
+# ## Error Types:
+# Some specific **`Error`** types for these classes:
+  
+# <section id='tce'></section>
+#
+# * **`TransformConstructorError`**:
+#
+# >> These errors are thrown when something is wrong in the [**`Transform`**](#transform) constructor
+class TransformConstructorError extends Error
+
 # ___
 
 # ## <section id='transform'>Transform:</section>
 # ___
-# A **`Transform`** represents a mapping from **`Point`**s to **`Point`**s and from **`Vector`**s to **`Vector`**s in 3-dimensional space using 4-dimensional [**Homogenous Coordinates**](http://en.wikipedia.org/wiki/Homogeneous_coordinates).
+# A **`Transform`** represents a mapping from [**`Points`**](geometry.html#point) to **`Points`** and from [**`Vectors`**](geometry.html#vector) to **`Vectors`** in 3-dimensional space using 4-dimensional [**Homogenous Coordinates**](http://en.wikipedia.org/wiki/Homogeneous_coordinates).
 class Transform
   # ### *constructor:*
-  # > The **`Transform`** constructor function is defined for creating a new **`Transform`** from up totwo transformation [**`Matrix4x4`**](matrix.html#matrix)s.
-  # > If two matrices are passed, these are taken as being the transformation matrix, and its inverse.
+  # > The **`Transform`** constructor function takes two optional parameters:
+  #
+  # > * The 4 by 4 transformation matrix: `matrix` - must be a [**`Matrix4x4`**](matrix.html#matrix)
+  #
+  # > * The 4 by 4 inverse of the transformation matrix: `inverse` - must be a [**`Matrix4x4`**](matrix.html#matrix)
   #
   # > If only one matrix is passed, its inverse is calculated using the [**`Matrix4x4.Inverse`**](matrix.html#matrix-inverse) function.
   #
-  # > If no transformation matrices are passed, a default **`Transform`** is initialised with both `matrix` and `inverse` being declared as the identity matrix:  
+  # > If no matrices are passed, a default **`Transform`** is initialised with both `matrix` and `inverse` being initialised as the identity matrix:
   # >> `[1, 0, 0, 0]`  
   # >> `[0, 1, 0, 0]`  
   # >> `[0, 0, 1, 0]`  
   # >> `[0, 0, 0, 1]`
+  #
+  # If the arguments are of the incorrect type, the constructor will throw a [**`TransformConstructorError`**](#tce).
   constructor: (matrix, inverse) ->
+    
+    if matrix?
+      unless matrix instanceof Matrix4x4
+        throw TransformConstructorError 'matrix must be a Matrix4x4.'
+    if inverse?
+      unless inverse instanceof Matrix4x4
+        throw TransformConstructorError 'inverse must be a Matrix4x4.'
+    
     if not matrix? and not inverse?
       @matrix = new Matrix4x4()
       @inverse = new Matrix4x4()
@@ -35,14 +60,14 @@ class Transform
   # ___  
   # ### Prototypical Instance Functions:
 
-  # These functions are attached to each instance of the **`Transform`** class - changing the function of one **`Transform`** changes the function on all other **`Transform`**s as well. These functions act on a **`Transform`** instance in place - the original object is modified.
+  # These functions are attached to each instance of the **`Transform`** class - changing the function of one **`Transform`** changes the function on all other **`Transforms`** as well. These functions act on a **`Transform`** instance in place - the original object is modified.
         
   # ### *equals:*
-  # > **`equals`** checks a **`Transform`** for equality with another **`Transform`**. Two **`Transform`**s are equal if each of their `matrix` and `inverse` components are the same.    
+  # > **`equals`** checks a **`Transform`** for equality with another **`Transform`**. Two **`Transforms`** are equal if each of their `matrix` and `inverse` components are the same.    
   equals: (t) ->
-    if t.constructor? and t.constructor.name is "Transform"
+    if t.constructor? and t instanceof Transform
       return Matrix4x4.Equals(@matrix, t.matrix) and Matrix4x4.Equals(@inverse, t.inverse)
-    return false
+    return no
   
   # ### *hasScale:*
   # > **`hasScale`** checks whether a **`Transform`** instance has a significant scaling factor in it.
@@ -69,9 +94,9 @@ class Transform
   # ### *Transform.Equals:*
   # > **`Transform.Equals`** checks if two **`Transform`** instances are equal to one another. Two **`Transform`**s are equal if each of their `matrix` and `inverse` components are the same.    
   @Equals: (t1, t2) ->
-    if t1.constructor? and t1.constructor.name is "Transform" and t2.constructor? and t2.constructor.name is "Transform"
+    if t1? and t1 instanceof Transform and t2? and t2 instanceof Transform
       return Matrix4x4.Equals(t1.matrix, t2.matrix) and Matrix4x4.Equals(t1.inverse, t2.inverse)
-    return false
+    return no
   
   # ### *Transform.IsIdentity:*
   # > **`Transform.IsIdentity`** checks if a given **`Transform`** is the Identity matrix:
@@ -210,7 +235,7 @@ class Transform
   @LookAt: (position, look, up) ->
     forward = Vector.Normalise Point.SubtractPointFromPoint(look, position)
     left = Vector.Normalise Vector.Cross(Vector.Normalise(up), forward)
-    newUp = Vector.Cross(forward, left)
+    newUp = Vector.Cross forward, left
     matrix = [[],[],[],[]]
     matrix[0][0] = left.x
     matrix[0][1] = newUp.x
@@ -261,7 +286,8 @@ class Transform
     yp = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3]
     zp = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3]
     wp = m[3][0] * x + m[3][1] * y + m[3][2] * z + m[3][3]
-    if wp is 1 then return new Point(xp, yp, zp)
+    if wp is 1
+      return new Point(xp, yp, zp)
     return Point.Divide new Point(xp, yp, zp), wp
 
   # ### *Transform.TransformNormal:*
@@ -279,7 +305,7 @@ class Transform
   # > **`Transform.TransformRay`** transforms a [**`Ray`**](geometry.html#ray) by a given **`Transform`**.
   @TransformRay: (t, r) ->
     rRet = new Ray()
-    for key, value of r
+    for own key, value of r
       rRet[key] = value
     rRet.origin = Transform.TransformPoint t, rRet.origin
     rRet.direction = Transform.TransformVector t, rRet.direction
