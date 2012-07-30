@@ -1,0 +1,74 @@
+<!DOCTYPE html>  <html> <head>   <title>scene.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               scene.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><em>scene.coffee</em> contains the <a href="#scene"><strong><code>Scene</code></strong></a> class.</p>
+
+<hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Error Types:</h2>
+
+<p>Some specific <strong><code>Error</code></strong> types for these classes:</p>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><section id='sce'></section></p>
+
+<ul>
+<li><strong><code>SceneConstructorError</code></strong>:</li>
+</ul>
+
+<blockquote>
+  <blockquote>
+    <p>These errors are thrown when something is wrong in the <a href="#scene"><strong><code>Scene</code></strong></a> constructor</p>
+  </blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">SceneConstructorError</span> <span class="k">extends</span> <span class="nb">Error</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2><section id='scene'>Scene:</section></h2>
+
+<hr />
+
+<p>The <strong><code>Scene</code></strong> class is the object which contains the representation of everything in the scene.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Scene</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3><em>constructor:</em></h3>
+
+<blockquote>
+  <p>The <strong><code>Scene</code></strong> constructor requires three parameters:</p>
+  
+  <ul>
+  <li><p>The single acceleration data structure for all the <a href="primitive.html#primitive"><strong><code>Primitive</code></strong></a> geometry in the <strong><code>Scene</code></strong>: <code>aggregate</code> - must be a <strong><code>Primitive</code></strong></p></li>
+  <li><p>An <code>Array</code> of all the [<strong><code>Lights</code></strong>] in the <strong><code>Scene</code></strong>: <code>lights</code></p></li>
+  <li><p>The single data structure for all volumetric primitives: <code>volumeRegion</code> - must be a <a href=""><strong><code>VolumeRegion</code></strong></a></p></li>
+  </ul>
+  
+  <p>If the arguments are not supplied or are of the incorrect type, the constructor will throw a <a href="#sce"><strong><code>SceneConstructorError</code></strong></a>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(@aggregate, @lights, @volumeRegion) -&gt;</span>
+    <span class="nx">unless</span> <span class="nx">@aggregate</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;aggregate must be defined.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@aggregate</span> <span class="k">instanceof</span> <span class="nx">Primitive</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;aggregate must be a Primitive.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@lights</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;lights must be defined.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">@lights</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;lights must be an Array.&#39;</span>
+    <span class="k">for</span> <span class="nx">l</span> <span class="k">in</span> <span class="nx">@lights</span>
+      <span class="nx">unless</span> <span class="nx">l</span> <span class="k">instanceof</span> <span class="nx">Light</span>
+        <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;lights must only contain Lights.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@volumeRegion</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;volumeRegion must be defined.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">@volumeRegion</span> <span class="k">instanceof</span> <span class="nx">VolumeRegion</span>
+      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;volumeRegion must be a VolumeRegion.&#39;</span>
+    
+    <span class="vi">@bound = </span><span class="nx">@aggregate</span><span class="p">.</span><span class="nx">worldBound</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">@volumeRegion</span><span class="o">?</span>
+      <span class="vi">@bound = </span><span class="nx">BBox</span><span class="p">.</span><span class="nx">UnionBBoxAndBBox</span> <span class="nx">bound</span><span class="p">,</span> <span class="nx">volumeRegion</span><span class="p">.</span><span class="nx">worldBound</span><span class="p">()</span>
+      </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3><em>worldBound:</em></h3>
+
+<blockquote>
+  <p><strong><code>worldBound</code></strong> returns a <a href="geometry.html#bbox"><strong><code>BoundingBox</code></strong></a> that encompasses every object within the <strong><code>Scene</code></strong>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">worldBound: </span><span class="o">-&gt;</span>
+    <span class="k">return</span> <span class="nx">@bound</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3><em>intersect:</em></h3>
+
+<blockquote>
+  <p><strong><code>intersect</code></strong> returns geometric information about a single <a href="geometry.html#ray"><strong><code>Ray</code></strong></a>-<strong><code>Scene</code></strong> intersection corresponding to the first intersection (if any) along the parametric range of the <strong><code>Ray</code></strong>.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">intersect: </span><span class="nf">(ray) -&gt;</span>
+    <span class="p">[</span><span class="nx">hit</span><span class="p">,</span> <span class="nx">intersection</span><span class="p">]</span> <span class="o">=</span> <span class="nx">@acceleration</span><span class="p">.</span><span class="nx">intersect</span> <span class="nx">ray</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nx">hit</span><span class="p">,</span> <span class="nx">intersection</span><span class="p">]</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3><em>intersectP:</em></h3>
+
+<blockquote>
+  <p><strong><code>intersectP</code></strong> determines whether or not an intersection occurs between a <strong><code>Ray</code></strong> and a <strong><code>Scene</code></strong>, without providing any information about the intersection.  </p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">intersectP: </span><span class="nf">(ray) -&gt;</span>
+    <span class="k">return</span> <span class="nx">@acceleration</span><span class="p">.</span><span class="nx">intersecP</span> <span class="nx">ray</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <hr />
+
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>The <a href="#scene"><strong><code>Scene</code></strong></a> class is added to the global <code>root</code> object.    </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<span class="nv">root.Scene = </span><span class="nx">Scene</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
