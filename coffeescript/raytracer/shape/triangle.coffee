@@ -147,7 +147,7 @@ class Triangle extends Shape
     p3 = @mesh.positions[@v + 2]
     return BoundingBox.UnionBBoxAndPoint new BoundingBox(p1, p2), p3
     
-  intersects: (ray) ->
+  intersect: (ray) ->
     p1 = @mesh.positions[@v]
     p2 = @mesh.positions[@v + 1]
     p3 = @mesh.positions[@v + 2]
