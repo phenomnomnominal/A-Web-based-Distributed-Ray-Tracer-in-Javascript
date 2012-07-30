@@ -56,6 +56,17 @@ MathFunctions.SolveLinearSystem2x2 = (a, b) ->
   if isNaN(x0) or isNaN(x1)
     return [false, null, null]
   return [true, x0, x1]
+  
+# ### *RoundUpPow2:*
+# > **`MathFunctions.RoundUpPow2`** rounds a number up to the nearest power of 2. 
+MathFunctions.RoundUpPow2 = (v) ->
+  v--
+  v |= v >> 1
+  v |= v >> 2
+  v |= v >> 4
+  v |= v >> 8
+  v |= v >> 16
+  return v + 1
     
 # ___
 # ## Exports:

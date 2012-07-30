@@ -55,9 +55,21 @@
   <span class="k">if</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">x0</span><span class="p">)</span> <span class="o">or</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">x1</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="kc">false</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">]</span>
   <span class="k">return</span> <span class="p">[</span><span class="kc">true</span><span class="p">,</span> <span class="nx">x0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">]</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <hr />
+  </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3><em>RoundUpPow2:</em></h3>
 
-<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>The <a href="#math"><strong><code>MathFunctions</code></strong></a> object is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
+<blockquote>
+  <p><strong><code>MathFunctions.RoundUpPow2</code></strong> rounds a number up to the nearest power of 2. </p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">MathFunctions.RoundUpPow2 = </span><span class="nf">(v) -&gt;</span>
+  <span class="nx">v</span><span class="o">--</span>
+  <span class="nx">v</span> <span class="o">|=</span> <span class="nx">v</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+  <span class="nx">v</span> <span class="o">|=</span> <span class="nx">v</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>
+  <span class="nx">v</span> <span class="o">|=</span> <span class="nx">v</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+  <span class="nx">v</span> <span class="o">|=</span> <span class="nx">v</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span>
+  <span class="nx">v</span> <span class="o">|=</span> <span class="nx">v</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span>
+  <span class="k">return</span> <span class="nx">v</span> <span class="o">+</span> <span class="mi">1</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <hr />
+
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>The <a href="#math"><strong><code>MathFunctions</code></strong></a> object is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">root = </span><span class="nx">exports</span> <span class="o">?</span> <span class="k">this</span>
 <span class="nv">root.MathFunctions = </span><span class="nx">MathFunctions</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
