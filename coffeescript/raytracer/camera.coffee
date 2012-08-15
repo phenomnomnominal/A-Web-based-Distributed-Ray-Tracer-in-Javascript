@@ -1,3 +1,5 @@
+class NotImplementedError extends Error
+
 # *camera.coffee* contains generic camera constructs, specifically the
 #[**`Camera`**](#camera) interface and two subclasses which implement it:
 #
@@ -353,9 +355,105 @@ class PerspectiveCamera extends ProjectiveCamera
 # all film subclasses must implement.
 class Film
   
-  # # TODO
-
   constructor: (@xResolution, @yResolution) ->
+    
+  addSample: ->
+    throw NotImplementedError '`addSample` must be implemented by Film subclasses.'
+    
+  splat: ->
+    throw NotImplementedError '`splat` must be implemented by Film subclasses.'
+  
+  getSampleExtent: ->
+    throw NotImplementedError '`getSampleExtent` must be implemented by Film subclasses.'
+    
+  getPixelExtent: ->
+    throw NotImplementedError '`getPixelExtent` must be implemented by Film subclasses.'
+  
+  updateDisplay: ->
+    console.info '`updateDisplay` can optionally be implemented by Film subclasses.'
+    
+  writeImage: ->
+    throw NotImplementedError '`writeImage` must be implemented by Film subclasses.'
+
+class ImageFilm extends Film
+  FILTER_TABLE_SIZE = 16
+  
+  constructor: (xResolution, yResolution, @filter, cropWindow) ->
+    super(xResolution, yResolution)
+    @cropWindow = (val for val in cropWindow)
+    @xPixelStart = Math.ceil(@xResolution * @cropWindow[0])
+    @xPixelCount = Math.max(1, Math.ceil(@xResolution * @cropWindow[1]) - @xPixelStart)
+    @yPixelStart = Math.ceil(@yResolution * @cropWindow[2])
+    @yPixelCount = Math.max(1, Math.ceil(@yResolution * @cropWindow[3]) - @yPixelStart)
+    @pixels = ([] for x in [0...@xPixelCount])
+    
+    
+    @filterTable = []
+    
+    for y in [0...FILTER_TABLE_SIZE]
+      fy = (y + 0.5) * @filter.yWidth / FILTER_TABLE_SIZE
+      for x in [0...FILTER_TABLE_SIZE]
+        fx = (x + 0.5) * @filter.xWidth / FILTER_TABLE_SIZE
+        @filterTable.push @filter.evaluate(fx, fy)
+  
+  addSample: (sample, spectrum) ->
+    dImageX = sample.imageX - 0.5
+    dImageY = sample.imageY - 0.5
+    x0 = Math.ceil dImageX - filter.xWidth
+    x1 = Math.floor dImageX + filter.xWidth
+    y0 = Math.ceil dImageY - filter.yWidth
+    y1 = Math.floor dImageY + filter.yWidth
+    
+    x0 = Math.max x0, @xPixelStart
+    x1 = Math.min x1, @xPixelStart + @xPixelCount - 1
+    y0 = Math.max y0, @yPixelStart
+    y1 = Math.min y1, @yPixelStart + @yPixelCount - 1
+    if x1 - x0 < 0 or y1 - y0 < 0
+      return
+    xyz = spectrum.ToXYZ()
+    [sX, sY, sZ] = xyz
+
+    ifx = []
+    for x in [x0..x1]
+      fx = Math.abs (x - dImageX) * @filter.invXWidth * FILTER_TABLE_SIZE
+      ifx[x - x0] = Math.min(Math.floor(fx), FILTER_TABLE_SIZE - 1)
+    ify = []
+    for y in [y0..y1]
+      fy = Math.abs (y - dImageY) * @filter.invYWidth * FILTER_TABLE_SIZE
+      ify[y - y0] = Math.min(Math.floor(fy), FILTER_TABLE_SIZE - 1)
+
+    syncNeeded = @filter.xWidth > 0.5 or @filter.yWidth > 0.5
+    
+    for y in [y0..y1]
+      for x in [x0..x1]
+        offset = ify[y - y0] * FILTER_TABLE_SIZE + ifx[x - x0]
+        filterWeight = @filterTable[offset]
+        pixelX = x - @xPixelStart
+        pixelY = y - @yPixelStart 
+        pixel = if pixel[x][y]? then pixel[x][y] else {} 
+        if not syncNeeded 
+          pixel.xyz ?= [0, 0, 0]
+          [pX, pY, pZ] = pixel.xyz
+          pX += filterWeight * sX
+          pY += filterWeight * sY
+          pZ += filterWeight * sZ
+          pixel.xyz = [pX, pY, pZ]
+          pixel.weightSum ?= 0
+          pixel.weightSum += filterWeight
+    
+  getSampleExtent: ->
+    xStart = Math.floor(@xPixelStart + 0.5 - @filter.xWidth)
+    xEnd = Math.floor(@xPixelStart + 0.5 + @xPixelCount + @filter.xWidth)
+    yStart = Math.floor(@yPixelStart + 0.5 - @filter.yWidth)
+    yEnd = Math.floor(@yPixelStart + 0.5 + @yPixelCount + @filter.yWidth)
+    return [xStart, xEnd, yStart, yEnd]
+    
+  getPixelExtent: ->
+    xStart = @xPixelStart
+    xEnd = @xPixelStart + @xPixelCount
+    yStart = @yPixelStart
+    yEnd = @yPixelStart + @yPixelCount
+    return [xStart, xEnd, yStart, yEnd]
 
 # ___
 # ## Exports:
