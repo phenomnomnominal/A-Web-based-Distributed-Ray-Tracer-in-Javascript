@@ -24,12 +24,24 @@
 <span class="nv">OrthographicCamera = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">OrthographicCamera</span>
 <span class="nv">PerspectiveCamera = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">PerspectiveCamera</span>
 <span class="nv">Film = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Film</span>
+
 <span class="nv">AnimatedTransform = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">AnimatedTransform</span>
+<span class="nv">Transform = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Transform</span>
 <span class="nv">Vector = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Vector</span>
 <span class="nv">Point = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Point</span>
 <span class="nv">Normal = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Normal</span>
-<span class="nv">Transform = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Transform</span>
-<span class="nv">TriangleMesh = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">TriangleMesh</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>COLLADA Values:</h2>
+
+<span class="nv">TriangleMesh = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">TriangleMesh</span>
+
+<span class="nv">DistantLight = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">DistantLight</span>
+<span class="nv">PointLight = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">PointLight</span>
+<span class="nv">SpotLight = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">SpotLight</span>
+
+<span class="nv">RGBSpectrum = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">RGBSpectrum</span>
+
+<span class="nv">KdTree = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">KdTree</span>
+
+<span class="nv">Scene = </span><span class="nx">raytracer</span><span class="p">.</span><span class="nx">Scene</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>COLLADA Values:</h2>
 
 <p>It is useful to have references to groupings of some common <a href="http://www.collada.org"><strong>COLLADA</strong></a> values:</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <ul>
 <li><code>inputSemantic</code> - Valid <code>&lt;input&gt;</code> semantic attribute values</li>
@@ -71,10 +83,18 @@
   <li><p>Extract <a href="shape.html"><strong><code>Shapes</code></strong></a> from <code>scene</code></p></li>
   </ol>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">parseCOLLADASceneDescriptionJSON = </span><span class="nf">(sceneDescriptionJSON) -&gt;</span>
-  <span class="nv">scene = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">sceneDescriptionJSON</span>
+  <span class="nv">sceneObj = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">sceneDescriptionJSON</span>
+  <span class="nv">scene = </span><span class="nx">makeScene</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">getShapesFrom</span> <span class="nx">sceneObj</span><span class="p">),</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">getLightsFrom</span> <span class="nx">sceneObj</span><span class="p">)</span>
   <span class="nv">render = </span>
-    <span class="nv">cameras: </span><span class="nx">getCamerasFrom</span> <span class="nx">scene</span>
-    <span class="nv">geometry: </span><span class="nx">getShapesFrom</span> <span class="nx">scene</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3><em>getValueOf</em>:</h3>
+    <span class="nv">cameras: </span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span> <span class="nx">getCamerasFrom</span> <span class="nx">sceneObj</span>
+    <span class="nv">scene: </span><span class="nx">scene</span>
+
+<span class="nv">makeScene = </span><span class="nf">(geometry, lights) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>if geometry.length is 0
+ throw COLLADAFileError 'no geometry to render.'
+if lights.length is 0
+ throw COLLADAFileError 'no lights, image will be black.'
+accelerator = new KdTree(geometry)
+return new Scene(accelerator, lights)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="p">{</span> <span class="nv">geometry: </span><span class="nx">geometry</span><span class="p">,</span> <span class="nv">lights: </span><span class="nx">lights</span> <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h3><em>getValueOf</em>:</h3>
 
 <blockquote>
   <p><strong><code>getValueOf</code></strong> takes an object and decides the best value that should be returned. It is useful when selecting data from the converted <a href="http://www.json.org/"><strong>JSON</strong></a>, where we often find an array with a single item, or a stringified <strong><code>Number</code></strong>.</p>
@@ -108,17 +128,17 @@
         <span class="k">return</span> <span class="nx">number</span>
       <span class="k">return</span> <span class="nx">obj</span>
   <span class="k">return</span> <span class="kc">undefined</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h3><em>getObjectsFrom</em>:</h3>
+    </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3><em>getObjectsFrom</em>:</h3>
 
 <blockquote>
   <p><strong><code>getObjectsFrom</code></strong> returns all objects within the <code>root</code> object which match the <a href="http://goessner.net/articles/JsonPath/"><strong>JSONPath</strong></a> <code>path</code>.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getObjectsFrom = </span><span class="nf">(root, path) -&gt;</span>
-  <span class="k">return</span> <span class="nx">getValueOf</span> <span class="nx">jsonpath</span><span class="p">.</span><span class="nx">jsonPath</span> <span class="nx">root</span><span class="p">,</span> <span class="nx">path</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3><em>atLeastOnePropertyIn</em>:</h3>
+  <span class="k">return</span> <span class="nx">getValueOf</span> <span class="nx">jsonpath</span><span class="p">.</span><span class="nx">jsonPath</span> <span class="nx">root</span><span class="p">,</span> <span class="nx">path</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h3><em>atLeastOnePropertyIn</em>:</h3>
 
 <blockquote>
   <p><strong><code>atLeastOnePropertyIn</code></strong> returns a <code>Boolean</code> for whether <code>obj</code> has a property with a name from the <code>properties</code> list.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">atLeastOnePropertyIn = </span><span class="nf">(obj, properties)-&gt;</span>
-  <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">any</span> <span class="nx">properties</span><span class="p">,</span> <span class="p">(</span><span class="nf">(property) -&gt;</span> <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span><span class="o">?</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h2>Transform Handling:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h3><em>createObjectToWorldTransform</em>:</h3>
+  <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">any</span> <span class="nx">properties</span><span class="p">,</span> <span class="p">(</span><span class="nf">(property) -&gt;</span> <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span><span class="o">?</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h2>Transform Handling:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <h3><em>createObjectToWorldTransform</em>:</h3>
 
 <blockquote>
   <p><strong><code>createObjectToWorldTransform</code></strong> takes a <code>&lt;node&gt;</code> element, extracts the <em>Translation</em>, <em>Rotation</em> and <em>Scale</em> transforms using <a href="#get-translation"><strong><code>getTranslation</code></strong></a>, <a href="#get-rotation"><strong><code>getRotation</code></strong></a> and <a href="#get-scale"><strong><code>getScale</code></strong></a> and combines them into a single <code>objectToWorld</code> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>.</p>
@@ -157,7 +177,7 @@
     <span class="k">for</span> <span class="nx">scaleT</span> <span class="k">in</span> <span class="nx">scaleTs</span>
       <span class="nv">objectToWorld = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">Multiply</span> <span class="nx">objectToWorld</span><span class="p">,</span> <span class="nx">scaleT</span>
 
-  <span class="k">return</span> <span class="nx">objectToWorld</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <h3><section id='get-translation'><em>getTranslation</em>:</section></h3>
+  <span class="k">return</span> <span class="nx">objectToWorld</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <h3><section id='get-translation'><em>getTranslation</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>getTranslation</code></strong> takes a <code>&lt;translate&gt;</code> element and creates a new <em>Translate</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;translate&gt;</code> element must have the following form:</p>
@@ -175,7 +195,7 @@
   <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span> <span class="p">[</span><span class="o">+</span><span class="nx">translateX</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateY</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateZ</span><span class="p">],</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;The X, Y and Z components of a `&lt;translate&gt;` must be numbers.&#39;</span>
     
-  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Translate</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="o">+</span><span class="nx">translateX</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateY</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateZ</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <h3><section id='get-rotation'><em>getRotation</em>:</section></h3>
+  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Translate</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="o">+</span><span class="nx">translateX</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateY</span><span class="p">,</span> <span class="o">+</span><span class="nx">translateZ</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h3><section id='get-rotation'><em>getRotation</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>getRotation</code></strong> takes a <code>&lt;rotate&gt;</code> element and creates a new <em>Rotate</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;rotate&gt;</code> element must have the following form:</p>
@@ -205,7 +225,7 @@
     <span class="k">else</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;No axis bit is set in `&lt;rotate&gt;`.&#39;</span>
       
-  <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h3><section id='get-scale'><em>getScale</em>:</section></h3>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">Transform</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h3><section id='get-scale'><em>getScale</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>getScale</code></strong> takes a <code>&lt;scale&gt;</code> element and creates a new <em>Scale</em> <a href="transform.html#transform"><strong><code>Transform</code></strong></a>. A <code>&lt;scale&gt;</code> element must have the following form:</p>
@@ -223,7 +243,7 @@
   <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">all</span> <span class="p">[</span><span class="o">+</span><span class="nx">scaleX</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleY</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleZ</span><span class="p">],</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;The X, Y and Z components of a `&lt;scale&gt;` must be numbers.&#39;</span>
   
-  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Scale</span> <span class="o">+</span><span class="nx">scaleX</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleY</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleZ</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <h2>Camera Handling:</h2>
+  <span class="k">return</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">Scale</span> <span class="o">+</span><span class="nx">scaleX</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleY</span><span class="p">,</span> <span class="o">+</span><span class="nx">scaleZ</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <h2>Camera Handling:</h2>
 
 <blockquote>
   <p>We are able to handle two different <a href="camera.html"><strong><code>Camera</code></strong></a> types:</p>
@@ -232,7 +252,7 @@
   <li><p><a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a></p></li>
   <li><p><a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a></p></li>
   </ol>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <h3><em>getCamerasFrom</em>:</h3>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <h3><em>getCamerasFrom</em>:</h3>
 
 <blockquote>
   <p><strong><code>getCamerasFrom</code></strong> performs the task of finding all the <code>&lt;node&gt;</code> elements who have <code>&lt;instance_camera&gt;</code> child elements within the parsed <a href="http://www.collada.org"><strong>COLLADA</strong></a> XML document. The <a href="http://goessner.net/articles/JsonPath/"><strong>JSONPath</strong></a> expression:</p>
@@ -250,7 +270,7 @@
     <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">camera_nodes</span>
       <span class="k">return</span> <span class="p">(</span><span class="nx">createCamera</span><span class="p">(</span><span class="nx">camera_node</span><span class="p">,</span> <span class="nx">scene</span><span class="p">)</span> <span class="k">for</span> <span class="nx">camera_node</span> <span class="k">in</span> <span class="nx">camera_nodes</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="nx">createCamera</span><span class="p">(</span><span class="nx">camera_nodes</span><span class="p">,</span> <span class="nx">scene</span><span class="p">)]</span>
-  <span class="k">return</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <h3><section id='create-camera'><em>createCamera</em>:</section></h3>
+  <span class="k">return</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h3><section id='create-camera'><em>createCamera</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>createCamera</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract the relevant information needed to create a <a href="camera.html#camera"><strong><code>Camera</code></strong></a> from an <code>&lt;instance_camera&gt;</code> element. </p>
@@ -258,13 +278,13 @@
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createCamera = </span><span class="nf">(camera_node, scene) -&gt;</span>
   <span class="nv">cameras = </span><span class="p">[]</span>
-  <span class="nv">camToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">camera_node</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <blockquote>
+  <span class="nv">camToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">camera_node</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;node&gt;</code> element may contain <strong>0 or more</strong> <code>&lt;instance_camera&gt;</code> elements</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">instanceCameras = </span><span class="nx">camera_node</span><span class="p">.</span><span class="nx">instance_camera</span>
   <span class="k">for</span> <span class="nx">instanceCamera</span> <span class="k">in</span> <span class="p">(</span><span class="nx">instanceCameras</span> <span class="o">?</span> <span class="p">[])</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>An <code>&lt;instance_camera&gt;</code> element must have a <code>url</code> attribute which refers to the <code>id</code> of a unique <code>&lt;camera&gt;</code> element</li>
   </ul>
@@ -272,14 +292,14 @@
     <span class="nv">camera = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..camera[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
     <span class="k">if</span> <span class="nx">camera</span> <span class="o">is</span> <span class="kc">false</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;camera&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;camera&gt;</code> element must contain <strong>1</strong> <code>&lt;optics&gt;</code> element</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">optics = </span><span class="nx">getValueOf</span> <span class="nx">camera</span><span class="p">.</span><span class="nx">optics</span>
     <span class="nx">unless</span> <span class="nx">optics</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">optics</span> 
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;camera&gt;` must contain 1 `&lt;optics&gt;`.&#39;</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>An <code>&lt;optics&gt;</code> element must contain <strong>1</strong> <code>&lt;technique_common&gt;</code> element which contains either <strong>1</strong> <code>&lt;perspective&gt;</code> element or <strong>1</strong> <code>&lt;orthographic&gt;</code> element</li>
   </ul>
@@ -287,13 +307,13 @@
     <span class="nx">unless</span> <span class="nx">techniqueCommon</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">optics</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;optics&gt;` must contain 1 `&lt;technique_common&gt;`.&#39;</span>
     <span class="nx">unless</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">perspective</span><span class="o">?</span> <span class="o">or</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">orthographic</span><span class="o">?</span>
-      <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;optics&gt;&lt;technique_common&gt;` must contain either 1 `&lt;perspective&gt;` or 1 `&lt;orthographic&gt;`.&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <blockquote>
+      <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;optics&gt;&lt;technique_common&gt;` must contain either 1 `&lt;perspective&gt;` or 1 `&lt;orthographic&gt;`.&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <blockquote>
   <p>If a <code>&lt;perspective&gt;</code> element is present a <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a> is created.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">perspective = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">perspective</span>
     <span class="k">if</span> <span class="nx">perspective</span><span class="o">?</span>
       <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">perspective</span>
         <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;optics&gt;&lt;technique_common&gt;` may contain at most 1 `&lt;perspective&gt;`&#39;</span>
-      <span class="nx">cameras</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createPerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">perspective</span><span class="p">)</span>  </pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <blockquote>
+      <span class="nx">cameras</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createPerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">perspective</span><span class="p">)</span>  </pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <blockquote>
   <p>If a <code>&lt;orthographic&gt;</code> element is present an <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a> is created.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">orthographic = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">orthographic</span>
     <span class="k">if</span> <span class="nx">orthographic</span><span class="o">?</span> 
@@ -301,7 +321,7 @@
         <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;optics&gt;&lt;technique_common&gt;` may contain at most 1 `&lt;orthographic&gt;`&#39;</span>
       <span class="nx">cameras</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createOrthographicCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="nx">orthographic</span><span class="p">)</span>
         
-  <span class="k">return</span> <span class="nx">cameras</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <h3><em>createPerspectiveCamera</em>:</h3>
+  <span class="k">return</span> <span class="nx">cameras</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <h3><em>createPerspectiveCamera</em>:</h3>
 
 <blockquote>
   <p><strong><code>createPerspectiveCamera</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract the relevant information needed to create a <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a> from an <code>&lt;perspective&gt;</code> element.</p>
@@ -313,7 +333,7 @@
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createPerspectiveCamera = </span><span class="nf">(camToWorld, perspective) -&gt;</span>
   <span class="nv">camToWorld = </span><span class="k">new</span> <span class="nx">AnimatedTransform</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><strong>1</strong> <code>&lt;znear&gt;</code> element</li>
@@ -322,7 +342,7 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">near = </span><span class="nx">getValueOf</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">znear</span>
   <span class="nx">unless</span> <span class="nx">near</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">near</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;perspective&gt;` element must contain 1 `&lt;znear&gt;`.&#39;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><strong>1</strong> <code>&lt;zfar&gt;</code> element</li>
@@ -331,11 +351,11 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">far = </span><span class="nx">getValueOf</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">zfar</span>
   <span class="nx">unless</span> <span class="nx">far</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">far</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;perspective&gt;` element must contain 1 `&lt;zfar&gt;`.&#39;</span>
-   </pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <blockquote>
+   </pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>As well as either:</li>
   </ul>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><p><strong>1</strong> <code>&lt;xfov&gt;</code> element</p></li>
@@ -347,14 +367,14 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">xfov</span><span class="o">?</span> <span class="k">then</span> <span class="nv">xfov = </span><span class="nx">getValueOf</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">xfov</span> <span class="k">else</span> <span class="kc">null</span>
   <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">yfov</span><span class="o">?</span> <span class="k">then</span> <span class="nv">yfov = </span><span class="nx">getValueOf</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">yfov</span> <span class="k">else</span> <span class="kc">null</span>  
   <span class="k">if</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">aspect_ratio</span><span class="o">?</span> <span class="k">then</span> <span class="nv">aspectRatio = </span><span class="nx">getValueOf</span> <span class="nx">perspective</span><span class="p">.</span><span class="nx">aspect_ratio</span> <span class="k">else</span> <span class="kc">null</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <blockquote>
   <p>These are used to determine any missing values.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">yfov</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">aspectRatio</span><span class="o">?</span>
     <span class="nv">aspectRatio = </span><span class="nx">xfov</span> <span class="o">/</span> <span class="nx">yfov</span>
   <span class="k">else</span> <span class="k">if</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">yfov</span><span class="o">?</span>
     <span class="nv">yfov = </span><span class="nx">xfov</span> <span class="o">/</span> <span class="nx">aspectRatio</span>
   <span class="k">else</span> <span class="k">if</span> <span class="nx">yfov</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">xfov</span><span class="o">?</span>
-    <span class="nv">xfov = </span><span class="nx">yfov</span> <span class="o">*</span> <span class="nx">aspectRatio</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <blockquote>
+    <span class="nv">xfov = </span><span class="nx">yfov</span> <span class="o">*</span> <span class="nx">aspectRatio</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <blockquote>
   <p>If the <code>&lt;aspect_ratio&gt;</code> element is not present, the <code>&lt;aspectRatio&gt;</code> should be calculated from the <code>&lt;xfov&gt;</code> and <code>&lt;yfov&gt;</code> elements and the current viewport.  </p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">xfov</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">yfov</span><span class="o">?</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;perspective&gt;` must contain either 1 `&lt;xfov&gt;` or 1 `&lt;yfov&gt;`.&#39;</span>
@@ -367,9 +387,9 @@
     <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="nx">aspectRatio</span><span class="p">,</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
   <span class="k">else</span> 
     <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">]</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <blockquote>
   <p>This data is used to create a new <a href="camera.html#perspective"><strong><code>PerspectiveCamera</code></strong></a></p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="k">new</span> <span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="nx">xfov</span><span class="p">,</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <h3><em>createOrthographicCamera</em>:</h3>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="k">new</span> <span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="nx">xfov</span><span class="p">,</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <h3><em>createOrthographicCamera</em>:</h3>
 
 <blockquote>
   <p><strong><code>createOrthographicCamera</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract the relevant information needed to create an <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a> from an <code>&lt;orthographic&gt;</code> element.</p>
@@ -381,7 +401,7 @@
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createOrthographicCamera = </span><span class="nf">(camToWorld, orthographic) -&gt;</span>
   <span class="nv">camToWorld = </span><span class="k">new</span> <span class="nx">AnimatedTransform</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><strong>1</strong> <code>&lt;znear&gt;</code> element</li>
@@ -389,7 +409,7 @@
   </blockquote>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">near = </span><span class="nx">getValueOf</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">znear</span>
   <span class="nx">unless</span> <span class="nx">near</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">near</span>
-    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;orthographic&gt;` element must contain 1 `&lt;znear&gt;`.&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <blockquote>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;orthographic&gt;` element must contain 1 `&lt;znear&gt;`.&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><strong>1</strong> <code>&lt;zfar&gt;</code> element      </li>
@@ -398,11 +418,11 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">far = </span><span class="nx">getValueOf</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">zfar</span>
   <span class="nx">unless</span> <span class="nx">far</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">far</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;orthographic&gt;` element must contain 1 `&lt;zfar&gt;`.&#39;</span>
-   </pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <blockquote>
+   </pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>As well as either:</li>
   </ul>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  </pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li><p><strong>1</strong> <code>&lt;xmag&gt;</code> element</p></li>
@@ -414,14 +434,14 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">xmag</span><span class="o">?</span> <span class="k">then</span> <span class="nv">xmag = </span><span class="nx">getValueOf</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">xmag</span>
   <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">ymag</span><span class="o">?</span> <span class="k">then</span> <span class="nv">ymag = </span><span class="nx">getValueOf</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">ymag</span>  
   <span class="k">if</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">aspect_ratio</span><span class="o">?</span> <span class="k">then</span> <span class="nv">aspectRatio = </span><span class="nx">getValueOf</span> <span class="nx">orthographic</span><span class="p">.</span><span class="nx">aspect_ratio</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <blockquote>
   <p>These are used to determine any missing values.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">ymag</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">aspectRatio</span><span class="o">?</span>
     <span class="nv">aspectRatio = </span><span class="p">(</span><span class="nx">xmag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">ymag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
   <span class="k">else</span> <span class="k">if</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">ymag</span><span class="o">?</span>
     <span class="nv">ymag = </span><span class="p">(</span><span class="nx">xmag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nx">aspectRatio</span>
   <span class="k">else</span> <span class="k">if</span> <span class="nx">ymag</span><span class="o">?</span> <span class="o">and</span> <span class="nx">aspectRatio</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">xmag</span><span class="o">?</span>
-    <span class="nv">xmag = </span><span class="p">(</span><span class="nx">ymag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="nx">aspectRaio</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <blockquote>
+    <span class="nv">xmag = </span><span class="p">(</span><span class="nx">ymag</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="nx">aspectRaio</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <blockquote>
   <p>If the <code>&lt;aspect_ratio&gt;</code> element is not present, the <code>&lt;aspectRatio&gt;</code> should be calculated from the <code>&lt;xmag&gt;</code> and <code>&lt;ymag&gt;</code> elements and the current viewport.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">xmag</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">ymag</span><span class="o">?</span>
     <span class="k">throw</span>  <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;orthographic&gt;` must have either 1 `&lt;xmag&gt;` or 1 `&lt;ymag&gt;`.&#39;</span>
@@ -434,9 +454,9 @@
     <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="nx">aspectRatio</span><span class="p">,</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
   <span class="k">else</span> 
     <span class="nv">screenWindow = </span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">aspectRatio</span><span class="p">]</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <blockquote>
   <p>This data is used to create a new <a href="camera.html#orthographic"><strong><code>OrthographicCamera</code></strong></a></p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="k">new</span> <span class="nx">OrthographicCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <h2>Geometry Handling:</h2>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="k">new</span> <span class="nx">OrthographicCamera</span><span class="p">(</span><span class="nx">camToWorld</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Film</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="nx">near</span><span class="p">,</span> <span class="nx">far</span><span class="p">,</span> <span class="nx">screenWindow</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <hr />             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <h2>Geometry Handling:</h2>
 
 <blockquote>
   <p>All <a href="http://www.collada.org"><strong>COLLADA</strong></a> geometry elements need to be converted to <a href="triangle.html#mesh"><strong><code>TriangleMesh</code></strong></a>es.</p>
@@ -446,7 +466,7 @@
   <ul>
   <li><code>&lt;polylist&gt;</code></li>
   </ul>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <h3><em>getShapesFrom</em>:</h3>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <h3><em>getShapesFrom</em>:</h3>
 
 <blockquote>
   <p><strong><code>getShapesFrom</code></strong> performs the task of finding all the <code>&lt;node&gt;</code> elements who have <code>&lt;instance_geometry&gt;</code> child elements within the parsed <a href="http://www.collada.org"><strong>COLLADA</strong></a> XML document. The <a href="http://goessner.net/articles/JsonPath/"><strong>JSONPath</strong></a> expression:</p>
@@ -465,7 +485,7 @@
       <span class="k">return</span> <span class="p">(</span><span class="nx">createShapes</span><span class="p">(</span><span class="nx">geometry_node</span><span class="p">,</span> <span class="nx">scene</span><span class="p">)</span> <span class="k">for</span> <span class="nx">geometry_node</span> <span class="k">in</span> <span class="nx">geometry_nodes</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="nx">createShapes</span> <span class="nx">geometry_nodes</span><span class="p">,</span> <span class="nx">scene</span><span class="p">]</span>
   <span class="k">return</span> <span class="p">[]</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <h3><section id='create-shapes'><em>createShapes</em>:</section></h3>
+    </pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <h3><section id='create-shapes'><em>createShapes</em>:</section></h3>
 
 <blockquote>
   <p><strong><code>createShapes</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract the relevant information needed to create a <a href="shape.html"><strong><code>Shape</code></strong></a> from an <code>&lt;instance_geometry&gt;</code> element.</p>
@@ -473,12 +493,16 @@
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">createShapes = </span><span class="nf">(geometry_node, scene) -&gt;</span>
   <span class="nv">shapes = </span><span class="p">[]</span>
-  <span class="nv">shapeToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">geometry_node</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <blockquote>
+  <span class="nv">shapeToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">geometry_node</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;node&gt;</code> element may contain <strong>0 or more</strong> <code>&lt;instance_geometry&gt;</code> elements</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">instanceGeometries = </span><span class="nx">geometry_node</span><span class="p">.</span><span class="nx">instance_geometry</span>
-  <span class="k">for</span> <span class="nx">instanceGeometry</span> <span class="k">in</span> <span class="p">(</span><span class="nx">instanceGeometries</span> <span class="o">?</span> <span class="p">[])</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <blockquote>
+  <span class="k">for</span> <span class="nx">instanceGeometry</span> <span class="k">in</span> <span class="p">(</span><span class="nx">instanceGeometries</span> <span class="o">?</span> <span class="p">[])</span>
+    
+    <span class="nv">bindMaterial = </span><span class="nx">getValueOf</span> <span class="nx">instanceGeometry</span><span class="p">.</span><span class="nx">bind_material</span>
+    <span class="k">if</span> <span class="nx">bindMaterial</span><span class="o">?</span>
+      <span class="nv">material = </span><span class="nx">getMaterialFrom</span> <span class="nx">bindMaterial</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>An <code>&lt;instance_geometry&gt;</code> element must have a <code>url</code> attribute which refers to the <code>id</code> of a  unique <code>&lt;geometry&gt;</code> element</li>
   </ul>
@@ -486,7 +510,7 @@
     <span class="nv">geometry = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..geometry[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
     <span class="k">if</span> <span class="nx">geometry</span> <span class="o">is</span> <span class="kc">false</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;geometry&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <blockquote>
   <p><ul>
   <li>A <code>&lt;geometry&gt;</code> element must contain <strong>1</strong> element from the following <em>geometric_element</em> types:</p>
   
@@ -505,14 +529,14 @@
     
     <span class="k">if</span> <span class="nx">geometry</span><span class="p">.</span><span class="nx">mesh</span><span class="o">?</span>
       <span class="nv">mesh = </span><span class="nx">getValueOf</span> <span class="nx">geometry</span><span class="p">.</span><span class="nx">mesh</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>A <code>&lt;mesh&gt;</code> element must contain <strong>1</strong> <code>&lt;vertices&gt;</code> element</li>
     </ul>
   </blockquote>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">vertices = </span><span class="nx">getVerticesFrom</span> <span class="nx">mesh</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <p><ul>
     <li>A <code>&lt;mesh&gt;</code> element may contain <strong>0 or more</strong> of the <em>primitive_element</em> types:</p>
@@ -533,7 +557,7 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">primitiveElements = </span><span class="p">[</span><span class="s">&#39;lines&#39;</span><span class="p">,</span> <span class="s">&#39;linestrips&#39;</span><span class="p">,</span> <span class="s">&#39;polygons&#39;</span><span class="p">,</span> <span class="s">&#39;polylist&#39;</span><span class="p">,</span> <span class="s">&#39;triangles&#39;</span><span class="p">,</span> <span class="s">&#39;trifans&#39;</span><span class="p">,</span> <span class="s">&#39;tristrips&#39;</span><span class="p">]</span>
       <span class="nx">unless</span> <span class="nx">atLeastOnePropertyIn</span> <span class="nx">mesh</span><span class="p">,</span> <span class="nx">primitiveElements</span>
         <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;`&lt;mesh&gt;` may contain 0 or more `&lt;lines&gt;`, `&lt;linestrips&gt;`, `&lt;polygons&gt;`, `&lt;polylist&gt;`, `&lt;triangles&gt;`, `&lt;trifans&gt;` or `&lt;tristrips&gt;`.&#39;</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <blockquote>
   <p><a href="triangle.html#mesh"><strong><code>TriangleMeshes</code></strong></a> are created from the <em>primitive_elements</em>.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="nx">mesh</span><span class="p">.</span><span class="nx">polygons</span><span class="o">?</span>
         <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">polygons</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
@@ -552,7 +576,95 @@
         <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">tristrips</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;tristrips&gt;` yet&#39;</span>
       
-  <span class="k">return</span> <span class="nx">shapes</span></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <h3><em>getVerticesFrom</em>:</h3>
+  <span class="k">return</span> <span class="nx">shapes</span>
+  
+<span class="nv">getMaterialFrom = </span><span class="nf">(bindMaterial, scene) -&gt;</span>
+  <span class="nv">techniqueCommon = </span><span class="nx">getValueOf</span> <span class="nx">bindMaterial</span><span class="p">.</span><span class="nx">technique_common</span>
+  <span class="nx">unless</span> <span class="nx">techniqueCommon</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">techniqueCommon</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;bind_material&gt;` must contain 1 `&lt;techniqueCommon&gt;`.&#39;</span>
+    
+  <span class="nv">instanceMaterial = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">instance_material</span>
+  <span class="nx">unless</span> <span class="nx">instanceMaterial</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">instanceMaterial</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;bind_material&gt;&lt;technique_common&gt;` must contain 1 `&lt;instance_material&gt;`.&#39;</span>
+  
+  <span class="nv">symbol = </span><span class="nx">getValueOf</span> <span class="nx">instanceMaterial</span><span class="p">.</span><span class="nx">symbol</span>
+  <span class="nx">unless</span> <span class="nx">symbol</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">symbol</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;instance_material&gt;` must have a `symbol` attribute.&#39;</span>
+  
+  <span class="nv">target = </span><span class="nx">getValueOf</span> <span class="nx">instanceMaterial</span><span class="p">.</span><span class="nx">target</span>
+  <span class="nx">unless</span> <span class="nx">target</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">target</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;instance_material&gt;` must have a `target` attribute.&#39;</span>
+    
+  <span class="nv">id = </span><span class="k">if</span> <span class="nx">target</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;#&#39;</span> <span class="k">then</span> <span class="nx">target</span><span class="p">.</span><span class="nx">substring</span> <span class="mi">1</span> <span class="k">else</span> <span class="nx">target</span>
+  
+  <span class="nv">materialElement = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..material[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
+  
+  <span class="nv">instanceEffect = </span><span class="nx">getVaueOf</span> <span class="nx">materialElement</span><span class="p">.</span><span class="nx">instance_effect</span>
+  <span class="nx">unless</span> <span class="nx">instanceEffect</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">instanceEffect</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;material&gt;` must contain 1 `&lt;instance_effect&gt;`.&#39;</span>
+  
+  <span class="nv">url = </span><span class="nx">getValueOf</span> <span class="nx">instanceEffect</span><span class="p">.</span><span class="nx">url</span>
+  <span class="nx">unless</span> <span class="nx">url</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">url</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;instance_effect&gt;` must have a `url` attribute.&#39;</span>
+    
+  <span class="nv">id = </span><span class="k">if</span> <span class="nx">url</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;#&#39;</span> <span class="k">then</span> <span class="nx">url</span><span class="p">.</span><span class="nx">substring</span> <span class="mi">1</span> <span class="k">else</span> <span class="nx">url</span>
+  
+  <span class="nv">effectElement = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..effect[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
+  <span class="k">if</span> <span class="nx">effectElement</span> <span class="o">is</span> <span class="kc">false</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;effect&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
+  
+  <span class="nv">profileElements = </span><span class="p">[</span><span class="s">&#39;profile_BRIDGE&#39;</span><span class="p">,</span> <span class="s">&#39;profile_CG&#39;</span><span class="p">,</span> <span class="s">&#39;profile_COMMON&#39;</span><span class="p">,</span> <span class="s">&#39;profile_GLES&#39;</span><span class="p">,</span> <span class="s">&#39;profile_GLES2&#39;</span><span class="p">,</span> <span class="s">&#39;profile_GLSL&#39;</span><span class="p">]</span>
+  <span class="nx">unless</span> <span class="nx">atLeastOnePropertyIn</span> <span class="nx">effectElement</span><span class="p">,</span> <span class="nx">profileElements</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;`&lt;effectElement&gt;` must contain 1 or more `&lt;profile_BRIDGE&gt;`, `&lt;profile_CG&gt;`, `&lt;profile_COMMON&gt;`, `&lt;profile_GLES&gt;`, `&lt;profile_GLES2&gt;` or `&lt;profile_GLSL&gt;`.&#39;</span>
+    
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_BRIDGE</span><span class="o">?</span>
+    <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">profile_BRIDGE</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;effect&gt;&lt;profile_BRIDGE&gt;` yet&#39;</span>
+    
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_CG</span><span class="o">?</span>
+    <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">profile_CG</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;effect&gt;&lt;profile_CG&gt;` yet&#39;</span>
+    
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_COMMON</span>
+    <span class="nv">profileCommon = </span><span class="nx">getValueOf</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_COMMON</span>
+    <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">profileCommon</span>
+      <span class="nv">profileCommon = </span><span class="p">[</span><span class="nx">profileCommon</span><span class="p">]</span>
+    <span class="k">for</span> <span class="nx">common</span> <span class="k">in</span> <span class="nx">profileCommon</span>
+      <span class="nv">technique = </span><span class="nx">getValueOf</span> <span class="nx">common</span><span class="p">.</span><span class="nx">technique</span>
+      <span class="nx">unless</span> <span class="nx">technique</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">technique</span>
+        <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;profile_COMMON&gt;` must contain 1 `&lt;technique&gt;`.&#39;</span>
+        <span class="nx">unless</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">blinn</span><span class="o">?</span> <span class="o">^</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">constant</span><span class="o">?</span> <span class="o">^</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">lambert</span><span class="o">?</span> <span class="o">^</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">phong</span><span class="o">?</span>
+          <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;profile_COMMON&gt;&lt;technique&gt;` must contain either 1 `&lt;blinn&gt;` or 1 `&lt;constant&gt;` or 1 `&lt;lambert&gt;` or 1 `&lt;phong&gt;`.&#39;</span>
+        
+        <span class="k">if</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">blinn</span><span class="o">?</span>
+          <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">blinn</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;technique&gt;&lt;blinn&gt;` yet&#39;</span>
+          
+        <span class="k">if</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">constant</span><span class="o">?</span>
+          <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">constant</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;technique&gt;&lt;constant&gt;` yet&#39;</span>
+
+        <span class="k">if</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">lambert</span><span class="o">?</span>
+          <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">lambert</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;technique&gt;&lt;lambert&gt;` yet&#39;</span>
+          
+        <span class="k">if</span> <span class="nx">technique</span><span class="p">.</span><span class="nx">phong</span><span class="o">?</span>
+          <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">phong</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;technique&gt;&lt;phong&gt;` yet&#39;</span>
+
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_GLES</span><span class="o">?</span>
+    <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">profile_GLES</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;effect&gt;&lt;profile_GLES&gt;` yet&#39;</span>
+
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_GLES2</span><span class="o">?</span>
+    <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">profile_GLES2</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;effect&gt;&lt;profile_GLES2&gt;` yet&#39;</span>
+
+  <span class="k">if</span> <span class="nx">effectElement</span><span class="p">.</span><span class="nx">profile_GLSL</span><span class="o">?</span>
+    <span class="o">`//</span> <span class="nv">TODO: </span><span class="nx">Handle</span> <span class="o">&lt;</span><span class="nx">profile_GLSL</span><span class="o">&gt;</span> <span class="nx">elements</span><span class="o">`</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;Can\&#39;t handle `&lt;effect&gt;&lt;profile_GLSL&gt;` yet&#39;</span>
+
+  </pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <h3><em>getVerticesFrom</em>:</h3>
 
 <blockquote>
   <p><strong><code>getVerticesFrom</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract and reorganise the <em>vertices</em> data into a more useable format for building <a href="triangle.html#mesh"><strong><code>TriangleMeshes</code></strong></a>.</p>
@@ -561,33 +673,33 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getVerticesFrom = </span><span class="nf">(mesh) -&gt;</span>
   <span class="nv">positionSemanticCount = </span><span class="mi">0</span>
   <span class="nv">inputs = </span><span class="p">[]</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;mesh&gt;</code> element must contain <strong>1</strong> <code>&lt;vertices&gt;</code> element</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">vertices = </span><span class="nx">getValueOf</span> <span class="nx">mesh</span><span class="p">.</span><span class="nx">vertices</span>
   <span class="nx">unless</span> <span class="nx">vertices</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">vertices</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;mesh&gt;` must contain 1 `&lt;vertices&gt;`.&#39;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;vertices&gt;</code> element must contain <strong>1 or more</strong> <code>&lt;input&gt; (unshared)</code> element which refer to a <code>&lt;source&gt;</code> element somewhere else in the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document.</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">verticesInputs = </span><span class="nx">vertices</span><span class="p">.</span><span class="nx">input</span>
   <span class="nx">unless</span> <span class="nx">verticesInputs</span><span class="o">?</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;vertices&gt;` must contain 1 or more `&lt;input&gt; (unshared)`.&#39;</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <blockquote>
   <ul>
   <li><strong>1</strong> of the <code>&lt;input&gt; (unshared)</code> elements must have <code>semantic</code> set to <code>'POSITION'</code></li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">positionSemanticCount</span><span class="o">++</span> <span class="k">for</span> <span class="nx">input</span> <span class="k">in</span> <span class="nx">verticesInputs</span> <span class="k">when</span> <span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span> <span class="o">is</span> <span class="s">&#39;POSITION&#39;</span>
   <span class="nx">unless</span> <span class="nx">positionSemanticCount</span> <span class="o">is</span> <span class="mi">1</span>
     <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;vertices&gt;` must contain 1 `&lt;input&gt;` with semantic=&quot;POSITION&quot;&#39;</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;input&gt; (unshared)</code> element must have:</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">for</span> <span class="nx">vertexInput</span> <span class="k">in</span> <span class="nx">verticesInputs</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-67">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-67">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>a <code>semantic</code> attribute, which specifies the type of data in the <code>&lt;source&gt;</code> element</li>
@@ -596,7 +708,7 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">semantic = </span><span class="nx">getValueOf</span> <span class="nx">vertexInput</span><span class="p">.</span><span class="nx">semantic</span>
     <span class="nx">unless</span> <span class="nx">semantic</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">semantic</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;input&gt; (unshared)` must have a `semantic` attribute.&#39;</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-67">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-67">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-68">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-68">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>a <code>source</code> attribute, which specifies the <code>id</code> of the <code>&lt;source&gt;</code> element </li>
@@ -611,7 +723,7 @@
 
     <span class="k">if</span> <span class="nx">sourceElement</span> <span class="o">is</span> <span class="kc">false</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;source&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
-    </pre></div>             </td>           </tr>                               <tr id="section-68">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-68">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-69">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-69">&#182;</a>               </div>               <blockquote>
   <p>An <code>input</code> containing the <code>semantic</code> and the <code>&lt;source&gt;</code> element is created for each <code>&lt;input&gt; (unshared)</code>.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">input =</span>
       <span class="nv">semantic: </span><span class="nx">semantic</span>
@@ -619,10 +731,10 @@
     
     <span class="nx">inputs</span><span class="p">.</span><span class="nx">push</span> <span class="nx">input</span>
             
-    </pre></div>             </td>           </tr>                               <tr id="section-69">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-69">&#182;</a>               </div>               <blockquote>
+    </pre></div>             </td>           </tr>                               <tr id="section-70">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-70">&#182;</a>               </div>               <blockquote>
   <p>An <code>Object</code> containing a list of these <code>input</code> objects is returned from the function.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="p">[</span><span class="nv">input: </span><span class="nx">inputs</span><span class="p">]</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-70">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-70">&#182;</a>               </div>               <h3><em>getPolylistsFrom</em>:</h3>
+  </pre></div>             </td>           </tr>                               <tr id="section-71">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-71">&#182;</a>               </div>               <h3><em>getPolylistsFrom</em>:</h3>
 
 <blockquote>
   <p><strong><code>getPolylistsFrom</code></strong> uses the well-defined structure of the <a href="http://www.collada.org/2005/COLLADASchema.xsd"><strong>COLLADA SCHEMA</strong></a> to extract and reorganise the <em>polylist</em> data into a more useable format for building <a href="triangle.html#mesh"><strong><code>TriangleMeshes</code></strong></a>.</p>
@@ -630,25 +742,25 @@
   <p><strong>The relevant structure is as follows:</strong></p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">getPolylistsFrom = </span><span class="nf">(mesh) -&gt;</span>
   <span class="nv">polylists = </span><span class="p">[]</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-71">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-71">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-72">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-72">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;mesh&gt;</code> element may contain <strong>0 or more</strong> <code>&lt;polylist&gt;</code> elements</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">for</span> <span class="nx">polylist</span> <span class="k">in</span> <span class="nx">mesh</span><span class="p">.</span><span class="nx">polylist</span>
 
     <span class="nv">vertexSemantic = </span><span class="mi">0</span>
-    <span class="nv">inputs = </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-72">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-72">&#182;</a>               </div>               <blockquote>
+    <span class="nv">inputs = </span><span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-73">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-73">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;polylist&gt;</code> element may contain <strong>0 or more</strong> <code>&lt;input&gt; (shared)</code> elements which refer to a <code>&lt;source&gt;</code> element somewhere else in the <a href="http://www.collada.org"><strong>COLLADA</strong></a> document.</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">polylistInputs = </span><span class="nx">polylist</span><span class="p">.</span><span class="nx">input</span>
     <span class="k">if</span> <span class="nx">polylistInputs</span><span class="o">?</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-73">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-73">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-74">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-74">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>Any <code>&lt;input&gt; (shared)</code> elements must have:</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">for</span> <span class="nx">polylistInput</span> <span class="k">in</span> <span class="nx">polylistInputs</span>
-        </pre></div>             </td>           </tr>                               <tr id="section-74">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-74">&#182;</a>               </div>               <blockquote>
+        </pre></div>             </td>           </tr>                               <tr id="section-75">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-75">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>A <code>semantic</code> attribute, which specifies the type of data in the <code>&lt;source&gt;</code> element</li>
@@ -659,7 +771,7 @@
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;input&gt; (shared)` must have a `semantic` attribute.&#39;</span>
         <span class="nx">unless</span> <span class="nx">semantic</span> <span class="k">in</span> <span class="nx">inputSemantic</span>
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;input&gt;` must have a valid `semantic` attribute type.&#39;</span>
-          </pre></div>             </td>           </tr>                               <tr id="section-75">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-75">&#182;</a>               </div>               <blockquote>
+          </pre></div>             </td>           </tr>                               <tr id="section-76">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-76">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>A <code>source</code> attribute, which specifies the <code>id</code> of the <code>&lt;source&gt;</code> element </li>
@@ -670,7 +782,7 @@
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;input&gt; (shared)` must have a `source` attribute.&#39;</span>
         
         <span class="nv">id = </span><span class="k">if</span> <span class="nx">source</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;#&#39;</span> <span class="k">then</span> <span class="nx">source</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="nx">source</span>
-          </pre></div>             </td>           </tr>                               <tr id="section-76">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-76">&#182;</a>               </div>               <blockquote>
+          </pre></div>             </td>           </tr>                               <tr id="section-77">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-77">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>An <code>offset</code> attribute, which specifies the offset into the list of values from the <code>&lt;source&gt;</code> element</li>
@@ -679,7 +791,7 @@
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">offset = </span><span class="nx">getValueOf</span> <span class="nx">polylistInput</span><span class="p">.</span><span class="nx">offset</span>
         <span class="nx">unless</span> <span class="nx">offset</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">offset</span>
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;An `&lt;input&gt; (shared)` must have an `offset` attribute.&#39;</span>
-        </pre></div>             </td>           </tr>                               <tr id="section-77">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-77">&#182;</a>               </div>               <blockquote>
+        </pre></div>             </td>           </tr>                               <tr id="section-78">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-78">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>If there are more than <strong>0</strong> <code>&lt;input&gt; (shared)</code> elements, <strong>1</strong> of them must have <code>semantic</code> set to 'VERTEX'</li>
   </ul>
@@ -690,7 +802,7 @@
           
         <span class="k">if</span> <span class="nx">sourceElement</span><span class="o">?</span> <span class="o">and</span> <span class="nx">sourceElement</span> <span class="o">is</span> <span class="kc">false</span>
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;source&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
-        </pre></div>             </td>           </tr>                               <tr id="section-78">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-78">&#182;</a>               </div>               <blockquote>
+        </pre></div>             </td>           </tr>                               <tr id="section-79">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-79">&#182;</a>               </div>               <blockquote>
   <p>An <code>input</code> containing the <code>semantic</code>, <code>source</code> id, the <code>&lt;source&gt;</code> element, and the <code>offset</code> is created for each <code>&lt;input&gt; (shared)</code>.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">input = </span>
           <span class="nv">semantic: </span><span class="nx">semantic</span><span class="p">,</span> 
@@ -698,14 +810,14 @@
           <span class="nv">sourceElement: </span><span class="nx">sourceElement</span><span class="p">,</span>
           <span class="nv">offset: </span><span class="nx">getValueOf</span> <span class="nx">polylistInput</span><span class="p">.</span><span class="nx">offset</span>
         <span class="nx">inputs</span><span class="p">.</span><span class="nx">push</span> <span class="nx">input</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-79">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-79">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-80">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-80">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;polylist&gt;</code> element must have a <code>count</code> attribute, which specifies the number of polygon primitives</li>
   </ul>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">count = </span><span class="nx">getValueOf</span> <span class="nx">polylist</span><span class="p">.</span><span class="nx">count</span>
       <span class="nx">unless</span> <span class="nx">count</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">count</span>
         <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;polylist&gt; must have a `count` attribute.&#39;</span>      
-      </pre></div>             </td>           </tr>                               <tr id="section-80">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-80">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-81">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-81">&#182;</a>               </div>               <blockquote>
   <ul>
   <li>A <code>&lt;polylist&gt;</code> element may also contain:</li>
   </ul>
@@ -720,7 +832,7 @@
         <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">vcount</span>
           <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;polylist&gt;` may only contain 0 or 1 `&lt;vcount&gt;`.&#39;</span>
         <span class="nv">vcount = </span><span class="p">(</span><span class="o">+</span><span class="nx">v</span> <span class="k">for</span> <span class="nx">v</span> <span class="k">in</span> <span class="p">(</span><span class="nx">getValueOf</span> <span class="nx">polylist</span><span class="p">.</span><span class="nx">vcount</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">))</span>
-        </pre></div>             </td>           </tr>                               <tr id="section-81">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-81">&#182;</a>               </div>               <blockquote>
+        </pre></div>             </td>           </tr>                               <tr id="section-82">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-82">&#182;</a>               </div>               <blockquote>
   <blockquote>
     <ul>
     <li>A <code>&lt;p&gt;</code> element, which specifies the vertex attribute indices for all polygons</li>
@@ -734,12 +846,12 @@
       
     <span class="nx">unless</span> <span class="nx">vertexSemantic</span> <span class="o">is</span> <span class="mi">1</span> <span class="o">and</span> <span class="nx">polylistInputs</span><span class="o">?</span>
       <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;If a `&lt;polylist&gt;` has `&lt;input&gt;` children, 1 of them must have semantic=&quot;VERTEX&quot;&#39;</span>
-      </pre></div>             </td>           </tr>                               <tr id="section-82">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-82">&#182;</a>               </div>               <blockquote>
+      </pre></div>             </td>           </tr>                               <tr id="section-83">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-83">&#182;</a>               </div>               <blockquote>
   <p>An object containing the <code>count</code>, <code>inputs</code>, <code>vcount</code> and <code>p</code> for each <code>&lt;polylist&gt;</code> is pushed into the <code>polylists</code> array.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">polylists</span><span class="p">.</span><span class="nx">push</span> <span class="nv">count: </span><span class="nx">count</span><span class="p">,</span> <span class="nv">input: </span><span class="nx">inputs</span><span class="p">,</span> <span class="nv">vcount: </span><span class="nx">vcount</span><span class="p">,</span> <span class="nv">p: </span><span class="nx">p</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-83">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-83">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-84">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-84">&#182;</a>               </div>               <blockquote>
   <p>The <code>polylists</code> array is returned from the function.</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="nx">polylists</span></pre></div>             </td>           </tr>                               <tr id="section-84">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-84">&#182;</a>               </div>               <h3><em>createTriangleMesh</em>:</h3>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="nx">polylists</span></pre></div>             </td>           </tr>                               <tr id="section-85">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-85">&#182;</a>               </div>               <h3><em>createTriangleMesh</em>:</h3>
 
 <blockquote>
   <p><strong><code>createTriangleMesh</code></strong> takes the organised <code>&lt;input&gt;</code> data, creates their <code>&lt;source&gt;</code> objects and creates <a href="triangle.html#mesh"><strong><code>TriangleMesh</code></strong></a>es from these objects.</p>
@@ -752,12 +864,12 @@
   <span class="nv">sharedInputs = </span><span class="nx">getObjectsFrom</span> <span class="nx">primitive</span><span class="p">,</span> <span class="s">&quot;$..input&quot;</span>
   <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">sharedInputs</span>
     <span class="nv">sharedInputs = </span><span class="p">[</span><span class="nx">sharedInputs</span><span class="p">]</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-85">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-85">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-86">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-86">&#182;</a>               </div>               <blockquote>
   <p>The <code>&lt;input&gt;</code> elements are sorted into the <code>dataflow</code> object by their <code>offset</code> value, indicating the order in which they should be accessed. </p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">dataflow = </span><span class="p">[]</span>
   <span class="k">for</span> <span class="nx">input</span> <span class="k">in</span> <span class="nx">sharedInputs</span>
     <span class="nv">offset = </span><span class="nx">input</span><span class="p">.</span><span class="nx">offset</span>
-    <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">]</span> <span class="o">=</span> <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">]</span> <span class="o">?</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-86">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-86">&#182;</a>               </div>               <blockquote>
+    <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">]</span> <span class="o">=</span> <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">]</span> <span class="o">?</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-87">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-87">&#182;</a>               </div>               <blockquote>
   <p>If the <code>semantic</code> value is <code>'VERTEX'</code> then the data to be accessed comes from the <code>&lt;vertices&gt;</code> element, otherwise it comes from the <em>primitive_element</em> types.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">switch</span> <span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span>
       <span class="k">when</span> <span class="s">&#39;VERTEX&#39;</span>
@@ -765,7 +877,7 @@
         <span class="k">for</span> <span class="nx">own</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">val</span> <span class="k">of</span> <span class="nx">verticesSourceObjects</span>
           <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">].</span><span class="nx">push</span> <span class="nx">val</span>
       <span class="k">else</span>
-        <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">].</span><span class="nx">push</span> <span class="nx">primitiveSourceObjects</span><span class="p">[</span><span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-87">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-87">&#182;</a>               </div>               <blockquote>
+        <span class="nx">dataflow</span><span class="p">[</span><span class="nx">offset</span><span class="p">].</span><span class="nx">push</span> <span class="nx">primitiveSourceObjects</span><span class="p">[</span><span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-88">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-88">&#182;</a>               </div>               <blockquote>
   <p>Faces are created from their natural vertex counts e.g.</p>
   
   <ul>
@@ -797,7 +909,7 @@
                     <span class="nx">face</span><span class="p">[</span><span class="nx">semantic</span><span class="p">]</span> <span class="o">=</span> <span class="nx">face</span><span class="p">[</span><span class="nx">semantic</span><span class="p">]</span> <span class="o">?</span> <span class="p">[]</span>
                     <span class="nx">face</span><span class="p">[</span><span class="nx">semantic</span><span class="p">].</span><span class="nx">push</span> <span class="nx">source</span><span class="p">[</span><span class="nx">p</span><span class="p">[</span><span class="nx">pIndex</span><span class="p">]]</span>
                   <span class="nx">pIndex</span><span class="o">++</span>
-              <span class="nx">faces</span><span class="p">.</span><span class="nx">push</span> <span class="nx">face</span></pre></div>             </td>           </tr>                               <tr id="section-88">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-88">&#182;</a>               </div>               <blockquote>
+              <span class="nx">faces</span><span class="p">.</span><span class="nx">push</span> <span class="nx">face</span></pre></div>             </td>           </tr>                               <tr id="section-89">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-89">&#182;</a>               </div>               <blockquote>
   <p>Triangles are then created from the faces.</p>
   
   <ul>
@@ -816,7 +928,7 @@
           <span class="nx">triangle1</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
           <span class="nx">triangle2</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nx">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
       <span class="nx">triangles</span><span class="p">.</span><span class="nx">push</span> <span class="nx">triangle1</span><span class="p">,</span> <span class="nx">triangle2</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-89">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-89">&#182;</a>               </div>               <blockquote>
+  </pre></div>             </td>           </tr>                               <tr id="section-90">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-90">&#182;</a>               </div>               <blockquote>
   <p>The data from the triangles is then used to build the arrays which are passed into the <a href="triangle.html#mesh"><strong><code>TriangleMesh</code></strong></a> constructor.</p>
   
   <p>For now, we are only interested in <code>'POSITION'</code>, <code>'NORMAL'</code> and <code>'TEXCOORD'</code> data.</p>
@@ -843,7 +955,7 @@
   
   <span class="k">return</span> <span class="k">new</span> <span class="nx">TriangleMesh</span><span class="p">(</span><span class="nx">objectToWorld</span><span class="p">,</span> <span class="nx">Transform</span><span class="p">.</span><span class="nx">InverseTransform</span><span class="p">(</span><span class="nx">objectToWorld</span><span class="p">),</span> <span class="kc">false</span><span class="p">,</span> 
                           <span class="nx">numberTriangles</span><span class="p">,</span> <span class="nx">numberTriangles</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">vertexIndices</span><span class="p">,</span> <span class="nx">positions</span><span class="p">,</span> 
-                          <span class="nx">normals</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">uvs</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-90">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-90">&#182;</a>               </div>               <h3><em>createSourceObjects</em>:</h3>
+                          <span class="nx">normals</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">uvs</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-91">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-91">&#182;</a>               </div>               <h3><em>createSourceObjects</em>:</h3>
 
 <blockquote>
   <p><strong><code>createSourceObjects</code></strong> takes the data from a <code>&lt;source&gt;</code> element, e.g.:</p>
@@ -872,7 +984,7 @@
           <span class="k">if</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">arrayElementNames</span>
             <span class="nv">sourceVals = </span><span class="p">(</span><span class="o">+</span><span class="nx">v</span> <span class="k">for</span> <span class="nx">v</span> <span class="k">in</span> <span class="p">(</span><span class="nx">getValueOf</span> <span class="nx">val</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">))</span>
         
-        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">sourceVals</span></pre></div>             </td>           </tr>                               <tr id="section-91">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-91">&#182;</a>               </div>               <blockquote>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">sourceVals</span></pre></div>             </td>           </tr>                               <tr id="section-92">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-92">&#182;</a>               </div>               <blockquote>
   <p>The object type is assumed based on the <code>semantic</code> type.</p>
 </blockquote>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">switch</span> <span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span>
             <span class="k">when</span> <span class="s">&#39;POSITION&#39;</span>
@@ -892,8 +1004,91 @@
                 <span class="nv">u = </span><span class="nx">sourceVals</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
                 <span class="nv">v = </span><span class="nx">sourceVals</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
                 <span class="nx">sourceObjects</span><span class="p">[</span><span class="nx">input</span><span class="p">.</span><span class="nx">semantic</span><span class="p">].</span><span class="nx">push</span> <span class="p">[</span><span class="nx">u</span><span class="p">,</span> <span class="nx">v</span><span class="p">]</span>
-  <span class="k">return</span> <span class="nx">sourceObjects</span></pre></div>             </td>           </tr>                               <tr id="section-92">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-92">&#182;</a>               </div>               <hr />
+  <span class="k">return</span> <span class="nx">sourceObjects</span>
 
-<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-93">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-93">&#182;</a>               </div>               <p>The <strong><code>parseCOLLADASceneDescriptionJSON</code></strong> function is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.parse = </span><span class="nx">parseCOLLADASceneDescriptionJSON</span>
+<span class="nv">getLightsFrom = </span><span class="nf">(scene) -&gt;</span>
+  <span class="nv">light_nodes = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&#39;$..node[?(@.instance_light)]&#39;</span>
+  <span class="k">if</span> <span class="nx">light_nodes</span> <span class="o">isnt</span> <span class="kc">false</span>
+    <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">light_nodes</span>
+      <span class="k">return</span> <span class="p">(</span><span class="nx">createLight</span><span class="p">(</span><span class="nx">light_node</span><span class="p">,</span> <span class="nx">scene</span><span class="p">)</span> <span class="k">for</span> <span class="nx">light_node</span> <span class="k">in</span> <span class="nx">light_nodes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nx">createLight</span> <span class="nx">light_nodes</span><span class="p">,</span> <span class="nx">scene</span><span class="p">]</span>
+  <span class="k">return</span> <span class="p">[]</span>
+
+<span class="nv">createLight = </span><span class="nf">(light_node, scene) -&gt;</span>
+  <span class="nv">lights = </span><span class="p">[]</span>
+  <span class="nv">lightToWorld = </span><span class="nx">createObjectToWorldTransform</span> <span class="nx">light_node</span>
+
+  <span class="nv">instanceLights = </span><span class="nx">light_node</span><span class="p">.</span><span class="nx">instance_light</span>
+  <span class="k">for</span> <span class="nx">instanceLight</span> <span class="k">in</span> <span class="p">(</span><span class="nx">instanceLights</span> <span class="o">?</span> <span class="p">[])</span>
+
+    <span class="nv">id = </span><span class="k">if</span> <span class="nx">instanceLight</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">is</span> <span class="s">&#39;#&#39;</span> <span class="k">then</span> <span class="nx">instanceLight</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="nx">instanceLight</span><span class="p">.</span><span class="nx">url</span>
+    <span class="nv">light = </span><span class="nx">getObjectsFrom</span> <span class="nx">scene</span><span class="p">,</span> <span class="s">&quot;$..light[?(@.id == &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;)]&quot;</span>
+    <span class="k">if</span> <span class="nx">light</span> <span class="o">is</span> <span class="kc">false</span>
+      <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&quot;There is no `&lt;light&gt;` with the `id` &#39;</span><span class="si">#{</span><span class="nx">id</span><span class="si">}</span><span class="s">&#39;&quot;</span>
+
+    <span class="nv">techniqueCommon = </span><span class="nx">getValueOf</span> <span class="nx">light</span><span class="p">.</span><span class="nx">technique_common</span>
+    <span class="nx">unless</span> <span class="nx">techniqueCommon</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">techniqueCommon</span>
+      <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;light&gt;` must contain 1 `&lt;technique_common&gt;`.&#39;</span>
+    <span class="nx">unless</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">ambient</span><span class="o">?</span> <span class="o">^</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">directional</span><span class="o">?</span> <span class="o">^</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">point</span><span class="o">?</span> <span class="o">^</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">spot</span><span class="o">?</span>
+      <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;light&gt;&lt;technique_common&gt;` must contain either 1 `&lt;ambient&gt;` or 1 `&lt;directional&gt;` or 1 `&lt;point&gt;` or 1 `&lt;spot&gt;`.&#39;</span>
+
+    <span class="nv">ambient = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">ambient</span>
+    <span class="k">if</span> <span class="nx">ambient</span><span class="o">?</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span> <span class="s">&#39;AmbientLights are not supported &#39;</span>
+
+    <span class="nv">directional = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">directional</span>
+    <span class="k">if</span> <span class="nx">directional</span><span class="o">?</span>
+      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">directional</span>
+        <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;light&gt;&lt;technique_common&gt;` may contain at most 1 `&lt;directional&gt;`&#39;</span>
+      <span class="nx">lights</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createDirectionalLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">directional</span><span class="p">)</span>  
+
+    <span class="nv">point = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">point</span>
+    <span class="k">if</span> <span class="nx">point</span><span class="o">?</span>
+      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">point</span>
+        <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;light&gt;&lt;technique_common&gt;` may contain at most 1 `&lt;point&gt;`&#39;</span>
+      <span class="nx">lights</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createPointLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">point</span><span class="p">)</span>  
+
+    <span class="nv">spot = </span><span class="nx">getValueOf</span> <span class="nx">techniqueCommon</span><span class="p">.</span><span class="nx">spot</span>
+    <span class="k">if</span> <span class="nx">spot</span><span class="o">?</span>
+      <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">spot</span>
+        <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;light&gt;&lt;technique_common&gt;` may contain at most 1 `&lt;spot&gt;`&#39;</span>
+      <span class="nx">lights</span><span class="p">.</span><span class="nx">push</span> <span class="nx">createSpotLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">spot</span><span class="p">)</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">lights</span>
+  <span class="k">for</span> <span class="nx">l</span> <span class="k">in</span> <span class="nx">lights</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">l</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">name</span>
+  <span class="k">return</span> <span class="nx">lights</span>
+
+<span class="nv">createDirectionalLight = </span><span class="nf">(lightToWorld, directional) -&gt;</span>
+  <span class="nv">color = </span><span class="nx">getValueOf</span> <span class="nx">directional</span><span class="p">.</span><span class="nx">color</span>
+  <span class="nx">unless</span> <span class="nx">color</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">color</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;directional&gt;` element must contain 1 `&lt;color&gt;`.&#39;</span>
+  <span class="p">[</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
+  
+  <span class="nv">direction = </span><span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="nv">direction = </span><span class="nx">Transform</span><span class="p">.</span><span class="nx">TransformVector</span> <span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">direction</span>
+  
+  <span class="k">new</span> <span class="nx">DistantLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">RGBSpectrum</span><span class="p">.</span><span class="nx">FromRGB</span><span class="p">([</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]),</span> <span class="nx">direction</span><span class="p">)</span>
+  
+<span class="nv">createPointLight = </span><span class="nf">(lightToWorld, point) -&gt;</span>
+  <span class="nv">color = </span><span class="nx">getValueOf</span> <span class="nx">point</span><span class="p">.</span><span class="nx">color</span>
+  <span class="nx">unless</span> <span class="nx">color</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">color</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;point&gt;` element must contain 1 `&lt;color&gt;`.&#39;</span>
+  <span class="p">[</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
+  
+  <span class="k">new</span> <span class="nx">PointLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">RGBSpectrum</span><span class="p">.</span><span class="nx">FromRGB</span><span class="p">([</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]))</span>
+  
+<span class="nv">createSpotLight = </span><span class="nf">(lightToWorld, spot) -&gt;</span>
+  <span class="nv">color = </span><span class="nx">getValueOf</span> <span class="nx">spot</span><span class="p">.</span><span class="nx">color</span>
+  <span class="nx">unless</span> <span class="nx">color</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">color</span>
+    <span class="k">throw</span> <span class="nx">COLLADAFileError</span> <span class="s">&#39;A `&lt;directional&gt;` element must contain 1 `&lt;color&gt;`.&#39;</span>
+  <span class="p">[</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
+  
+  <span class="nv">falloffAngle = </span><span class="nx">getValueOf</span> <span class="nx">spot</span><span class="p">.</span><span class="nx">falloff_angle</span> <span class="o">?</span> <span class="mi">180</span>
+  <span class="nv">falloffExponent = </span><span class="nx">getValueOf</span> <span class="nx">spot</span><span class="p">.</span><span class="nx">falloff_exponent</span> <span class="o">?</span> <span class="mi">0</span>
+  <span class="nv">falloffStart = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">falloffAngle</span><span class="p">),</span> <span class="nx">falloffExponent</span>
+  <span class="k">new</span> <span class="nx">SpotLight</span><span class="p">(</span><span class="nx">lightToWorld</span><span class="p">,</span> <span class="nx">RGBSpectrum</span><span class="p">.</span><span class="nx">FromRGB</span><span class="p">([</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">]),</span> <span class="nx">falloffAngle</span><span class="p">,</span> <span class="nx">falloffStart</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-93">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-93">&#182;</a>               </div>               <hr />
+
+<h2>Exports:</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-94">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-94">&#182;</a>               </div>               <p>The <strong><code>parseCOLLADASceneDescriptionJSON</code></strong> function is added to the global <code>root</code> object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.parse = </span><span class="nx">parseCOLLADASceneDescriptionJSON</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

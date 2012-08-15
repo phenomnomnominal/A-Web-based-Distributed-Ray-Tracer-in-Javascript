@@ -30,12 +30,24 @@ raytracer = require('../raytracer/').Raytracer
 OrthographicCamera = raytracer.OrthographicCamera
 PerspectiveCamera = raytracer.PerspectiveCamera
 Film = raytracer.Film
+
 AnimatedTransform = raytracer.AnimatedTransform
+Transform = raytracer.Transform
 Vector = raytracer.Vector
 Point = raytracer.Point
 Normal = raytracer.Normal
-Transform = raytracer.Transform
+
 TriangleMesh = raytracer.TriangleMesh
+
+DistantLight = raytracer.DistantLight
+PointLight = raytracer.PointLight
+SpotLight = raytracer.SpotLight
+
+RGBSpectrum = raytracer.RGBSpectrum
+
+KdTree = raytracer.KdTree
+
+Scene = raytracer.Scene
 
 # ___
 
@@ -80,10 +92,20 @@ class UnsupportedDataError extends Error
 #
 # > 2. Extract [**`Shapes`**](shape.html) from `scene`
 parseCOLLADASceneDescriptionJSON = (sceneDescriptionJSON) ->
-  scene = JSON.parse sceneDescriptionJSON
+  sceneObj = JSON.parse sceneDescriptionJSON
+  scene = makeScene _.flatten(getShapesFrom sceneObj), _.flatten(getLightsFrom sceneObj)
   render = 
-    cameras: getCamerasFrom scene
-    geometry: getShapesFrom scene
+    cameras: _.flatten getCamerasFrom sceneObj
+    scene: scene
+
+makeScene = (geometry, lights) ->
+  #if geometry.length is 0
+  #  throw COLLADAFileError 'no geometry to render.'
+  #if lights.length is 0
+  #  throw COLLADAFileError 'no lights, image will be black.'
+  #accelerator = new KdTree(geometry)
+  #return new Scene(accelerator, lights)
+  return { geometry: geometry, lights: lights }
 
 # ### *getValueOf*:
 # > **`getValueOf`** takes an object and decides the best value that should be returned. It is useful when selecting data from the converted [**JSON**](http://www.json.org/), where we often find an array with a single item, or a stringified **`Number`**.
@@ -445,6 +467,10 @@ createShapes = (geometry_node, scene) ->
   # > * A `<node>` element may contain **0 or more** `<instance_geometry>` elements
   instanceGeometries = geometry_node.instance_geometry
   for instanceGeometry in (instanceGeometries ? [])
+    
+    bindMaterial = getValueOf instanceGeometry.bind_material
+    if bindMaterial?
+      material = getMaterialFrom bindMaterial
 
     # > * An `<instance_geometry>` element must have a `url` attribute which refers to the `id` of a  unique `<geometry>` element
     id = if instanceGeometry.url.substr(0, 1) is '#' then instanceGeometry.url.substring(1) else instanceGeometry.url    
@@ -498,7 +524,94 @@ createShapes = (geometry_node, scene) ->
         console.warn 'Can\'t handle `<tristrips>` yet'
       
   return shapes
+  
+getMaterialFrom = (bindMaterial, scene) ->
+  techniqueCommon = getValueOf bindMaterial.technique_common
+  unless techniqueCommon? and not _.isArray techniqueCommon
+    throw COLLADAFileError 'A `<bind_material>` must contain 1 `<techniqueCommon>`.'
+    
+  instanceMaterial = getValueOf techniqueCommon.instance_material
+  unless instanceMaterial? and not _.isArray instanceMaterial
+    throw COLLADAFileError 'A `<bind_material><technique_common>` must contain 1 `<instance_material>`.'
+  
+  symbol = getValueOf instanceMaterial.symbol
+  unless symbol? and _.isString symbol
+    throw COLLADAFileError 'An `<instance_material>` must have a `symbol` attribute.'
+  
+  target = getValueOf instanceMaterial.target
+  unless target? and _.isString target
+    throw COLLADAFileError 'An `<instance_material>` must have a `target` attribute.'
+    
+  id = if target.substr(0, 1) is '#' then target.substring 1 else target
+  
+  materialElement = getObjectsFrom scene, "$..material[?(@.id == '#{id}')]"
+  
+  instanceEffect = getVaueOf materialElement.instance_effect
+  unless instanceEffect? and not _.isArray instanceEffect
+    throw COLLADAFileError 'A `<material>` must contain 1 `<instance_effect>`.'
+  
+  url = getValueOf instanceEffect.url
+  unless url? and _.isString url
+    throw COLLADAFileError 'An `<instance_effect>` must have a `url` attribute.'
+    
+  id = if url.substring(0, 1) is '#' then url.substring 1 else url
+  
+  effectElement = getObjectsFrom scene, "$..effect[?(@.id == '#{id}')]"
+  if effectElement is false
+    throw COLLADAFileError "There is no `<effect>` with the `id` '#{id}'"
+  
+  profileElements = ['profile_BRIDGE', 'profile_CG', 'profile_COMMON', 'profile_GLES', 'profile_GLES2', 'profile_GLSL']
+  unless atLeastOnePropertyIn effectElement, profileElements
+    throw COLLADAFileError '`<effectElement>` must contain 1 or more `<profile_BRIDGE>`, `<profile_CG>`, `<profile_COMMON>`, `<profile_GLES>`, `<profile_GLES2>` or `<profile_GLSL>`.'
+    
+  if effectElement.profile_BRIDGE?
+    `// TODO: Handle <profile_BRIDGE> elements`
+    console.warn 'Can\'t handle `<effect><profile_BRIDGE>` yet'
+    
+  if effectElement.profile_CG?
+    `// TODO: Handle <profile_CG> elements`
+    console.warn 'Can\'t handle `<effect><profile_CG>` yet'
+    
+  if effectElement.profile_COMMON
+    profileCommon = getValueOf effectElement.profile_COMMON
+    unless _.isArray profileCommon
+      profileCommon = [profileCommon]
+    for common in profileCommon
+      technique = getValueOf common.technique
+      unless technique? and not _.isArray technique
+        throw COLLADAFileError 'A `<profile_COMMON>` must contain 1 `<technique>`.'
+        unless technique.blinn? ^ technique.constant? ^ technique.lambert? ^ technique.phong?
+          throw COLLADAFileError 'An `<profile_COMMON><technique>` must contain either 1 `<blinn>` or 1 `<constant>` or 1 `<lambert>` or 1 `<phong>`.'
+        
+        if technique.blinn?
+          `// TODO: Handle <blinn> elements`
+          console.warn 'Can\'t handle `<technique><blinn>` yet'
+          
+        if technique.constant?
+          `// TODO: Handle <constant> elements`
+          console.warn 'Can\'t handle `<technique><constant>` yet'
 
+        if technique.lambert?
+          `// TODO: Handle <lambert> elements`
+          console.warn 'Can\'t handle `<technique><lambert>` yet'
+          
+        if technique.phong?
+          `// TODO: Handle <phong> elements`
+          console.warn 'Can\'t handle `<technique><phong>` yet'
+
+  if effectElement.profile_GLES?
+    `// TODO: Handle <profile_GLES> elements`
+    console.warn 'Can\'t handle `<effect><profile_GLES>` yet'
+
+  if effectElement.profile_GLES2?
+    `// TODO: Handle <profile_GLES2> elements`
+    console.warn 'Can\'t handle `<effect><profile_GLES2>` yet'
+
+  if effectElement.profile_GLSL?
+    `// TODO: Handle <profile_GLSL> elements`
+    console.warn 'Can\'t handle `<effect><profile_GLSL>` yet'
+
+  
 # ### *getVerticesFrom*:
 # > **`getVerticesFrom`** uses the well-defined structure of the [**COLLADA SCHEMA**](http://www.collada.org/2005/COLLADASchema.xsd) to extract and reorganise the *vertices* data into a more useable format for building [**`TriangleMeshes`**](triangle.html#mesh).
 #
@@ -792,6 +905,89 @@ createSourceObjects = (meshObjects) ->
                 v = sourceVals[i + 1]
                 sourceObjects[input.semantic].push [u, v]
   return sourceObjects
+
+getLightsFrom = (scene) ->
+  light_nodes = getObjectsFrom scene, '$..node[?(@.instance_light)]'
+  if light_nodes isnt false
+    if _.isArray light_nodes
+      return (createLight(light_node, scene) for light_node in light_nodes)
+    return [createLight light_nodes, scene]
+  return []
+
+createLight = (light_node, scene) ->
+  lights = []
+  lightToWorld = createObjectToWorldTransform light_node
+
+  instanceLights = light_node.instance_light
+  for instanceLight in (instanceLights ? [])
+
+    id = if instanceLight.url.substr(0, 1) is '#' then instanceLight.url.substring(1) else instanceLight.url
+    light = getObjectsFrom scene, "$..light[?(@.id == '#{id}')]"
+    if light is false
+      throw COLLADAFileError "There is no `<light>` with the `id` '#{id}'"
+
+    techniqueCommon = getValueOf light.technique_common
+    unless techniqueCommon? and not _.isArray techniqueCommon
+      throw COLLADAFileError 'A `<light>` must contain 1 `<technique_common>`.'
+    unless techniqueCommon.ambient? ^ techniqueCommon.directional? ^ techniqueCommon.point? ^ techniqueCommon.spot?
+      throw COLLADAFileError 'A `<light><technique_common>` must contain either 1 `<ambient>` or 1 `<directional>` or 1 `<point>` or 1 `<spot>`.'
+
+    ambient = getValueOf techniqueCommon.ambient
+    if ambient?
+      console.warn 'AmbientLights are not supported '
+
+    directional = getValueOf techniqueCommon.directional
+    if directional?
+      if _.isArray directional
+        throw COLLADAFileError 'A `<light><technique_common>` may contain at most 1 `<directional>`'
+      lights.push createDirectionalLight(lightToWorld, directional)  
+
+    point = getValueOf techniqueCommon.point
+    if point?
+      if _.isArray point
+        throw COLLADAFileError 'A `<light><technique_common>` may contain at most 1 `<point>`'
+      lights.push createPointLight(lightToWorld, point)  
+
+    spot = getValueOf techniqueCommon.spot
+    if spot?
+      if _.isArray spot
+        throw COLLADAFileError 'A `<light><technique_common>` may contain at most 1 `<spot>`'
+      lights.push createSpotLight(lightToWorld, spot)
+
+  console.log lights
+  for l in lights
+    console.log l.constructor.name
+  return lights
+
+createDirectionalLight = (lightToWorld, directional) ->
+  color = getValueOf directional.color
+  unless color? and not _.isArray color
+    throw COLLADAFileError 'A `<directional>` element must contain 1 `<color>`.'
+  [r, g, b] = color.split ' '
+  
+  direction = new Vector(0, 0, 1)
+  direction = Transform.TransformVector lightToWorld, direction
+  
+  new DistantLight(lightToWorld, RGBSpectrum.FromRGB([r, g, b]), direction)
+  
+createPointLight = (lightToWorld, point) ->
+  color = getValueOf point.color
+  unless color? and not _.isArray color
+    throw COLLADAFileError 'A `<point>` element must contain 1 `<color>`.'
+  [r, g, b] = color.split ' '
+  
+  new PointLight(lightToWorld, RGBSpectrum.FromRGB([r, g, b]))
+  
+createSpotLight = (lightToWorld, spot) ->
+  color = getValueOf spot.color
+  unless color? and not _.isArray color
+    throw COLLADAFileError 'A `<directional>` element must contain 1 `<color>`.'
+  [r, g, b] = color.split ' '
+  
+  falloffAngle = getValueOf spot.falloff_angle ? 180
+  falloffExponent = getValueOf spot.falloff_exponent ? 0
+  falloffStart = Math.pow Math.cos(falloffAngle), falloffExponent
+  new SpotLight(lightToWorld, RGBSpectrum.FromRGB([r, g, b]), falloffAngle, falloffStart)
 
 # ___
 # ## Exports:
