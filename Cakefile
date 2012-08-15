@@ -2,7 +2,34 @@
 
 task 'compile', 'compile everything', ->
   exec 'coffee -o javascript/client/ -cw coffeescript/client/'
-  exec 'coffee -j javascript/raytracer/raytracer.js -cw coffeescript/raytracer/'
+  files = ['primitive/primitive.coffee',
+           'accelerators/kdtree.coffee',
+           'camera.coffee',
+           'filter.coffee',
+           'geometry/',
+           'integrators/',
+           'intersection.coffee',
+           'lights/light.coffee',
+           'lights/areaLight.coffee',
+           'lights/diffuseAreaLight.coffee',
+           'lights/distantLight.coffee',
+           'lights/infiniteAreaLight.coffee',
+           'lights/pointLight.coffee',
+           'lights/spotLight.coffee',
+           'materials.coffee',
+           'utils/tasks.coffee',
+           'renderers/',
+           'samplers/',
+           'scene.coffee',
+           'setup.coffee',
+           'shape/',
+           'spectrum.coffee'
+           'specular.coffee',
+           'utils/math.coffee']
+  joinOrder = ''
+  joinOrder += "'coffeescript/raytracer/#{file}' " for file in files
+  exec "coffee -j javascript/raytracer/raytracer.js -cw #{joinOrder}"
+  exec 'coffee -o javascript/raytracer/ -cw coffeescript/raytracer/index.coffee'
   exec 'coffee -o javascript/server/ -cw coffeescript/server/'
   exec 'coffee -o javascript/testing/ -cw coffeescript/testing/'
   console.log 'Done compile, now watching for changes...'
@@ -14,14 +41,9 @@ task 'docs', 'create docs', ->
 
   exec 'docco coffeescript/raytracer/scene.coffee'
   
-  exec 'docco coffeescript/raytracer/geometry/animatedTransform.coffee'
-  exec 'docco coffeescript/raytracer/geometry/differentialGeometry.coffee'
-  exec 'docco coffeescript/raytracer/geometry/geometry.coffee'
-  exec 'docco coffeescript/raytracer/geometry/matrix.coffee'
-  exec 'docco coffeescript/raytracer/geometry/transform.coffee'
+  exec 'docco coffeescript/raytracer/geometry/*.coffee'
   
-  exec 'docco coffeescript/raytracer/shape/shape.coffee'
-  exec 'docco coffeescript/raytracer/shape/triangle.coffee'
+  exec 'docco coffeescript/raytracer/shape/*.coffee'
   
   exec 'docco coffeescript/raytracer/utils/math.coffee'
   
