@@ -121,6 +121,9 @@ class Shape
   # > The default implementation returns the true geometry, but it may be overridden by subclasses to transform the true geometry by an `objectToWorld` [**`Transform`**](transform.html#transform). This **`Transform`** will not necessarily be the same **`Transform`** defined in the `@objectToWorld` property. This allows for object instancing, where the same geometry is just transformed to a different location in world-space.
   getShadingGeometry: (objectToWorld, dg) ->
     return dg
+
+class ShapeSet
+  constructor: (@shapes) ->
     
 # ___
 # ## Exports:
