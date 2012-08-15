@@ -694,6 +694,23 @@ class BoundingBox
     center = Point.AddPointToPoint Point.Multiply(@pMin, 0.5), Point.Multiply(@pMax, 0.5)
     radius = if BoundingBox.Inside this, center then Point.Distance center, @pMax else 0
     return [center, radius]
+    
+  intersectP: (r) ->
+    t0 = r.minTime
+    t1 = r.maxTime
+    for i in ['x', 'y', 'z']
+      invRayDir = 1 / r.direction[i]
+      tNear = (@pMin[i] - ray.origin[i]) * invRayDir
+      tFar = (@pMax[i] - ray.origin[i]) * invRayDir
+      if tNear > tFar
+        temp = tNear
+        tNear = tFar
+        tFar = temp
+      t0 = if tNear > t0 then tNear else t0
+      t1 = if tFar < t1 then tFar else t1
+      if t0 > t1 
+        return [no, t0, t1]
+    return [yes, t0, t1]
   
   # ___  
   # ### Static Functions: 
