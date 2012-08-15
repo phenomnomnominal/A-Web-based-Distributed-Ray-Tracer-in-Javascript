@@ -59,15 +59,20 @@ MathFunctions.SolveLinearSystem2x2 = (a, b) ->
   
 # ### *RoundUpPow2:*
 # > **`MathFunctions.RoundUpPow2`** rounds a number up to the nearest power of 2. 
-MathFunctions.RoundUpPow2 = (v) ->
-  v--
-  v |= v >> 1
-  v |= v >> 2
-  v |= v >> 4
-  v |= v >> 8
-  v |= v >> 16
-  return v + 1
+MathFunctions.RoundUpPow2 = (n) ->
+  n--
+  n |= n >> 1
+  n |= n >> 2
+  n |= n >> 4
+  n |= n >> 8
+  n |= n >> 16
+  return n + 1
     
+# ### *IsPowerOf2:*
+# > **`MathFunctions.IsPowerOf2`** checks if a number is a power of 2.
+MathFunctions.IsPowerOf2 = (n) ->
+  return n > 0 and (n & (n - 1)) is 0
+
 # ___
 # ## Exports:
 
