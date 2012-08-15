@@ -40,10 +40,9 @@
     <span class="k">for</span> <span class="nx">l</span> <span class="k">in</span> <span class="nx">@lights</span>
       <span class="nx">unless</span> <span class="nx">l</span> <span class="k">instanceof</span> <span class="nx">Light</span>
         <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;lights must only contain Lights.&#39;</span>
-    <span class="nx">unless</span> <span class="nx">@volumeRegion</span><span class="o">?</span>
-      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;volumeRegion must be defined.&#39;</span>
-    <span class="nx">unless</span> <span class="nx">@volumeRegion</span> <span class="k">instanceof</span> <span class="nx">VolumeRegion</span>
-      <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;volumeRegion must be a VolumeRegion.&#39;</span>
+    <span class="k">if</span> <span class="nx">@volumeRegion</span><span class="o">?</span>
+      <span class="nx">unless</span> <span class="nx">@volumeRegion</span> <span class="k">instanceof</span> <span class="nx">VolumeRegion</span>
+        <span class="k">throw</span> <span class="nx">SceneConstructorError</span> <span class="s">&#39;volumeRegion must be a VolumeRegion.&#39;</span>
     
     <span class="vi">@bound = </span><span class="nx">@aggregate</span><span class="p">.</span><span class="nx">worldBound</span><span class="p">()</span>
     <span class="k">if</span> <span class="nx">@volumeRegion</span><span class="o">?</span>

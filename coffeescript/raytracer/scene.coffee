@@ -39,10 +39,9 @@ class Scene
     for l in @lights
       unless l instanceof Light
         throw SceneConstructorError 'lights must only contain Lights.'
-    unless @volumeRegion?
-      throw SceneConstructorError 'volumeRegion must be defined.'
-    unless @volumeRegion instanceof VolumeRegion
-      throw SceneConstructorError 'volumeRegion must be a VolumeRegion.'
+    if @volumeRegion?
+      unless @volumeRegion instanceof VolumeRegion
+        throw SceneConstructorError 'volumeRegion must be a VolumeRegion.'
     
     @bound = @aggregate.worldBound()
     if @volumeRegion?
